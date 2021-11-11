@@ -1,70 +1,84 @@
-// Package Imports
-const { validationResult } = require('express-validator')
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken')
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import User from '../models/user.js';
 
-// Model Imports
-const User = require('../models/user')
-
-exports.signup = async (req, res, next) => {
-    const email = req.body.email;
-    const name = req.body.name;
+export let signup = async (req, res, next) => {
+    const username = req.body.username;
+    const phone = req.body.phone;
     const password = req.body.password;
-    const errors = validationResult(req)
-  
+
     try {
-        if (!errors.isEmpty()){
-            const error = new Error()
-            error.message = errors.array()[0].msg,
-            error.statusCode = 422;
-            error.data = errors.array()
-            throw error;
-        }
-  
-      const hashedPassword = await bcrypt.hash(password, 12);
-  
-      const user = new User({
-        email,
-        name,
-        password: hashedPassword,
-      });
-  
-      await user.save();
-      res.status(201).json({ message: "User Registered!" });
+        // const checkEmail = await User.findOne({ email: email });
+
+        // if (checkEmail) {
+        //     const error = new Error('This email is already in use!');
+        //     error.statusCode = 404;
+        //     throw error;
+        // }
+
+        // if (password.matches(/"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"/)) {
+        //     const error = new Error(
+        //         'Password must be 8 characters long, contain at least one letter and one number!'
+        //     );
+        //     error.statusCode = 401;
+        //     throw error;
+        // }
+
+        const hashedPassword = await bcrypt.hash(password, 12);
+
+        const user = new User({
+            username,
+            phone,
+            password: hashedPassword
+        });
+
+        await user.save();
+        res.status(201).json({ message: 'User Registered!' });
     } catch (err) {
-      next(err);
+        next(err);
     }
-  };
+};
 
-exports.login = async (req, res, next) => {
-
+export let login = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
-    try{
-        const user = await User.findOne({email: email})
 
-        if(!user){
-            const error = new Error("User Not Found!");
+    try {
+        const user = await User.findOne({ email: email });
+
+        // Checking User email
+        if (!user) {
+            const error = new Error('User Not Found!');
             error.statusCode = 404;
             throw error;
         }
 
+        // Checking User password
         const isEqual = await bcrypt.compare(password, user.password);
-        if (!isEqual){
-            const error = new Error("Passwords do not match!");
+        if (!isEqual) {
+            const error = new Error('Wrong Password!');
             error.statusCode = 401;
             throw error;
         }
-        
-        const token = jwt.sign({ email: email }, 'secret', { expiresIn: '1h' });
-        
+
+        // If everything checks out, send back JWT and the info we wish to send.
+        // TOKEN ===================================
+        const token = jwt.sign(
+            {
+                email: user.email,
+                userId: user._id.toString()
+            },
+            'secretkey',
+            { expiresIn: '1h' }
+        );
+        // TOKEN ===================================
+
         res.status(200).json({
-            user: user, 
-            message: "Logged in Successfully", 
-            "token": token
+            token: token,
+            user: user,
+            message: 'Logged in Successfully'
         });
-    }
-    catch (err){
+    } catch (err) {
         next(err);
     }
-} 
+};
