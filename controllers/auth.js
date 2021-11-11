@@ -8,14 +8,6 @@ export let signup = async (req, res, next) => {
     const password = req.body.password;
 
     try {
-        // const checkEmail = await User.findOne({ email: email });
-
-        // if (checkEmail) {
-        //     const error = new Error('This email is already in use!');
-        //     error.statusCode = 404;
-        //     throw error;
-        // }
-
         // if (password.matches(/"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"/)) {
         //     const error = new Error(
         //         'Password must be 8 characters long, contain at least one letter and one number!'
@@ -40,11 +32,11 @@ export let signup = async (req, res, next) => {
 };
 
 export let login = async (req, res, next) => {
-    const email = req.body.email;
+    const username = req.body.username;
     const password = req.body.password;
 
     try {
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ username: username });
 
         // Checking User email
         if (!user) {
@@ -61,11 +53,11 @@ export let login = async (req, res, next) => {
             throw error;
         }
 
-        // If everything checks out, send back JWT and the info we wish to send.
+        // If everything checks out, send back JWT and the message we wish to send.
         // TOKEN ===================================
         const token = jwt.sign(
             {
-                email: user.email,
+                username: user.username,
                 userId: user._id.toString()
             },
             'secretkey',

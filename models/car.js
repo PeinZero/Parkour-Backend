@@ -1,9 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const CarSchema = new Schema({
-    // Identification
-    vehicleIdNumber: {
+
+    // =======================| Identification |====>
+
+    carNumberPlate: {
         type: String ,
         required: true
     },
@@ -15,16 +17,23 @@ const CarSchema = new Schema({
         type: String ,
         required: true
     },
-    prodYear: {
-        type: String ,
-    }, 
     carColor:{
         type: String ,
         required: true
     },
+    prodYear: {
+        type: String ,
+    }, 
     carMileage:{
         type: Number,
-    }    
+    },
+
+    // =======================| Owner Reference |====>
+
+    carOwner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    }
 })
 
-module.exports = mongoose.model('Car', CarSchema)
+export default mongoose.model('Car', CarSchema)

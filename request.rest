@@ -1,6 +1,6 @@
-###
-POST http://localhost:5000/auth/signup
-Content-Type: application/json
+### sign up
+POST http://localhost:5000/auth/signup 
+Content-Type: application/json 
 
 {
     "username": "Fanoflix",
@@ -8,4 +8,25 @@ Content-Type: application/json
     "password": "hughjackman50"
 }
  
-###
+### login
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "username": "Fanoflix",
+    "password": "hughjackman50"
+}
+
+
+### register car
+POST http://localhost:5000/user/RegisterCar
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZhbm9mbGl4IiwidXNlcklkIjoiNjE4ZDYwYzZkMTA2MmI0NjI3ZWE1YjY0IiwiaWF0IjoxNjM2NjY1ODI4LCJleHAiOjE2MzY2Njk0Mjh9.3Hysi6hsnmQeenq0WuKMi4QZIZvATRg5aQeBPLbOftQ
+
+{
+    "carNumberPlate": "1234",
+    "carMake": "Toyota",
+    "carModel": "Corolla",
+    "carColor": "Red",
+    "prodYear": "2019"
+}

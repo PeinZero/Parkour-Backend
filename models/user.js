@@ -7,6 +7,7 @@ const Role = {
 };
 
 const userSchema = new Schema({
+    
     // =======================| Identification |====>
 
     username: {
