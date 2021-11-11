@@ -15,7 +15,7 @@ const SERVER_PORT = 5000;
 // Routes Imports
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
-// Model Imports
+import spotRoutes from './routes/spot.js';
 
 // Constants
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -81,6 +81,7 @@ app.use((req, res, next) => {
 //Routes
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/spot', spotRoutes);
 
 app.use((error, req, res, next) => {
     console.log(error);
