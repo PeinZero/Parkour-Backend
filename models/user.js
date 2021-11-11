@@ -7,7 +7,7 @@ const Role = {
 };
 
 const userSchema = new Schema({
-    
+
     // =======================| Identification |====>
 
     username: {
@@ -35,14 +35,14 @@ const userSchema = new Schema({
         enum: Role,
         default: Role.PARKER,
     },
-    cars: {
+    cars: [{
         type: Schema.Types.ObjectId,
         ref: "Cars",
-    },
-    spots: {
+    }],
+    spots: [{
         type: Schema.Types.ObjectId,
         ref: "Spots",
-    },
+    }],
 });
 
 export default mongoose.model("User", userSchema);

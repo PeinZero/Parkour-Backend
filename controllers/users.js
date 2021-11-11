@@ -20,7 +20,13 @@ export let registerCar = async (req, res, next) => {
             prodYear: req.body.prodYear,
             carOwner: user._id
         });
+        
+        // adding car
         await car.save();
+
+        // adding car to user
+        user.cars.push(car);
+        await user.save();
 
         res.status(201).json({
             message: 'Car registered successfully'
