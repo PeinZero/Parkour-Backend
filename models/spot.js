@@ -28,6 +28,12 @@ const SpotSchema = new Schema(
       type: Number,
       required: true
     },
+    spotRatings: {
+      type: Number,
+    },
+    spotReviews: [{
+      type: String
+    }],
 
     // =======================| Owner Reference |====>
 

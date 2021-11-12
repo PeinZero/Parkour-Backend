@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import isAuth from '../middleware/isAuth.js';
-import { registerCar, registerSpot, getAllUsers } from '../controllers/users.js';
+import {registerCar, registerSpot, getAllUsers} from '../controllers/users.js';
 
 const router = Router();
 

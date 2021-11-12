@@ -5,7 +5,7 @@ import Point from '../models/point.js';
 
 export let getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find({});
+    const users = await User.find();
     res.status(200).json(users);
 
   } catch (error) {
