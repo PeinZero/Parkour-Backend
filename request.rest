@@ -3,17 +3,17 @@ POST http://localhost:5000/auth/signup
 Content-Type: application/json 
 
 {
-    "username": "Ammar",
+    "username": "ammar",
     "phone": "12345678",
     "password": "123"
 }
- 
+
 ### login
 POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "username": "Ammar",
+    "username": "ammar",
     "password": "123"
 }
 
