@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
-const schema = mongoose.Schema;
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 
-const pointSchema = new mongoose.Schema({
+const PointSchema = new mongoose.Schema({
     type: {
       type: String,
       enum: ['Point'],
-      required: true
+      default: 'Point'
     },
     // longitude is first in cordinates array.
     coordinates: {
@@ -14,4 +14,4 @@ const pointSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.Schema('Point', pointSchema);
+export default mongoose.model('Point', PointSchema);

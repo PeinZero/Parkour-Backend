@@ -9,6 +9,10 @@ const SpotSchema = new Schema(
       type: String,
       required: true
     },
+    spotDescription: {
+      type: String,
+      required: true
+    },
     spotLocation: {
       type: Schema.Types.ObjectId,
       ref: 'Point',
@@ -17,13 +21,9 @@ const SpotSchema = new Schema(
     spotImagesUrl: [
       {
         type: String,
-        required: true
+        // required: true
       }
     ],
-    spotDescription: {
-      type: String,
-      required: true
-    },
     pricePerHour: {
       type: Number,
       required: true
@@ -39,54 +39,19 @@ const SpotSchema = new Schema(
 
     // =======================| State |====>
 
-    isActive: Boolean,
+    isActive: {type: Boolean, default: true},
+    isBooked: {type: Boolean, default: false},
     bookingExpireTime: Date, // booking should be ended by user after this time
     bookingEndTime: Date, // actual time the booking was ended by user
-    isBooked: Boolean,
 
     spotAvailibilty: {
-      monday: [
-        {
-          startTime: Date,
-          endTime: Date
-        }
-      ],
-      tuesday: [
-        {
-          startTime: Date,
-          endTime: Date
-        }
-      ],
-      wednesday: [
-        {
-          startTime: Date,
-          endTime: Date
-        }
-      ],
-      thursday: [
-        {
-          startTime: Date,
-          endTime: Date
-        }
-      ],
-      friday: [
-        {
-          startTime: Date,
-          endTime: Date
-        }
-      ],
-      saturday: [
-        {
-          startTime: Date,
-          endTime: Date
-        }
-      ],
-      sunday: [
-        {
-          startTime: Date,
-          endTime: Date
-        }
-      ]
+      monday: [{ startTime: Date, endTime: Date }],
+      tuesday: [{ startTime: Date, endTime: Date }],
+      wednesday: [{ startTime: Date, endTime: Date }],
+      thursday: [{ startTime: Date, endTime: Date }],
+      friday: [{ startTime: Date, endTime: Date }],
+      saturday: [{ startTime: Date, endTime: Date }],
+      sunday: [{ startTime: Date, endTime: Date }]
     }
   },
   {

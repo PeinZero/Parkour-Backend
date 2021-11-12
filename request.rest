@@ -3,9 +3,9 @@ POST http://localhost:5000/auth/signup
 Content-Type: application/json 
 
 {
-    "username": "Fanoflix",
+    "username": "Ammar",
     "phone": "12345678",
-    "password": "hughjackman50"
+    "password": "123"
 }
  
 ### login
@@ -13,20 +13,33 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "username": "Fanoflix",
-    "password": "hughjackman50"
+    "username": "Ammar",
+    "password": "123"
 }
 
 
 ### register car
-POST http://localhost:5000/user/RegisterCar
+POST http://localhost:5000/user/registerCar
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZhbm9mbGl4IiwidXNlcklkIjoiNjE4ZDYwYzZkMTA2MmI0NjI3ZWE1YjY0IiwiaWF0IjoxNjM2NjY1ODI4LCJleHAiOjE2MzY2Njk0Mjh9.3Hysi6hsnmQeenq0WuKMi4QZIZvATRg5aQeBPLbOftQ
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFtbWFyIiwidXNlcklkIjoiNjE4ZTQ2OTJmZTA2NTJmYzUxMWIyYmNmIiwiaWF0IjoxNjM2NzE0MTM3LCJleHAiOjE2MzY3MTc3Mzd9.g_LA2uSUdXB5wliYl2jAjhWCttntxkd6n8hCiEQBs_4
 
 {
     "carNumberPlate": "1234",
-    "carMake": "Toyota",
-    "carModel": "Corolla",
-    "carColor": "Red",
+    "carMake": "Honda",
+    "carModel": "Civic",
+    "carColor": "White",
     "prodYear": "2019"
+}
+
+### register spot
+
+POST http://localhost:5000/user/registerSpot
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFtbWFyIiwidXNlcklkIjoiNjE4ZTQ2OTJmZTA2NTJmYzUxMWIyYmNmIiwiaWF0IjoxNjM2NzE0MTM3LCJleHAiOjE2MzY3MTc3Mzd9.g_LA2uSUdXB5wliYl2jAjhWCttntxkd6n8hCiEQBs_4
+
+{
+    "spotName": "Ammar's spot",
+    "spotDescription": "spot is situated near Safoora Chowrangi, KESC Society, 2nd street on left, infront of park",
+    "spotLocation": [24.8607, 67.0011],
+    "pricePerHour": 100
 }
