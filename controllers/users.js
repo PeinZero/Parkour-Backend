@@ -3,6 +3,18 @@ import Car from '../models/car.js';
 import Spot from '../models/spot.js';
 import Point from '../models/point.js';
 
+export let getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    res.status(200).json(users);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
 export let registerCar = async (req, res, next) => {
   const userId = req.userId;
 
@@ -34,12 +46,10 @@ export let registerCar = async (req, res, next) => {
       message: 'Car registered successfully',
       car
     });
-
   } catch (err) {
     next(err);
   }
 };
-
 
 export let registerSpot = async (req, res, next) => {
   const userId = req.userId;
@@ -53,9 +63,9 @@ export let registerSpot = async (req, res, next) => {
       });
     }
 
-    const spotLocation = new Point({coordinates: req.body.spotLocation});
+    const spotLocation = new Point({ coordinates: req.body.spotLocation });
     await spotLocation.save();
-    
+
     let spot = new Spot({
       spotName: req.body.spotName,
       spotDescription: req.body.spotDescription,
