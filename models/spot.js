@@ -42,7 +42,7 @@ const SpotSchema = new Schema(
     isActive: {type: Boolean, default: true},
     isBooked: {type: Boolean, default: false},
     bookingExpireTime: Date, // booking should be ended by user after this time
-    bookingEndTime: Date, // actual time the booking was ended by user
+    actualBookingEndTime: Date, // actual time the booking was ended by user
 
     spotAvailibilty: {
       monday: [{ startTime: Date, endTime: Date }],
