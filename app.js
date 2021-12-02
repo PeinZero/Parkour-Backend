@@ -10,7 +10,7 @@ import path, { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const SERVER_PORT = 5000;
+const SERVER_PORT = process.env.PORT || 5000;
 
 // Routes Imports
 import authRoutes from './routes/auth.js';
