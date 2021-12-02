@@ -23,25 +23,25 @@ const app = express();
 
 // Setting up Multer Storage
 const fileStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'images');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
+  destination: function (req, file, cb) {
+    cb(null, 'images');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
 });
 
 // Setting up Multer File Filter
 const fileFilter = (req, file, cb) => {
-    if (
-        file.mimetype === 'image/png' ||
-        file.mimetype === 'image/jpg' ||
-        file.mimetype === 'image/jpeg'
-    ) {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
+  if (
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
 };
 
 // Body Parser to handle json data
@@ -52,7 +52,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Setting up Multer for File Upload
 app.use(
-    multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 );
 
 // Setting up Static Folders
@@ -65,16 +65,13 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Handling CORS Error
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET, POST, PUT, PATCH, DELETE'
-    );
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Content-Type, Authorization'
-    );
-    next();
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, PATCH, DELETE'
+  );
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
 });
 
 // <------------ Incoming requests flow from top to bottom. ------------>
@@ -85,25 +82,24 @@ app.use('/user', userRoutes);
 app.use('/spot', spotRoutes);
 
 app.use((error, req, res, next) => {
-    console.log(error);
-    console.log(error.statusCode);
-    const statusCode = error.statusCode || 500;
-    const message = error.message;
-    const data = error.data;
-    res.status(statusCode).json({ message: message, data: data });
+  console.log(error);
+  const statusCode = error.statusCode || 500;
+  const message = error.message;
+  const data = error.data;
+  res.status(statusCode).json({ message: message, data: data });
 });
 
 // Connecting to Database and Starting the server
 mongoose
-    .connect(MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => {
-        app.listen(SERVER_PORT, () => {
-            console.log(`Server running on Port ${SERVER_PORT}`);
-        });
-    })
-    .catch((err) => {
-        console.log(err);
+  .connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    app.listen(SERVER_PORT, () => {
+      console.log(`Server running on Port ${SERVER_PORT}`);
     });
+  })
+  .catch((err) => {
+    console.log(err);
+  });

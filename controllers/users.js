@@ -7,7 +7,6 @@ export let getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find();
     res.status(200).json(users);
-
   } catch (error) {
     res.status(500).json({
       message: error.message
@@ -54,6 +53,8 @@ export let registerCar = async (req, res, next) => {
 export let registerSpot = async (req, res, next) => {
   const userId = req.userId;
 
+  console.log(req);
+
   try {
     const user = await User.findById(userId);
 
@@ -91,7 +92,36 @@ export let registerSpot = async (req, res, next) => {
   }
 };
 
-export let getRegisteredCars = async (req, res, next) => {
-  // populate registered cars with owner name and mobile number
-  // if (car.populated) check --- DONT REMOVE THESE COMMENTS
+// export let getRegisteredCars = async (req, res, next) => {
+//   // populate registered cars with owner name and mobile number
+//   // if (car.populated) check --- DONT REMOVE THESE COMMENTS
+// };
+
+export let deleteSpot = async (req, res, next) => {
+  const userId = req.userId;
+  const spotId = req.body.spotId;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const spot = await Spot.findById(spotId);
+    if (!spot) {
+      throw new Error('Spot not found');
+    }
+
+    user.spots = user.spots.filter((spot) => spot._id.toString() !== spotId);
+    await user.save();
+
+    // Remove spot
+    await spot.remove();
+
+    res.status(200).json({
+      message: `Spot deleted successfully!`,
+    });
+  } catch (err) {
+    next(err);
+  }
 };

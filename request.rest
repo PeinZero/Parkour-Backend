@@ -1,19 +1,19 @@
-### sign up
+###
 POST http://localhost:5000/auth/signup 
 Content-Type: application/json 
 
 {
-    "username": "Ammar",
+    "name": "ammar",
     "phone": "12345678",
     "password": "123"
 }
- 
+
 ### login
 POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "username": "Ammar",
+    "name": "ammar",
     "password": "123"
 }
 
@@ -21,25 +21,35 @@ Content-Type: application/json
 ### register car
 POST http://localhost:5000/user/registerCar
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFtbWFyIiwidXNlcklkIjoiNjE4ZTQ2OTJmZTA2NTJmYzUxMWIyYmNmIiwiaWF0IjoxNjM2NzE0MTM3LCJleHAiOjE2MzY3MTc3Mzd9.g_LA2uSUdXB5wliYl2jAjhWCttntxkd6n8hCiEQBs_4
+Authorization: bearer 
 
 {
-    "carNumberPlate": "1234",
-    "carMake": "Honda",
-    "carModel": "Civic",
-    "carColor": "White",
-    "prodYear": "2019"
+    "carNumberPlate": "12345",
+    "carMake": "Toyota",
+    "carModel": "Corolla",
+    "carColor": "Black",
+    "prodYear": "2021"
 }
 
 ### register spot
 
 POST http://localhost:5000/user/registerSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFtbWFyIiwidXNlcklkIjoiNjE4ZTQ2OTJmZTA2NTJmYzUxMWIyYmNmIiwiaWF0IjoxNjM2NzE0MTM3LCJleHAiOjE2MzY3MTc3Mzd9.g_LA2uSUdXB5wliYl2jAjhWCttntxkd6n8hCiEQBs_4
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWE2NTRkMzY0YzMzMWUyMjZhMjAyMjEiLCJpYXQiOjE2MzgyOTQ4NTAsImV4cCI6MTYzODI5ODQ1MH0.VWoN0V3lHgbnaiWF0LaWD2EkWEXhXURr8UgBSJSZH7Y
 
 {
-    "spotName": "Ammar's spot",
-    "spotDescription": "spot is situated near Safoora Chowrangi, KESC Society, 2nd street on left, infront of park",
-    "spotLocation": [24.8607, 67.0011],
-    "pricePerHour": 100
+    "spotName": "Abdullah's spot",
+    "spotDescription": "Near 5 Star chowrangi",
+    "spotLocation": [69.8607, 17.0011],
+    "pricePerHour": 250
 }
+
+### delete spot
+
+POST http://localhost:5000/user/deleteSpot
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWE2NTRkMzY0YzMzMWUyMjZhMjAyMjEiLCJpYXQiOjE2MzgyOTQ4NTAsImV4cCI6MTYzODI5ODQ1MH0.VWoN0V3lHgbnaiWF0LaWD2EkWEXhXURr8UgBSJSZH7Y
+
+{
+    "spotId": "61a667b8e01f51ccaead6094"
+}   

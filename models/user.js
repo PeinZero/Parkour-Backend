@@ -42,8 +42,8 @@ const userSchema = new Schema({
 
   // =======================| State |====>
 
-  isParker: Boolean,
-  isSeller: Boolean,
+  isParker: {type: Boolean, default: true},
+  isSeller: {type: Boolean, default: false},
   currentRole: {
     type: String,
     enum: Role,

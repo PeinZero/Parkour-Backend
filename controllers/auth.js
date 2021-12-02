@@ -10,14 +10,6 @@ export let signup = async (req, res, next) => {
     const confirmPassword = req.body.confirmPassword;
 
     try {
-        // if (password.matches(/"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"/)) {
-        //     const error = new Error(
-        //         'Password must be 8 characters long, contain at least one letter and one number!'
-        //     );
-        //     error.statusCode = 401;
-        //     throw error;
-        // }
-
         const hashedPassword = await bcrypt.hash(password, 12);
 
         const user = new User({
@@ -60,7 +52,7 @@ export let login = async (req, res, next) => {
         // TOKEN ===================================
         const token = jwt.sign(
             {
-                username: user.username,
+                name: user.name,
                 userId: user._id.toString()
             },
             'secretkey',
