@@ -1,0 +1,1 @@
+MONGODB_URI = mongodb+srv://mahad:mahad1234@cluster0.ev0dq.mongodb.net/parkour

@@ -91,7 +91,7 @@ app.use((error, req, res, next) => {
 
 // Connecting to Database and Starting the server
 mongoose
-  .connect("mongodb+srv://mahad:mahad1234@cluster0.ev0dq.mongodb.net/parkour", {
+  .connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
