@@ -9,7 +9,7 @@ const Role = {
 const userSchema = new Schema({
   // =======================| Identification |====>
 
-  username: {
+  name: {
     type: String,
     required: true
   },

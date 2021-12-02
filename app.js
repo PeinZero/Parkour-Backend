@@ -79,12 +79,14 @@ app.use((req, res, next) => {
 
 // <------------ Incoming requests flow from top to bottom. ------------>
 //Routes
+
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/spot', spotRoutes);
 
 app.use((error, req, res, next) => {
     console.log(error);
+    console.log(error.statusCode);
     const statusCode = error.statusCode || 500;
     const message = error.message;
     const data = error.data;

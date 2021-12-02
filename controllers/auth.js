@@ -3,9 +3,11 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
 
 export let signup = async (req, res, next) => {
-    const username = req.body.username;
+    const name = req.body.name;
     const phone = req.body.phone;
+    const email = req.body.email;
     const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
 
     try {
         // if (password.matches(/"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"/)) {
@@ -19,8 +21,9 @@ export let signup = async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(password, 12);
 
         const user = new User({
-            username,
+            name,
             phone,
+            email,
             password: hashedPassword
         });
 
@@ -32,11 +35,11 @@ export let signup = async (req, res, next) => {
 };
 
 export let login = async (req, res, next) => {
-    const username = req.body.username;
+    const phone = req.body.phone;
     const password = req.body.password;
 
     try {
-        const user = await User.findOne({ username: username });
+        const user = await User.findOne({ phone: phone });
 
         // Checking User email
         if (!user) {
@@ -67,7 +70,7 @@ export let login = async (req, res, next) => {
 
         res.status(200).json({
             token: token,
-            user: user,
+            userID: user._id.toString(),
             message: 'Logged in Successfully'
         });
     } catch (err) {
