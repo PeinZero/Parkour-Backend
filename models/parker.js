@@ -10,15 +10,45 @@ const parkerSchema = new Schema({
     }
   ],
 
-  // =======================| Rating and Reviews |====>
-  rating: {
-      type: Number,
-      default: 0.0
+  defaultCar: {
+    // default car to be shown on a fresh "Book Spot" page
+    ref: 'Cars',
+    type: Schema.Types.ObjectId
   },
 
-  reviews: [{
-      type: String
-  }]
+  bookingRequests: [
+    {
+      ref: 'BookingRequests',
+      type: Schema.Types.ObjectId
+    }
+  ],
+
+  // IF A DEFAULT CAR IS DELETED, THEN ADD THE NEXT AVAILABLE CAR AS DEFAULT, IF NO CAR IS AVAILABLE THEN THINK ABOUT IT.
+
+  // =======================| State |====>
+
+  isInTransaction: {
+    type: Boolean,
+    default: false
+  },
+
+  // =======================| Rating and Reviews |====>
+
+  cumulativeRating: {
+    type: Number,
+    default: -1.0
+  },
+
+  reviews: [
+    {
+      author: {
+        ref: 'Seller',
+        type: Schema.Types.ObjectId
+      },
+      text: String,
+      providedRating: Number
+    }
+  ]
 });
 
 export default mongoose.model('Parker', parkerSchema);
