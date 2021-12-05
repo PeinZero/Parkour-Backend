@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
+import Parker from '../models/parker.js';
 
 export let signup = async (req, res, next) => {
     const name = req.body.name;
@@ -12,11 +13,20 @@ export let signup = async (req, res, next) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 12);
 
+        const parker = new Parker({
+            rating: 5.0,
+        })
+
+        parker.reviews.push('What a guy!!');
+
+        await parker.save();
+
         const user = new User({
             name,
             phone,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            parker
         });
 
         await user.save();
@@ -60,11 +70,14 @@ export let login = async (req, res, next) => {
         );
         // TOKEN ===================================
         
-        let modifiedUser = {...user};
+        let modifiedUser;
+            
         if(user.currentRoleParker){
+            modifiedUser = await user.populate('parker');
             delete modifiedUser.seller
         }
         else{
+            modifiedUser = await user.populate('seller');
             delete modifiedUser.parker
         }
 
