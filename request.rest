@@ -5,7 +5,8 @@ Content-Type: application/json
 {
     "name": "ammar",
     "phone": "12345678",
-    "password": "123"
+    "password": "123",
+    "confirmPassword": "123"
 }
 
 ### login
@@ -13,7 +14,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "name": "ammar",
+    "phone": "12345678",
     "password": "123"
 }
 
@@ -21,21 +22,21 @@ Content-Type: application/json
 ### register car
 POST http://localhost:5000/user/registerCar
 Content-Type: application/json
-Authorization: bearer 
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFkMTdiM2FlMmFiOWY1MGEwODBjMzQiLCJpYXQiOjE2Mzg3MzQyNjcsImV4cCI6MTYzODczNzg2N30.tBbsvQz0VGvOXvQXHmhIwRyD1P1F6VgSPgUOkKSL_70
 
 {
-    "carNumberPlate": "12345",
-    "carMake": "Toyota",
-    "carModel": "Corolla",
-    "carColor": "Black",
-    "prodYear": "2021"
+    "carNumberPlate": "4312",
+    "carMake": "Honda",
+    "carModel": "Civic",
+    "carColor": "White",
+    "prodYear": "2009"
 }
 
 ### register spot
 
 POST http://localhost:5000/user/registerSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWE2NTRkMzY0YzMzMWUyMjZhMjAyMjEiLCJpYXQiOjE2MzgyOTQ4NTAsImV4cCI6MTYzODI5ODQ1MH0.VWoN0V3lHgbnaiWF0LaWD2EkWEXhXURr8UgBSJSZH7Y
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFkMTdiM2FlMmFiOWY1MGEwODBjMzQiLCJpYXQiOjE2Mzg3MzQyNjcsImV4cCI6MTYzODczNzg2N30.tBbsvQz0VGvOXvQXHmhIwRyD1P1F6VgSPgUOkKSL_70
 
 {
     "spotName": "Abdullah's spot",
@@ -52,4 +53,9 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiL
 
 {
     "spotId": "61a667b8e01f51ccaead6094"
-}   
+}
+
+###
+
+GET http://localhost:5000/user/getAllUsers
+

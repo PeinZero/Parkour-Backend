@@ -3,21 +3,41 @@ const Schema = mongoose.Schema;
 
 const sellerSchema = new Schema({
   // =======================| Attachments |====>
-  spots: [
+
+  activeSpots: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Spots'
     }
   ],
 
+  inactiveSpots: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Spots'
+    }
+  ],
+
+  // =======================| State |====>
+
+  isInTransaction: {
+    type: Boolean,
+    default: false
+  },
+  
   // =======================| Rating and Reviews |====>
-  rating: {
+  cumulativeRating: {
       type: Number,
-      default: 0.0
+      default: -1.0
   },
 
   reviews: [{
-      type: String
+    author: {
+      ref: 'Parker',
+      type: Schema.Types.ObjectId
+    },
+    text: String,
+    providedRating: Number,
   }]
 });
 

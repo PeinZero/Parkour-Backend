@@ -11,10 +11,11 @@ router.post('/registerSpot', isAuth, registerSpot);
 // Gets
 router.get('/all', getAllUsers);
 
-
 // Dev APIs
 router.post('/deleteSpot', isAuth, deleteSpot);
 router.get('/getUser/:userId', isAuth, getUser);
 
+router.get('/getUser/:userId', isAuth, getUser);
+router.get("/getAllusers", getAllUsers);
 
 export default router;

@@ -1,3 +1,4 @@
+import { Timestamp } from 'bson';
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
@@ -29,18 +30,22 @@ const userSchema = new Schema({
   parker: {
       type: Schema.Types.ObjectId,
       ref: 'Parker'
-  },
+    },
 
-  seller: {
+    seller: {
       type: Schema.Types.ObjectId,
       ref: 'Seller'
+    },
+
+    // =======================| State |====>
+
+    isParker: { type: Boolean, default: true },
+    isSeller: { type: Boolean, default: false },
+    currentRoleParker: { type: Boolean, default: true }
   },
-
-  // =======================| State |====>
-  isParker: {type: Boolean, default: true},
-  isSeller: {type: Boolean, default: false},
-  currentRoleParker: {type: Boolean, default: true},
-
-});
+  {
+    timestamps: true
+  }
+);
 
 export default mongoose.model('User', userSchema);
