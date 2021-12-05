@@ -5,20 +5,20 @@ const SpotSchema = new Schema(
   {
     // =======================| Identification |====>
 
-    spotName: {
+    name: {
       type: String,
       required: true
     },
-    spotDescription: {
+    description: {
       type: String,
       required: true
     },
-    spotLocation: {
+    location: {
       type: Schema.Types.ObjectId,
       ref: 'Point',
       required: true
     },
-    spotImagesUrl: [
+    imagesUrl: [
       {
         type: String
         // required: true
@@ -31,25 +31,24 @@ const SpotSchema = new Schema(
 
     // =======================| References |====>
 
-    spotOwner: {
+    owner: {
       type: Schema.Types.ObjectId,
       ref: 'Seller',
       required: true
     },
 
-    spotBooker: {
+    booker: {
       type: Schema.Types.ObjectId,
       ref: 'Parker'
     },
 
-    // remember the story:
-    /* 
+    /*  
+        remember the story:
         User selects a spot on map
         User selects a time slot
         API receives ParkerId, SpotId, StartTime, EndTime
         API creates a new BookingRequest
         API pushes the new BookingRequest to the Spot with the SpotId
-
     */
     bookingRequests: [
       {
@@ -59,14 +58,8 @@ const SpotSchema = new Schema(
     ],
 
     // =======================| State |====>
-
-    isActive: { type: Boolean, default: true },
-    isVisible: { type: Boolean, default: true }, // used to hide spot from map when spot is confirmed as 'booked'
-    isBooked: { type: Boolean, default: false },
-    bookingExpireTime: Date, // booking should be ended by user after this time
-    actualBookingEndTime: Date, // actual time the booking was ended by user
-
-    spotAvailibilty: {
+    
+    availibilty: {
       monday: [{ startTime: Date, endTime: Date }],
       tuesday: [{ startTime: Date, endTime: Date }],
       wednesday: [{ startTime: Date, endTime: Date }],
@@ -74,7 +67,20 @@ const SpotSchema = new Schema(
       friday: [{ startTime: Date, endTime: Date }],
       saturday: [{ startTime: Date, endTime: Date }],
       sunday: [{ startTime: Date, endTime: Date }]
-    }
+    },
+
+    isActive: { type: Boolean, default: true },
+    isVisible: { type: Boolean, default: true }, // used to hide spot from map when spot is confirmed as 'booked'
+    isBooked: { type: Boolean, default: false },
+
+    bookingStartTime: Date, // seller accepted a parking request at this time
+    bookingEndTime: Date, // listed start time of the spot
+    bookingCancellationTime: Date, // booking cancelled - who cancelled will be checked in API
+
+    parkingStartTime: Date, // timer starts when user parks their car
+    parkingExpireTime: Date, // user should un-park at this time
+    actualParkingEndTime: Date, // actual time the car was removed by user
+
   },
   {
     timestamps: true // provides createdAt and updatedAt fields

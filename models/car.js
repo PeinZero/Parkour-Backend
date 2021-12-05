@@ -5,32 +5,32 @@ const CarSchema = new Schema(
   {
     // =======================| Identification |====>
 
-    carNumberPlate: {
+    numberPlate: {
       type: String,
       required: true
     },
-    carMake: {
+    make: {
       type: String,
       required: true
     },
-    carModel: {
+    model: {
       type: String,
       required: true
     },
-    carColor: {
+    color: {
       type: String,
       required: true
     },
     prodYear: {
       type: String
     },
-    carMileage: {
+    mileage: {
       type: Number
     },
 
     // =======================| Owner Reference |====>
 
-    carOwner: {
+    owner: {
       type: Schema.Types.ObjectId,
       ref: 'Parker'
     }

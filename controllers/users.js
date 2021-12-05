@@ -5,20 +5,6 @@ import Point from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 
-export let getUser = async (req, res, next) => {
-  const userId = req.params.userId
-  try {
-    const user = await User.findById(userId);
-    res.status(200).json({
-      message: "User fetched successfully!",
-      user
-    })
-
-  } catch (error) {
-    next(error);
-  }
-}
-
 export let registerCar = async (req, res, next) => {
   const userId = req.userId;
 
@@ -41,13 +27,13 @@ export let registerCar = async (req, res, next) => {
     const parker = await Parker.findById(user.parker);
 
     let car = new Car({
-      carNumberPlate: req.body.carNumberPlate,
-      carMake: req.body.carMake,
-      carModel: req.body.carModel,
-      carColor: req.body.carColor,
+      numberPlate: req.body.numberPlate,
+      make: req.body.make,
+      model: req.body.model,
+      color: req.body.color,
       prodYear: req.body.prodYear,
-      carMileage: req.body.carMileage,
-      carOwner: user._id
+      mileage: req.body.mileage,
+      owner: user._id
     });
 
     // adding car
@@ -87,16 +73,16 @@ export let registerSpot = async (req, res, next) => {
     const seller = await Seller.findById(user.seller);
 
 
-    const spotLocation = new Point({ coordinates: req.body.spotLocation });
-    await spotLocation.save();
+    const location = new Point({ coordinates: req.body.location });
+    await location.save();
 
     let spot = new Spot({
-      spotName: req.body.spotName,
-      spotDescription: req.body.spotDescription,
-      spotLocation,
+      name: req.body.name,
+      description: req.body.description,
+      location,
       pricePerHour: req.body.pricePerHour,
-      spotOwner: user._id
-      // spotAvailability: req.body.spotAvailability,
+      owner: user._id
+      // availibilty: req.body.availibilty,
     });
 
     // adding spot

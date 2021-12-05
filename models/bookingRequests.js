@@ -2,8 +2,13 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const bookingRequestsSchema = new Schema({
-  parkerReference: {
+  bookingRequestor: {
     ref: 'Parker',
+    type: Schema.Types.ObjectId
+  },
+  // car
+  car: {
+    ref: 'Car',
     type: Schema.Types.ObjectId
   },
 
