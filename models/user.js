@@ -21,9 +21,9 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  email: String,
-  gender: Boolean,
-  DOB: Date,
+  email: {type: String, default: null},
+  gender: {type: Boolean, default: null},
+  DOB: {type: Date, default: null},
 
   // =======================| Attachments |====>
   parker: {
@@ -38,7 +38,7 @@ const userSchema = new Schema({
 
   // =======================| State |====>
   isParker: {type: Boolean, default: true},
-  isSeller: {type: Boolean, default: true},
+  isSeller: {type: Boolean, default: false},
   currentRoleParker: {type: Boolean, default: true},
 
 });
