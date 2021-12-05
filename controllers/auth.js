@@ -59,10 +59,18 @@ export let login = async (req, res, next) => {
             { expiresIn: '1h' }
         );
         // TOKEN ===================================
+        
+        let modifiedUser = {...user};
+        if(user.currentRoleParker){
+            delete modifiedUser.seller
+        }
+        else{
+            delete modifiedUser.parker
+        }
 
         res.status(200).json({
             token: token,
-            user: user,
+            user: modifiedUser,
             message: 'Logged in Successfully'
         });
     } catch (err) {
