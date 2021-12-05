@@ -32,7 +32,7 @@ const CarSchema = new Schema(
 
     carOwner: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'Parker'
     }
   },
   {

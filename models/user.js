@@ -17,38 +17,30 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  email: {
-    type: String
-  },
   password: {
     type: String,
     required: true
   },
+  email: String,
+  gender: Boolean,
+  DOB: Date,
 
   // =======================| Attachments |====>
+  parker: {
+      type: Schema.Types.ObjectId,
+      ref: 'Parker'
+  },
 
-  cars: [
-    {
+  seller: {
       type: Schema.Types.ObjectId,
-      ref: 'Cars'
-    }
-  ],
-  spots: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Spots'
-    }
-  ],
+      ref: 'Seller'
+  },
 
   // =======================| State |====>
-
   isParker: {type: Boolean, default: true},
-  isSeller: {type: Boolean, default: false},
-  currentRole: {
-    type: String,
-    enum: Role,
-    default: Role.PARKER
-  }
+  isSeller: {type: Boolean, default: true},
+  currentRoleParker: {type: Boolean, default: true},
+
 });
 
 export default mongoose.model('User', userSchema);
