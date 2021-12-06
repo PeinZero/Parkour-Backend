@@ -9,16 +9,20 @@ const SpotSchema = new Schema(
       type: String,
       required: true
     },
-    description: {
+    addressLine1: {
       type: String,
       required: true
     },
+    addressLine2: String,
+    nearestLandmark: String,
+    comment: String,
+
     location: {
       type: Schema.Types.ObjectId,
       ref: 'Point',
       required: true
     },
-    imagesUrl: [
+    imagesURI: [
       {
         type: String
         // required: true
@@ -43,7 +47,7 @@ const SpotSchema = new Schema(
     },
 
     /*  
-        remember the story:
+        <== REMEMBER THE STORY ==>
         User selects a spot on map
         User selects a time slot
         API receives ParkerId, SpotId, StartTime, EndTime
@@ -77,7 +81,7 @@ const SpotSchema = new Schema(
     bookingEndTime: Date, // listed start time of the spot
     bookingCancellationTime: Date, // booking cancelled - who cancelled will be checked in API
 
-    parkingStartTime: Date, // timer starts when user parks their car
+    parkingStartTime: Date, // The startTime of the slot for which the parker booked the spot.
     parkingExpireTime: Date, // user should un-park at this time
     actualParkingEndTime: Date, // actual time the car was removed by user
 
