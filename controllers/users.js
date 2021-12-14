@@ -54,14 +54,12 @@ export let registerSpot = async (req, res, next) => {
     const user = await User.findById(userId);
     checkIfObjectExists(user, 'User not found');
 
-
     if (user.currentRoleParker) {
       const error = new Error('User is not a Seller');
       error.statusCode = 403;
       throw error;
     }
     const seller = await Seller.findById(user.seller);
-
 
     const location = new Point({ coordinates: req.body.location });
     await location.save();
@@ -77,7 +75,7 @@ export let registerSpot = async (req, res, next) => {
       pricePerHour: req.body.pricePerHour,
       owner: user._id,
 
-      availability: req.body.availability,
+      availability: req.body.availability
     });
 
     // adding spot
@@ -110,10 +108,8 @@ export let deleteSpot = async (req, res, next) => {
     const user = await User.findById(userId);
     checkIfObjectExists(user, 'User not found');
 
-
     const spot = await Spot.findById(spotId);
     checkIfObjectExists(spot, 'Spot not found');
-
 
     user.spots = user.spots.filter((spot) => spot._id.toString() !== spotId);
     await user.save();
@@ -149,6 +145,22 @@ export let getUser = async (req, res, next) => {
     const user = await User.findById(userId);
     checkIfObjectExists(user, 'User not found');
 
+    let modifiedUser;
+
+    if (user.currentRoleParker) {
+      modifiedUser = await user.populate({
+        path: 'parker',
+        populate: {
+          path: 'cars'
+        }
+      });
+      delete modifiedUser.seller;
+    } else {
+      modifiedUser = await user.populate('seller');
+      delete modifiedUser.parker;
+    }
+
+
     res.status(200).json({
       message: 'User fetched successfully!',
       user
@@ -158,7 +170,6 @@ export let getUser = async (req, res, next) => {
   }
 };
 
-
 // ================================== HELPER FUNCTIONS ==================================
 function checkIfObjectExists(object, errorMessage) {
   if (!object) {
@@ -167,4 +178,3 @@ function checkIfObjectExists(object, errorMessage) {
     throw error;
   }
 }
-

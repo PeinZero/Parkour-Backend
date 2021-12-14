@@ -28,12 +28,6 @@ export let signup = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // const parker = new Parker({
-    //     rating: 5.0,
-    // })
-
-    // parker.reviews.push('What a guy!!');
-
     const parker = new Parker();
 
     await parker.save();

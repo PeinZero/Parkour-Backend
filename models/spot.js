@@ -14,7 +14,7 @@ const SpotSchema = new Schema(
       required: true
     },
     addressLine2: String,
-    nearestLandmark: String,
+    nearestLandmark: String, // make it required later
     comment: String,
 
     location: {
