@@ -5,20 +5,6 @@ import Point from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 
-export let getUser = async (req, res, next) => {
-  const userId = req.params.userId
-  try {
-    const user = await User.findById(userId);
-    res.status(200).json({
-      message: "User fetched successfully!",
-      user
-    })
-
-  } catch (error) {
-    next(error);
-  }
-}
-
 export let registerCar = async (req, res, next) => {
   const userId = req.userId;
 

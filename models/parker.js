@@ -6,13 +6,13 @@ const parkerSchema = new Schema({
   cars: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Cars'
+      ref: 'Car'
     }
   ],
 
   defaultCar: {
     // default car to be shown on a fresh "Book Spot" page
-    ref: 'Cars',
+    ref: 'Car',
     type: Schema.Types.ObjectId
   },
 

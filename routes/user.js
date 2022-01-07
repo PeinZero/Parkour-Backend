@@ -15,7 +15,6 @@ router.get('/all', getAllUsers);
 router.post('/deleteSpot', isAuth, deleteSpot);
 router.get('/getUser/:userId', isAuth, getUser);
 
-router.get('/getUser/:userId', isAuth, getUser);
 router.get("/getAllusers", getAllUsers);
 
 export default router;
