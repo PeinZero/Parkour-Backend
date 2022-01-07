@@ -10,13 +10,7 @@ export let registerCar = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    
-
-    if (!user) {
-      const error = new Error('User not found');
-      error.statusCode = 404;
-      throw error;
-    }
+    checkIfObjectExists(user, 'User not found');
 
     if (!user.currentRoleParker) {
       const error = new Error('User is not a Parker');
@@ -27,13 +21,13 @@ export let registerCar = async (req, res, next) => {
     const parker = await Parker.findById(user.parker);
 
     let car = new Car({
-      carNumberPlate: req.body.carNumberPlate,
-      carMake: req.body.carMake,
-      carModel: req.body.carModel,
-      carColor: req.body.carColor,
+      numberPlate: req.body.numberPlate,
+      make: req.body.make,
+      model: req.body.model,
+      color: req.body.color,
       prodYear: req.body.prodYear,
-      carMileage: req.body.carMileage,
-      carOwner: user._id
+      mileage: req.body.mileage,
+      owner: user._id
     });
 
     // adding car
@@ -58,12 +52,7 @@ export let registerSpot = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-
-    if (!user) {
-      const error = new Error('User not found');
-      error.statusCode = 404;
-      throw error;
-    }
+    checkIfObjectExists(user, 'User not found');
 
     if (user.currentRoleParker) {
       const error = new Error('User is not a Seller');
@@ -72,17 +61,21 @@ export let registerSpot = async (req, res, next) => {
     }
     const seller = await Seller.findById(user.seller);
 
-
-    const spotLocation = new Point({ coordinates: req.body.spotLocation });
-    await spotLocation.save();
+    const location = new Point({ coordinates: req.body.location });
+    await location.save();
 
     let spot = new Spot({
-      spotName: req.body.spotName,
-      spotDescription: req.body.spotDescription,
-      spotLocation,
+      name: req.body.name,
+      addressLine1: req.body.addressLine1,
+      addressLine2: req.body.addressLine2,
+      nearestLandmark: req.body.nearestLandmark,
+      comment: req.body.comment,
+      location,
+      imagesURI: req.body.imagesURI,
       pricePerHour: req.body.pricePerHour,
-      spotOwner: user._id
-      // spotAvailability: req.body.spotAvailability,
+      owner: user._id,
+
+      availability: req.body.availability
     });
 
     // adding spot
@@ -113,18 +106,10 @@ export let deleteSpot = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    if (!user) {
-      const error = new Error('User not found');
-      error.statusCode = 404;
-      throw error;
-    }
+    checkIfObjectExists(user, 'User not found');
 
     const spot = await Spot.findById(spotId);
-    if (!spot) {
-      const error = new Error('Spot not found');
-      error.statusCode = 404;
-      throw error;
-    }
+    checkIfObjectExists(spot, 'Spot not found');
 
     user.spots = user.spots.filter((spot) => spot._id.toString() !== spotId);
     await user.save();
@@ -158,11 +143,21 @@ export let getUser = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
+    checkIfObjectExists(user, 'User not found');
 
-    if (!user) {
-      const error = new Error('User not found');
-      error.statusCode = 404;
-      throw error;
+    let modifiedUser;
+
+    if (user.currentRoleParker) {
+      modifiedUser = await user.populate({
+        path: 'parker',
+        populate: {
+          path: 'cars'
+        }
+      });
+      delete modifiedUser.seller;
+    } else {
+      modifiedUser = await user.populate('seller');
+      delete modifiedUser.parker;
     }
 
 
@@ -174,3 +169,12 @@ export let getUser = async (req, res, next) => {
     next(error);
   }
 };
+
+// ================================== HELPER FUNCTIONS ==================================
+function checkIfObjectExists(object, errorMessage) {
+  if (!object) {
+    const error = new Error(errorMessage);
+    error.statusCode = 404;
+    throw error;
+  }
+}

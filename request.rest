@@ -1,10 +1,11 @@
+
 ###
 POST http://localhost:5000/auth/signup 
 Content-Type: application/json 
 
 {
-    "name": "ammar",
-    "phone": "12345678",
+    "name": "test",
+    "phone": "123",
     "password": "123",
     "confirmPassword": "123"
 }
@@ -14,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "12345678",
+    "phone": "123",
     "password": "123"
 }
 
@@ -22,26 +23,27 @@ Content-Type: application/json
 ### register car
 POST http://localhost:5000/user/registerCar
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFkMTdiM2FlMmFiOWY1MGEwODBjMzQiLCJpYXQiOjE2Mzg3MzQyNjcsImV4cCI6MTYzODczNzg2N30.tBbsvQz0VGvOXvQXHmhIwRyD1P1F6VgSPgUOkKSL_70
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzk0OTc1MzQsImV4cCI6MTYzOTUwMTEzNH0.OdvO8A6lji2FWnt3kQ2xlfvI6EE7urCYyTLh4P7s6GU
 
 {
-    "carNumberPlate": "4312",
-    "carMake": "Honda",
-    "carModel": "Civic",
-    "carColor": "White",
-    "prodYear": "2009"
+    "numberPlate": "9999",
+    "make": "Changan",
+    "model": "Alsvin",
+    "color": "Red",
+    "prodYear": "2020"
 }
 
 ### register spot
 
 POST http://localhost:5000/user/registerSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFkMTdiM2FlMmFiOWY1MGEwODBjMzQiLCJpYXQiOjE2Mzg3MzQyNjcsImV4cCI6MTYzODczNzg2N30.tBbsvQz0VGvOXvQXHmhIwRyD1P1F6VgSPgUOkKSL_70
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzg4MTU4ODUsImV4cCI6MTYzODgxOTQ4NX0.BYCz61WdWOVA6m_l2oDq4-qeKnoxgGw6y_Sf6Nc4cZ4
 
 {
-    "spotName": "Abdullah's spot",
-    "spotDescription": "Near 5 Star chowrangi",
-    "spotLocation": [69.8607, 17.0011],
+    "name": "Abdullah's spot",
+    "addressLine1" : "Safoora, Sector 1, Scheme 33",
+    "nearestLandmark": "Near X Flats",
+    "location": [69.8607, 17.0011],
     "pricePerHour": 250
 }
 
@@ -49,7 +51,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiL
 
 POST http://localhost:5000/user/deleteSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWE2NTRkMzY0YzMzMWUyMjZhMjAyMjEiLCJpYXQiOjE2MzgyOTQ4NTAsImV4cCI6MTYzODI5ODQ1MH0.VWoN0V3lHgbnaiWF0LaWD2EkWEXhXURr8UgBSJSZH7Y
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzg4MTU4ODUsImV4cCI6MTYzODgxOTQ4NX0.BYCz61WdWOVA6m_l2oDq4-qeKnoxgGw6y_Sf6Nc4cZ4
 
 {
     "spotId": "61a667b8e01f51ccaead6094"
@@ -59,3 +61,8 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiL
 
 GET http://localhost:5000/user/getAllUsers
 
+
+###
+
+GET http://localhost:5000/user/getUser/61ae564cee9bfd18b3053b39
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzk1MTYzOTYsImV4cCI6MTYzOTUxOTk5Nn0.pz-3bOUUrz-4fWoVdIanDkMwoHGQAk67B4cQW0SlNsQ

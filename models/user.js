@@ -7,27 +7,28 @@ const Role = {
   SELLER: 'seller'
 };
 
-const userSchema = new Schema({
-  // =======================| Identification |====>
+const userSchema = new Schema(
+  {
+    // =======================| Identification |====>
 
-  name: {
-    type: String,
-    required: true
-  },
-  phone: {
-    type: String,
-    required: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  email: {type: String, default: null},
-  gender: {type: Boolean, default: null},
-  DOB: {type: Date, default: null},
+    name: {
+      type: String,
+      required: true
+    },
+    phone: {
+      type: String,
+      required: true
+    },
+    password: {
+      type: String,
+      required: true
+    },
+    email: { type: String, default: null },
+    gender: { type: Boolean, default: null },
+    DOB: { type: Date, default: null },
 
-  // =======================| Attachments |====>
-  parker: {
+    // =======================| Attachments |====>
+    parker: {
       type: Schema.Types.ObjectId,
       ref: 'Parker'
     },
