@@ -29,7 +29,6 @@ const CarSchema = new Schema(
     },
 
     // =======================| Owner Reference |====>
-
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'Parker'

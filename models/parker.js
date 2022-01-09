@@ -26,14 +26,12 @@ const parkerSchema = new Schema({
   // IF A DEFAULT CAR IS DELETED, THEN ADD THE NEXT AVAILABLE CAR AS DEFAULT, IF NO CAR IS AVAILABLE THEN THINK ABOUT IT.
 
   // =======================| State |====>
-
   isInTransaction: {
     type: Boolean,
     default: false
   },
 
   // =======================| Rating and Reviews |====>
-
   cumulativeRating: {
     type: Number,
     default: -1.0
