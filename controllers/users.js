@@ -145,26 +145,22 @@ export let getUser = async (req, res, next) => {
     const user = await User.findById(userId);
     checkIfObjectExists(user, 'User not found');
 
-    let modifiedUser;
+    let modifiedUser = await user.populate({
+      path: 'parker',
+      populate: {
+        path: 'cars'
+      }
+    });
 
-    if (user.currentRoleParker) {
-      modifiedUser = await user.populate({
-        path: 'parker',
-        populate: {
-          path: 'cars'
-        }
-      });
-      delete modifiedUser.seller;
-    } else {
-      modifiedUser = await user.populate('seller');
-      delete modifiedUser.parker;
+    if (user.isSeller) {
+        modifiedUser = await user.populate('seller');
     }
-
 
     res.status(200).json({
       message: 'User fetched successfully!',
       user
     });
+    
   } catch (error) {
     next(error);
   }
