@@ -2,19 +2,22 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
 import Parker from '../models/parker.js';
+import Seller from '../models/seller.js';
+import { checkIfObjectDoesNotExists, checkIfObjectExists } from '../helpers/helperfunctions.js';
 
 export let signup = async (req, res, next) => {
   const name = req.body.name;
   const phone = req.body.phone;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
-
   // Non required fields
   const email = req.body.email;
-
+  
   try {
+    const user = await User.findOne({phone: phone});
+    checkIfObjectExists(user, 'Phone Number already in use.');
 
-    if (!confirmPassword || !/\S/.test(confirmPassword)) {
+    if (!confirmPassword || !/\S/.test(confirmPassword)) { // testing whitespace
       const error = new Error('Please confirm your password');
       error.statusCode = 403;
       throw error;
@@ -29,18 +32,22 @@ export let signup = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const parker = new Parker();
-
     await parker.save();
 
-    const user = new User({
+    const seller = new Seller();
+    await seller.save();
+
+    // save empty seller aswell because switchRole API will self destruct if the user is only a parker with a non-existing seller reference.
+
+    const newUser = new User({
       name,
       phone,
       email,
       password: hashedPassword,
-      parker
+      parker,
+      seller
     });
-
-    await user.save();
+    await newUser.save();
 
     res.status(201).json({ message: 'User Registered!' });
   } catch (err) {
@@ -56,11 +63,7 @@ export let login = async (req, res, next) => {
     const user = await User.findOne({ phone: phone });
 
     // Checking User email
-    if (!user) {
-      const error = new Error('User Not Found!');
-      error.statusCode = 404;
-      throw error;
-    }
+    checkIfObjectDoesNotExists(user, 'User not found');
 
     // Checking User password
     const isEqual = await bcrypt.compare(password, user.password);
@@ -80,7 +83,6 @@ export let login = async (req, res, next) => {
       'secretkey',
       { expiresIn: '1h' }
     );
-    // TOKEN ===================================
 
     let modifiedUser;
 

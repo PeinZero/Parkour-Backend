@@ -10,7 +10,6 @@ const Role = {
 const userSchema = new Schema(
   {
     // =======================| Identification |====>
-
     name: {
       type: String,
       required: true
@@ -41,7 +40,7 @@ const userSchema = new Schema(
     // =======================| State |====>
 
     isParker: { type: Boolean, default: true },
-    isSeller: { type: Boolean, default: false },
+    isSeller: { type: Boolean, default: false }, // to change the text on the button from either "Become a Seller" or "Switch to Seller Panel"
     currentRoleParker: { type: Boolean, default: true }
   },
   {

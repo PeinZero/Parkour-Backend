@@ -4,8 +4,8 @@ POST http://localhost:5000/auth/signup
 Content-Type: application/json 
 
 {
-    "name": "test",
-    "phone": "123",
+    "name": "Ammar Parker",
+    "phone": "1p",
     "password": "123",
     "confirmPassword": "123"
 }
@@ -15,15 +15,20 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "123",
+    "phone": "1s",
     "password": "123"
 }
 
+### switch role
+PUT http://localhost:5000/user/switchRole
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxNjkxNzg3LCJleHAiOjE2NDE2OTUzODd9.edCtJiVZSvccXPlvo01fsaof_4TNN3Xl0WsVfpKn9hc
+
 
 ### register car
-POST http://localhost:5000/user/registerCar
+POST http://localhost:5000/car/registerCar
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzk0OTc1MzQsImV4cCI6MTYzOTUwMTEzNH0.OdvO8A6lji2FWnt3kQ2xlfvI6EE7urCYyTLh4P7s6GU
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxNjkxNzg3LCJleHAiOjE2NDE2OTUzODd9.edCtJiVZSvccXPlvo01fsaof_4TNN3Xl0WsVfpKn9hc
 
 {
     "numberPlate": "9999",
@@ -35,16 +40,16 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiL
 
 ### register spot
 
-POST http://localhost:5000/user/registerSpot
+POST http://localhost:5000/spot/registerSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzg4MTU4ODUsImV4cCI6MTYzODgxOTQ4NX0.BYCz61WdWOVA6m_l2oDq4-qeKnoxgGw6y_Sf6Nc4cZ4
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRWx1c2l2ZSBOaWdnYSIsInVzZXJJZCI6IjYxZDg4ZjJhOGNmYjU1ZTdmZWNlMzBiNiIsImlhdCI6MTY0MTY3NzU1NCwiZXhwIjoxNjQxNjgxMTU0fQ.AG4_gOpkgty8igH8H5RSCKDikRFaWCZCVum2EaY7dkA
 
 {
     "name": "Abdullah's spot",
     "addressLine1" : "Safoora, Sector 1, Scheme 33",
     "nearestLandmark": "Near X Flats",
-    "location": [69.8607, 17.0011],
-    "pricePerHour": 250
+    "location": [67.04038400013158, 25.01522262464436],
+    "pricePerHour": 10
 }
 
 ### delete spot
