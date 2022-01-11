@@ -5,10 +5,6 @@ const SpotSchema = new Schema(
   {
     // =======================| Identification |====>
 
-    name: {
-      type: String,
-      required: true
-    },
     addressLine1: {
       type: String,
       required: true
@@ -62,16 +58,22 @@ const SpotSchema = new Schema(
     ],
 
     // =======================| State |====>
-    
-    availibilty: {
-      monday: [{ startTime: Date, endTime: Date }],
-      tuesday: [{ startTime: Date, endTime: Date }],
-      wednesday: [{ startTime: Date, endTime: Date }],
-      thursday: [{ startTime: Date, endTime: Date }],
-      friday: [{ startTime: Date, endTime: Date }],
-      saturday: [{ startTime: Date, endTime: Date }],
-      sunday: [{ startTime: Date, endTime: Date }]
-    },
+
+    // availibilty: {
+    //   monday: [{ startTime: Date, endTime: Date }],
+    //   tuesday: [{ startTime: Date, endTime: Date }],
+    //   wednesday: [{ startTime: Date, endTime: Date }],
+    //   thursday: [{ startTime: Date, endTime: Date }],
+    //   friday: [{ startTime: Date, endTime: Date }],
+    //   saturday: [{ startTime: Date, endTime: Date }],
+    //   sunday: [{ startTime: Date, endTime: Date }]
+    // },
+    availability: [
+      {
+        slotDate: Date,
+        slots: [{ startTime: Date, endTime: Date }]
+      }
+    ],
 
     isActive: { type: Boolean, default: true },
     isVisible: { type: Boolean, default: true }, // used to hide spot from map when spot is confirmed as 'booked'
@@ -83,8 +85,7 @@ const SpotSchema = new Schema(
 
     parkingStartTime: Date, // The startTime of the slot for which the parker booked the spot.
     parkingExpireTime: Date, // user should un-park at this time
-    actualParkingEndTime: Date, // actual time the car was removed by user
-
+    actualParkingEndTime: Date // actual time the car was removed by user
   },
   {
     timestamps: true // provides createdAt and updatedAt fields

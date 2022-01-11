@@ -25,16 +25,8 @@ export const switchRole = async (req, res, next) => {
       modifiedUser = await user.populate({
         path: 'parker',
         populate: {
-          path: 'defaultCar'
-        },
-        populate: {
-          path: 'cars'
-        },
-        populate: {
-          path: 'reviews.author'
-        },
-        path: {
-          path: 'bookingRequests'
+          path: 'defaultCar cars reviews.author'
+          // bookingRequests left, figure it out
         }
       });
       delete modifiedUser.seller;
@@ -44,13 +36,7 @@ export const switchRole = async (req, res, next) => {
       modifiedUser = await user.populate({
         path: 'seller',
         populate: {
-          path: 'activeSpots'
-        },
-        populate: {
-          path: 'inactiveSpots'
-        },
-        populate: {
-          path: 'reviews.author'
+          path: 'activeSpots inactiveSpots reviews.author'
         }
       });
       delete modifiedUser.parker;

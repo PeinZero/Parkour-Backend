@@ -16,6 +16,7 @@ const SERVER_PORT = process.env.PORT || 5000;
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import spotRoutes from './routes/spot.js';
+import carRoutes from './routes/car.js';
 
 // Constants
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -80,6 +81,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/spot', spotRoutes);
+app.use('/car', carRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);

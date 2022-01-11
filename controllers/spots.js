@@ -6,6 +6,9 @@ import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 import { checkIfObjectDoesNotExists } from '../helpers/helperfunctions.js';
 
+
+// get spot by ID
+
 export let registerSpot = async (req, res, next) => {
     const userId = req.userId;
   
@@ -24,7 +27,6 @@ export let registerSpot = async (req, res, next) => {
       await location.save();
   
       let spot = new Spot({
-        name: req.body.name,
         addressLine1: req.body.addressLine1,
         addressLine2: req.body.addressLine2,
         nearestLandmark: req.body.nearestLandmark,
@@ -33,7 +35,6 @@ export let registerSpot = async (req, res, next) => {
         imagesURI: req.body.imagesURI,
         pricePerHour: req.body.pricePerHour,
         owner: user._id,
-  
         availability: req.body.availability
       });
   
@@ -54,7 +55,7 @@ export let registerSpot = async (req, res, next) => {
     }
   };
 
-
+// Still on the old ways, pathetic
   export let deleteSpot = async (req, res, next) => {
     const userId = req.userId;
     const spotId = req.body.spotId;

@@ -1,13 +1,16 @@
 import { Router } from 'express';
 import isAuth from '../middleware/isAuth.js';
-import {registerCar} from '../controllers/cars.js';
+import { addCar, deleteCar } from '../controllers/cars.js';
 
 const router = Router();
 
 // Posts
-router.post('/registerCar', isAuth, registerCar);
+router.post('/addCar', isAuth, addCar);
 
 // Gets
+
+// Deletes
+router.delete('/deleteCar', isAuth, deleteCar);
 
 // Dev APIs
 

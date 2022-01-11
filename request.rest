@@ -15,20 +15,20 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1s",
+    "phone": "1p",
     "password": "123"
 }
 
 ### switch role
 PUT http://localhost:5000/user/switchRole
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxNjkxNzg3LCJleHAiOjE2NDE2OTUzODd9.edCtJiVZSvccXPlvo01fsaof_4TNN3Xl0WsVfpKn9hc
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODgzMTk3LCJleHAiOjE2NDE4ODY3OTd9.0hsLAiYO5iCzCGNV8pWOCV4kLDE6cOc_QcJSd2nRYdw
 
 
 ### register car
 POST http://localhost:5000/car/registerCar
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxNjkxNzg3LCJleHAiOjE2NDE2OTUzODd9.edCtJiVZSvccXPlvo01fsaof_4TNN3Xl0WsVfpKn9hc
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODgzMTk3LCJleHAiOjE2NDE4ODY3OTd9.0hsLAiYO5iCzCGNV8pWOCV4kLDE6cOc_QcJSd2nRYdw
 
 {
     "numberPlate": "9999",
@@ -42,7 +42,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsY
 
 POST http://localhost:5000/spot/registerSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRWx1c2l2ZSBOaWdnYSIsInVzZXJJZCI6IjYxZDg4ZjJhOGNmYjU1ZTdmZWNlMzBiNiIsImlhdCI6MTY0MTY3NzU1NCwiZXhwIjoxNjQxNjgxMTU0fQ.AG4_gOpkgty8igH8H5RSCKDikRFaWCZCVum2EaY7dkA
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxNzMyOTg3LCJleHAiOjE2NDE3MzY1ODd9.gk_DqPqXDw5bq1UzpZp0djb0wuJZ36sHaWJ451AzQrw
 
 {
     "name": "Abdullah's spot",
@@ -54,7 +54,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRWx1c2l2Z
 
 ### delete spot
 
-POST http://localhost:5000/user/deleteSpot
+POST http://localhost:5000/spot/deleteSpot
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzg4MTU4ODUsImV4cCI6MTYzODgxOTQ4NX0.BYCz61WdWOVA6m_l2oDq4-qeKnoxgGw6y_Sf6Nc4cZ4
 
