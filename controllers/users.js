@@ -82,7 +82,7 @@ export const getUser = async (req, res, next) => {
       }
     });
 
-    if (!user.currentRoleParker) {
+    if (user.currentRoleParker) {
       user.currentRoleParker = true;
       user.isParker = true;
       modifiedUser = await user.populate({
