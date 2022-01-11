@@ -4,7 +4,7 @@ POST http://localhost:5000/auth/signup
 Content-Type: application/json 
 
 {
-    "name": "Ammar Parker",
+    "name": "Mahad Khalid",
     "phone": "1p",
     "password": "123",
     "confirmPassword": "123"
@@ -22,8 +22,7 @@ Content-Type: application/json
 ### switch role
 PUT http://localhost:5000/user/switchRole
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODgzMTk3LCJleHAiOjE2NDE4ODY3OTd9.0hsLAiYO5iCzCGNV8pWOCV4kLDE6cOc_QcJSd2nRYdw
-
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODk3OTM3LCJleHAiOjE2NDE5MDE1Mzd9.cEIIV7jnnf5f2tUW5ZyIRSCyOmomamExP1GehRG8Bds
 
 ### add car
 POST http://localhost:5000/car/addCar
@@ -59,11 +58,11 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxODkzNjcyLCJleHAiOjE2NDE4OTcyNzJ9.kt8soNJ-f-9qNYn3k1gLlGSs1L9jaTJiaf6uMA3Ew6A
 
 {
-    "name": "Abdullah's spot",
-    "addressLine1" : "Safoora, Sector 1, Scheme 33",
-    "nearestLandmark": "Near X Flats",
-    "location": [67.04038400013158, 25.01522262464436],
-    "pricePerHour": 10
+    "name": "Ammar's spot",
+    "addressLine1" : "North America",
+    "nearestLandmark": "Near N Flats",
+    "location": [68.04038400013158, 24.01522262464436],
+    "pricePerHour": 20
 }
 
 ### delete spot
@@ -72,15 +71,16 @@ POST http://localhost:5000/spot/deleteSpot/61dadb9db67d6c51be2bff85
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxODkzNjcyLCJleHAiOjE2NDE4OTcyNzJ9.kt8soNJ-f-9qNYn3k1gLlGSs1L9jaTJiaf6uMA3Ew6A
 
-
 ### get all spots
+GET http://localhost:5000/spot/getAllSpots
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxOTI2NDE1LCJleHAiOjE2NDE5MzAwMTV9.BVjI7-knn4YWuQP-mc0spCwfuOtS3ECkJwVlrSLh9zE
+
+### get all spots by seller
 GET http://localhost:5000/spot/getAllSpotsBySeller
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxODkzNjcyLCJleHAiOjE2NDE4OTcyNzJ9.kt8soNJ-f-9qNYn3k1gLlGSs1L9jaTJiaf6uMA3Ew6A
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxOTI2MzQwLCJleHAiOjE2NDE5Mjk5NDB9.Dd7z94tyKLBbGdtNS5hNyUGcTzA7Z5m0uQ0r0AAktbw
 
-###
-
-GET http://localhost:5000/user/getAllUsers
 
 
 ###

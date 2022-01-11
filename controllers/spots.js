@@ -123,6 +123,25 @@ export let getAllSpotsBySeller = async (req, res, next) => {
   }
 };
 
+export let getAllSpots = async (req, res, next) => {
+  try {
+    let data = await User.find({ isSeller: true }).populate({
+      path: 'seller',
+      populate: {
+        path: 'activeSpots'
+      }
+    }).select('name cumulativeRating reviews activeSpots');
+    checkIfObjectDoesNotExists(data, 'No sellers found');
+
+    res.status(200).json({
+      message: 'All Spots found successfully',
+      data
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export let getSpotsByRadius = async (req, res, next) => {
   // TODO: add radius
 };
