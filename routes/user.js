@@ -8,7 +8,7 @@ const router = Router();
 
 
 // Puts
-router.put('/switchRole', isAuth, switchRole);
+router.get('/switchrole', isAuth, switchRole);
 
 // Gets
 
