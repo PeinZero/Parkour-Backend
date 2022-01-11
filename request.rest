@@ -28,16 +28,16 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgU
 ### add car
 POST http://localhost:5000/car/addCar
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkxMzM4LCJleHAiOjE2NDE4OTQ5Mzh9.KHKSOIXbog9sokhhKhHK9P_XSVWXxY0GYXXtCcIq2AY
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkyNDIxLCJleHAiOjE2NDE4OTYwMjF9.2jDu6kDZfhUuH6_ywM66FU2MOCCo8F90a5ILmaNlYw0
 
 {
     "model": 
     {
-        "numberPlate": "111",
-        "make": "Chagnan",
-        "model": "Toyota",
+        "numberPlate": "222",
+        "make": "BMW",
+        "model": "asd",
         "color": "Black",
-        "prodYear": "2007"
+        "prodYear": "2017"
     }
 }
 
