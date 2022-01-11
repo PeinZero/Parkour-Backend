@@ -75,12 +75,7 @@ export const getUser = async (req, res, next) => {
     const user = await User.findById(userId);
     checkIfObjectDoesNotExists(user, 'User not found');
 
-    let modifiedUser = await user.populate({
-      path: 'parker',
-      populate: {
-        path: 'cars'
-      }
-    });
+    let modifiedUser;
 
     if (user.currentRoleParker) {
       user.currentRoleParker = true;

@@ -25,17 +25,26 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODgzMTk3LCJleHAiOjE2NDE4ODY3OTd9.0hsLAiYO5iCzCGNV8pWOCV4kLDE6cOc_QcJSd2nRYdw
 
 
-### register car
-POST http://localhost:5000/car/registerCar
+### add car
+POST http://localhost:5000/car/addCar
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODgzMTk3LCJleHAiOjE2NDE4ODY3OTd9.0hsLAiYO5iCzCGNV8pWOCV4kLDE6cOc_QcJSd2nRYdw
 
 {
     "numberPlate": "9999",
-    "make": "Changan",
-    "model": "Alsvin",
-    "color": "Red",
-    "prodYear": "2020"
+    "make": "Corolla",
+    "model": "Toyota",
+    "color": "Blue",
+    "prodYear": "2007"
+}
+
+### delete car
+DELETE http://localhost:5000/car/deleteCar
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODgzMTk3LCJleHAiOjE2NDE4ODY3OTd9.0hsLAiYO5iCzCGNV8pWOCV4kLDE6cOc_QcJSd2nRYdw
+
+{
+    "carId" : "61dd2721f8399c8302da4683"
 }
 
 ### register spot
@@ -69,5 +78,6 @@ GET http://localhost:5000/user/getAllUsers
 
 ###
 
-GET http://localhost:5000/user/getUser/61ae564cee9bfd18b3053b39
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzk1MTYzOTYsImV4cCI6MTYzOTUxOTk5Nn0.pz-3bOUUrz-4fWoVdIanDkMwoHGQAk67B4cQW0SlNsQ
+GET http://localhost:5000/user/getUser/61da3991198da5dd6c0bc9f9
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODg3NjMzLCJleHAiOjE2NDE4OTEyMzN9.oD9QKCZ05HOMpWBvzKQ0057YEPZE7M__q9DnqeMJMhI
+

@@ -3,7 +3,10 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
-import { checkIfObjectDoesNotExists, checkIfObjectExists } from '../helpers/helperfunctions.js';
+import {
+  checkIfObjectDoesNotExists,
+  checkIfObjectExists
+} from '../helpers/helperfunctions.js';
 
 export let signup = async (req, res, next) => {
   const name = req.body.name;
@@ -12,12 +15,13 @@ export let signup = async (req, res, next) => {
   const confirmPassword = req.body.confirmPassword;
   // Non required fields
   const email = req.body.email;
-  
+
   try {
-    const user = await User.findOne({phone: phone});
+    const user = await User.findOne({ phone: phone });
     checkIfObjectExists(user, 'Phone Number already in use.');
 
-    if (!confirmPassword || !/\S/.test(confirmPassword)) { // testing whitespace
+    if (!confirmPassword || !/\S/.test(confirmPassword)) {
+      // testing whitespace
       const error = new Error('Please confirm your password');
       error.statusCode = 403;
       throw error;
@@ -87,10 +91,25 @@ export let login = async (req, res, next) => {
     let modifiedUser;
 
     if (user.currentRoleParker) {
-      modifiedUser = await user.populate('parker');
+      user.currentRoleParker = true;
+      user.isParker = true;
+      modifiedUser = await user.populate({
+        path: 'parker',
+        populate: {
+          path: 'defaultCar cars reviews.author'
+          // bookingRequests left, figure it out
+        }
+      });
       delete modifiedUser.seller;
     } else {
-      modifiedUser = await user.populate('seller');
+      user.currentRoleParker = false;
+      user.isSeller = true;
+      modifiedUser = await user.populate({
+        path: 'seller',
+        populate: {
+          path: 'activeSpots inactiveSpots reviews.author'
+        }
+      });
       delete modifiedUser.parker;
     }
 

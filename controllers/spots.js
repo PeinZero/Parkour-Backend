@@ -80,3 +80,16 @@ export let registerSpot = async (req, res, next) => {
       next(err);
     }
   };
+
+  // Dev Api
+
+  export let getSpots = async (req, res, next) => {
+    try {
+      const spots = await Spot.find();
+      res.status(200).json(spots);
+    } catch (error) {
+      res.status(500).json({
+        message: error.message
+      });
+    }
+  }
