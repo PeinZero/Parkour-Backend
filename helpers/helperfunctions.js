@@ -1,3 +1,7 @@
+// TODO:
+// add a helper function to check if the user is a parker
+// TODO:
+
 export const checkIfObjectDoesNotExists = (object, errorMessage) => {
   if (!object) {
     const error = new Error(errorMessage);

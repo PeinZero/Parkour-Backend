@@ -8,9 +8,9 @@ const router = Router();
 
 
 // Puts
-router.put('/switchRole', isAuth, switchRole);
 
 // Gets
+router.get('/switchRole', isAuth, switchRole);
 
 // Dev APIs
 router.get('/all', getAllUsers);

@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import isAuth from '../middleware/isAuth.js';
-import {registerSpot, deleteSpot, getSpotsByRadius, getAllSpotsBySeller} from '../controllers/spots.js';
+import {addSpot, deleteSpot, getSpotsByRadius, getAllSpotsBySeller} from '../controllers/spots.js';
 
 const router = Router();
 
 // Posts
-router.post('/registerSpot', isAuth, registerSpot);
+router.post('/addSpot', isAuth, addSpot);
 
 // Gets
 

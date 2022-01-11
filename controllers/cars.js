@@ -5,7 +5,10 @@ import Point from '../models/point.js';
 import Parker from '../models/parker.js';
 import { checkIfObjectDoesNotExists } from '../helpers/helperfunctions.js';
 
-// get parkerSpots
+// TODO: 
+// set default car
+// TODO:
+
 export let getAllCarsByParker = async (req, res, next) => {
   const userId = req.userId;
 

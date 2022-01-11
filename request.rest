@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1p",
+    "phone": "1s",
     "password": "123"
 }
 
@@ -47,16 +47,16 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkxNzc4LCJleHAiOjE2NDE4OTUzNzh9.dKz3jpq-XBTLNSpdQcv8jz-tdcQITUyb8owSx28Ec88
 
 ### delete car
-DELETE http://localhost:5000/car/deleteCar/61dd4235f34d51d70eae0aba
+DELETE http://localhost:5000/car/deleteCar/61dd4a6dc27b32ced1f33cd4
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkxMzM4LCJleHAiOjE2NDE4OTQ5Mzh9.KHKSOIXbog9sokhhKhHK9P_XSVWXxY0GYXXtCcIq2AY
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkyNDIxLCJleHAiOjE2NDE4OTYwMjF9.2jDu6kDZfhUuH6_ywM66FU2MOCCo8F90a5ILmaNlYw0
 
 
-### register spot
+### add spot
 
-POST http://localhost:5000/spot/registerSpot
+POST http://localhost:5000/spot/addSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxNzMyOTg3LCJleHAiOjE2NDE3MzY1ODd9.gk_DqPqXDw5bq1UzpZp0djb0wuJZ36sHaWJ451AzQrw
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxODkzNjcyLCJleHAiOjE2NDE4OTcyNzJ9.kt8soNJ-f-9qNYn3k1gLlGSs1L9jaTJiaf6uMA3Ew6A
 
 {
     "name": "Abdullah's spot",
@@ -68,15 +68,15 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsY
 
 ### delete spot
 
-POST http://localhost:5000/spot/deleteSpot/61a667b8e01f51ccaead6094
+POST http://localhost:5000/spot/deleteSpot/61dadb9db67d6c51be2bff85
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzg4MTU4ODUsImV4cCI6MTYzODgxOTQ4NX0.BYCz61WdWOVA6m_l2oDq4-qeKnoxgGw6y_Sf6Nc4cZ4
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxODkzNjcyLCJleHAiOjE2NDE4OTcyNzJ9.kt8soNJ-f-9qNYn3k1gLlGSs1L9jaTJiaf6uMA3Ew6A
 
 
 ### get all spots
-GET http://localhost:5000/spot/getAllSpots
+GET http://localhost:5000/spot/getAllSpotsBySeller
 Content-Type: application/json
-Authorization: bearer 
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxODkzNjcyLCJleHAiOjE2NDE4OTcyNzJ9.kt8soNJ-f-9qNYn3k1gLlGSs1L9jaTJiaf6uMA3Ew6A
 
 ###
 

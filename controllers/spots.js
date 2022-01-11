@@ -6,9 +6,12 @@ import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 import { checkIfObjectDoesNotExists } from '../helpers/helperfunctions.js';
 
+// TODO:
 // get spot by ID
+// switch spot status (active -> inactive & inactive -> active)
+// TODO:
 
-export let registerSpot = async (req, res, next) => {
+export let addSpot = async (req, res, next) => {
   const userId = req.userId;
 
   try {
@@ -54,7 +57,6 @@ export let registerSpot = async (req, res, next) => {
   }
 };
 
-// Still on the old ways, pathetic
 export let deleteSpot = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
@@ -84,7 +86,7 @@ export let getAllSpotsBySeller = async (req, res, next) => {
   const userId = req.userId;
 
   try {
-    const user = await User.findById(userId);
+    let user = await User.findById(userId);
     checkIfObjectDoesNotExists(user, 'User not found');
 
     if (user.currentRoleParker) {
@@ -94,12 +96,33 @@ export let getAllSpotsBySeller = async (req, res, next) => {
     }
 
     const seller = await Seller.findById(user.seller);
+    checkIfObjectDoesNotExists(seller, 'Seller not found');
 
+    const selectedData = await Seller.findById(user.seller)
+      .select('activeSpots')
+      .populate({
+        path: 'activeSpots reviews',
+        populate: {
+          path: 'location'
+        }
+      });
+
+    res.status(200).json({
+      message: `All Spots found successfully for ${user.name}`,
+      data: {
+        activeSpots: selectedData.activeSpots,
+        seller: {
+          name: user.name,
+          rating: seller.cumulativeRating,
+          reviews: seller.reviews
+        }
+      }
+    });
   } catch (error) {
     next(error);
   }
 };
 
 export let getSpotsByRadius = async (req, res, next) => {
-  //todo: add radius
+  // TODO: add radius
 };
