@@ -102,9 +102,11 @@ export let deleteCar = async (req, res, next) => {
 
     await car.remove();
 
+    const cars = await Car.find({ owner: parker._id });
+
     res.status(200).json({
       message: 'Car deleted successfully',
-      cars: parker.cars
+      cars: cars
     });
   } catch (err) {
     next(err);
