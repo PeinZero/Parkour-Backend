@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1s",
+    "phone": "1p",
     "password": "123"
 }
 
@@ -74,7 +74,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsY
 ### get all spots
 GET http://localhost:5000/spot/getAllSpots
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxOTI2NDE1LCJleHAiOjE2NDE5MzAwMTV9.BVjI7-knn4YWuQP-mc0spCwfuOtS3ECkJwVlrSLh9zE
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxOTM4NjQ3LCJleHAiOjE2NDE5NDIyNDd9.NEjOLeIe-anTEKwcTJWkqmV3YVEDL6ssbKFJLtqxvO4
 
 ### get all spots by seller
 GET http://localhost:5000/spot/getAllSpotsBySeller

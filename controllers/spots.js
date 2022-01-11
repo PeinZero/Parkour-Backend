@@ -128,7 +128,10 @@ export let getAllSpots = async (req, res, next) => {
     let data = await User.find({ isSeller: true }).populate({
       path: 'seller',
       populate: {
-        path: 'activeSpots'
+        path: 'activeSpots',
+        populate:{
+          path: 'location'
+        }
       }
     }).select('name cumulativeRating reviews activeSpots');
     checkIfObjectDoesNotExists(data, 'No sellers found');
