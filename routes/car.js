@@ -10,7 +10,7 @@ router.post('/addCar', isAuth, addCar);
 // Gets
 
 // Deletes
-router.delete('/deleteCar', isAuth, deleteCar);
+router.delete('/deleteCar/:carId', isAuth, deleteCar);
 
 // Dev APIs
 

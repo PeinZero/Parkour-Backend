@@ -49,7 +49,7 @@ export let addCar = async (req, res, next) => {
 
 export let deleteCar = async (req, res, next) => {
   const userId = req.userId;
-  const carId = req.body.carId;
+  const carId = req.params.carId;
 
   try {
     const user = await User.findById(userId);
