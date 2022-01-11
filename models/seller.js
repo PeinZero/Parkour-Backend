@@ -7,14 +7,14 @@ const sellerSchema = new Schema({
   activeSpots: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Spots'
+      ref: 'Spot'
     }
   ],
 
   inactiveSpots: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Spots'
+      ref: 'Spot'
     }
   ],
 

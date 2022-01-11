@@ -28,24 +28,29 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgU
 ### add car
 POST http://localhost:5000/car/addCar
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODgzMTk3LCJleHAiOjE2NDE4ODY3OTd9.0hsLAiYO5iCzCGNV8pWOCV4kLDE6cOc_QcJSd2nRYdw
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkxMzM4LCJleHAiOjE2NDE4OTQ5Mzh9.KHKSOIXbog9sokhhKhHK9P_XSVWXxY0GYXXtCcIq2AY
 
 {
-    "numberPlate": "9999",
-    "make": "Corolla",
-    "model": "Toyota",
-    "color": "Blue",
-    "prodYear": "2007"
+    "model": 
+    {
+        "numberPlate": "111",
+        "make": "Chagnan",
+        "model": "Toyota",
+        "color": "Black",
+        "prodYear": "2007"
+    }
 }
+
+### get all cars
+GET http://localhost:5000/car/getAllCarsByParker
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkxNzc4LCJleHAiOjE2NDE4OTUzNzh9.dKz3jpq-XBTLNSpdQcv8jz-tdcQITUyb8owSx28Ec88
 
 ### delete car
-DELETE http://localhost:5000/car/deleteCar
+DELETE http://localhost:5000/car/deleteCar/61dd4235f34d51d70eae0aba
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODgzMTk3LCJleHAiOjE2NDE4ODY3OTd9.0hsLAiYO5iCzCGNV8pWOCV4kLDE6cOc_QcJSd2nRYdw
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkxMzM4LCJleHAiOjE2NDE4OTQ5Mzh9.KHKSOIXbog9sokhhKhHK9P_XSVWXxY0GYXXtCcIq2AY
 
-{
-    "carId" : "61dd2721f8399c8302da4683"
-}
 
 ### register spot
 
@@ -63,13 +68,15 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsY
 
 ### delete spot
 
-POST http://localhost:5000/spot/deleteSpot
+POST http://localhost:5000/spot/deleteSpot/61a667b8e01f51ccaead6094
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYW1tYXIiLCJ1c2VySWQiOiI2MWFlNTY0Y2VlOWJmZDE4YjMwNTNiMzkiLCJpYXQiOjE2Mzg4MTU4ODUsImV4cCI6MTYzODgxOTQ4NX0.BYCz61WdWOVA6m_l2oDq4-qeKnoxgGw6y_Sf6Nc4cZ4
 
-{
-    "spotId": "61a667b8e01f51ccaead6094"
-}
+
+### get all spots
+GET http://localhost:5000/spot/getAllSpots
+Content-Type: application/json
+Authorization: bearer 
 
 ###
 
@@ -79,5 +86,5 @@ GET http://localhost:5000/user/getAllUsers
 ###
 
 GET http://localhost:5000/user/getUser/61da3991198da5dd6c0bc9f9
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODg3NjMzLCJleHAiOjE2NDE4OTEyMzN9.oD9QKCZ05HOMpWBvzKQ0057YEPZE7M__q9DnqeMJMhI
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODg5OTM0LCJleHAiOjE2NDE4OTM1MzR9.KQvUn9oNEM3eUsH5BCa0YOcABIn7TKjOLWaWE7uvpxM
 
