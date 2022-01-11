@@ -10,6 +10,7 @@ router.post('/registerSpot', isAuth, registerSpot);
 // Gets
 
 // Dev APIs
-router.post('/deleteSpot', isAuth, deleteSpot);
+router.post('/deleteSpot/:spotId', isAuth, deleteSpot);
+// router.get('/getAllSpots', isAuth, getAllSpots);
 
 export default router;
