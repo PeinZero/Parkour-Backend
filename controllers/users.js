@@ -82,35 +82,29 @@ export const getUser = async (req, res, next) => {
       }
     });
 
-    if (user.currentRoleParker) {
+    if (!user.currentRoleParker) {
+      user.currentRoleParker = true;
+      user.isParker = true;
       modifiedUser = await user.populate({
         path: 'parker',
         populate: {
-          path: 'reviews.author'
-        },
-        populate: {
-          path: 'defaultCar'
-        },
-        populate: {
-          path: 'cars'
+          path: 'defaultCar cars reviews.author'
+          // bookingRequests left, figure it out
         }
       });
       delete modifiedUser.seller;
     } else {
+      user.currentRoleParker = false;
+      user.isSeller = true;
       modifiedUser = await user.populate({
         path: 'seller',
         populate: {
-          path: 'activeSpots'
-        },
-        populate: {
-          path: 'inactiveSpots'
-        },
-        populate: {
-          path: 'reviews.author'
+          path: 'activeSpots inactiveSpots reviews.author'
         }
       });
       delete modifiedUser.parker;
     }
+
 
     res.status(200).json({
       message: 'User fetched successfully!',
