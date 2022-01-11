@@ -66,9 +66,11 @@ export let addCar = async (req, res, next) => {
     parker.cars.push(car);
     await parker.save();
 
+    const cars = await Car.find({ owner: parker._id });
+
     res.status(201).json({
       message: 'Car added successfully',
-      cars: parker.cars
+      cars: cars
     });
   } catch (err) {
     next(err);

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import isAuth from '../middleware/isAuth.js';
-import {registerSpot, deleteSpot} from '../controllers/spots.js';
+import {registerSpot, deleteSpot, getSpotsByRadius, getAllSpotsBySeller} from '../controllers/spots.js';
 
 const router = Router();
 
@@ -11,6 +11,7 @@ router.post('/registerSpot', isAuth, registerSpot);
 
 // Dev APIs
 router.post('/deleteSpot/:spotId', isAuth, deleteSpot);
-// router.get('/getAllSpots', isAuth, getAllSpots);
+router.get('/getAllSpotsBySeller', isAuth, getAllSpotsBySeller);
+router.get('/getSpotsByRadius', isAuth, getSpotsByRadius);
 
 export default router;

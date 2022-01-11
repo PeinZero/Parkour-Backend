@@ -79,3 +79,27 @@ export let deleteSpot = async (req, res, next) => {
     next(err);
   }
 };
+
+export let getAllSpotsBySeller = async (req, res, next) => {
+  const userId = req.userId;
+
+  try {
+    const user = await User.findById(userId);
+    checkIfObjectDoesNotExists(user, 'User not found');
+
+    if (user.currentRoleParker) {
+      const error = new Error('User is not a Seller');
+      error.statusCode = 403;
+      throw error;
+    }
+
+    const seller = await Seller.findById(user.seller);
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+export let getSpotsByRadius = async (req, res, next) => {
+  //todo: add radius
+};
