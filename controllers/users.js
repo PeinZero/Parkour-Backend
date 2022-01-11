@@ -16,7 +16,7 @@ export const switchRole = async (req, res, next) => {
   try {
     const user = await User.findById(userId);
     checkIfObjectDoesNotExists(user, 'User not found');
-
+    console.log(user);
     let modifiedUser;
 
     if (!user.currentRoleParker) {
