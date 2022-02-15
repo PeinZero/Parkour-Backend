@@ -147,4 +147,24 @@ export let getAllSpots = async (req, res, next) => {
 
 export let getSpotsByRadius = async (req, res, next) => {
   // TODO: add radius
+  // REFERENCE:
+  // https://stackoverflow.com/questions/36190373/mongoose-find-geo-points-by-radius
+  // https://stackoverflow.com/questions/32199658/create-find-geolocation-in-mongoose
+  
+  /*
+  Location.find({
+    loc: {
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates: coords
+        },
+        $maxDistance: maxDistance
+      }
+    }
+  }).then((err, locations) => {
+    // do what you want here
+  });
+  */
+
 };
