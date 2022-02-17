@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "2s",
+    "phone": "1p",
     "password": "123"
 }
 
@@ -109,9 +109,9 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxOTI2MzQwLCJleHAiOjE2NDE5Mjk5NDB9.Dd7z94tyKLBbGdtNS5hNyUGcTzA7Z5m0uQ0r0AAktbw
 
 ### get spots by radius
-GET http://localhost:5000/spot/getSpotsByRadius?lat=67.155731&lng=24.939035&radius=2
+GET http://localhost:5000/spot/getSpotsByRadius?lat=24.942960&lng=67.158914&radius=7
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQ1MDk2NDg4LCJleHAiOjE2NDUxMDAwODh9.8AdripSbqpyr_bh8Kkmf0KojQTapQMP8HxOV6ceB8XM
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQ1MTA4MTYzLCJleHAiOjE2NDUxMTE3NjN9.za8Qk4nTw4NXgQYPKA5QQ0DeBHY18cXB0Fc2aCXj4R0
 
 ###
 
