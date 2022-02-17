@@ -1,10 +1,16 @@
 import User from '../models/user.js';
 import Car from '../models/car.js';
 import Spot from '../models/spot.js';
-import Point from '../models/point.js';
+import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
-import { checkIfObjectDoesNotExists } from '../helpers/helperfunctions.js';
+import {
+  checkIfObjectDoesNotExists,
+  checkIfObjectExists,
+  throwError
+} from '../helpers/helperfunctions.js';
+
+const Point = PointData.Point;
 
 // TODO:
 // get spot by ID
@@ -57,6 +63,7 @@ export let addSpot = async (req, res, next) => {
   }
 };
 
+// TODO: this isnt working, still not updated
 export let deleteSpot = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
@@ -125,15 +132,17 @@ export let getAllSpotsBySeller = async (req, res, next) => {
 
 export let getAllSpots = async (req, res, next) => {
   try {
-    let data = await User.find({ isSeller: true }).populate({
-      path: 'seller',
-      populate: {
-        path: 'activeSpots',
-        populate:{
-          path: 'location'
+    let data = await User.find({ isSeller: true })
+      .populate({
+        path: 'seller',
+        populate: {
+          path: 'activeSpots',
+          populate: {
+            path: 'location'
+          }
         }
-      }
-    }).select('name cumulativeRating reviews activeSpots');
+      })
+      .select('name cumulativeRating reviews activeSpots');
     checkIfObjectDoesNotExists(data, 'No sellers found');
 
     res.status(200).json({
@@ -146,25 +155,59 @@ export let getAllSpots = async (req, res, next) => {
 };
 
 export let getSpotsByRadius = async (req, res, next) => {
-  // TODO: add radius
-  // REFERENCE:
-  // https://stackoverflow.com/questions/36190373/mongoose-find-geo-points-by-radius
-  // https://stackoverflow.com/questions/32199658/create-find-geolocation-in-mongoose
-  
-  /*
-  Location.find({
-    loc: {
-      $near: {
-        $geometry: {
-          type: 'Point',
-          coordinates: coords
-        },
-        $maxDistance: maxDistance
-      }
-    }
-  }).then((err, locations) => {
-    // do what you want here
-  });
-  */
+  const queryLng = req.query.lng;
+  const queryLat = req.query.lat;
+  const queryRadius = req.query.radius; // is in kilometers
+  const userId = req.userId;
 
+  try {
+    const user = await User.findById(userId);
+    
+    if (!user) throwError('User not found', 404);
+    if (!queryLng || !queryLat) throwError('Missing lat or lng', 422);
+    if (!user.currentRoleParker) throwError('User is not a parker', 403);
+
+    const centerSearchPoint = [queryLng, queryLat];
+    // const centerSphere = [...centerSearchPoint, queryRadius/ 3963.2]; // in miles
+
+    //  ================ W A Y -- 1 ================
+    // const options = {
+    //   location: {
+    //     $geoWithin: {
+    //       $centerSphere: centerSphere
+    //     }
+    //   }
+    // };
+    // let spots = await Spot.find(options);
+
+    //  ================ W A Y -- 2 ================
+    let spots = await Spot.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: centerSearchPoint
+          },
+          // $minDistance: 500,
+          $maxDistance: queryRadius * 1000 // in meters
+        }
+      }
+    });
+
+    // ================ W A Y -- 3 ================
+    // let spots = await Spot.find()
+    //   .where('location')
+    //   .near({
+    //     center: centerSearchPoint,
+    //     maxDistance: queryRadius/3963.2, // in miles
+    //     spherical: true
+    //   });
+
+    res.status(200).json({
+      spots,
+      message: 'Spots found successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
 };

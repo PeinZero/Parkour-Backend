@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import PointData from './point.js';
 const Schema = mongoose.Schema;
 
 const SpotSchema = new Schema(
@@ -14,7 +15,8 @@ const SpotSchema = new Schema(
     comment: String,
 
     location: {
-      type: Schema.Types.ObjectId,
+      type: PointData.PointSchema,
+      index: '2dsphere',
       ref: 'Point',
       required: true
     },

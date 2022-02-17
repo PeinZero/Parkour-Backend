@@ -1,13 +1,16 @@
 import User from '../models/user.js';
 import Car from '../models/car.js';
 import Spot from '../models/spot.js';
-import Point from '../models/point.js';
+import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 import {
   checkIfObjectDoesNotExists,
   checkIfObjectExists
 } from '../helpers/helperfunctions.js';
+
+const Point = PointData.Point;
+
 
 // make switch role API to
 export const switchRole = async (req, res, next) => {
@@ -41,8 +44,6 @@ export const switchRole = async (req, res, next) => {
       });
       delete modifiedUser.parker;
     }
-
-    console.log(modifiedUser);
 
     await modifiedUser.save();
 

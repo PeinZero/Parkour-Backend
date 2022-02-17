@@ -1,13 +1,16 @@
 import User from '../models/user.js';
 import Car from '../models/car.js';
 import Spot from '../models/spot.js';
-import Point from '../models/point.js';
+import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import { checkIfObjectDoesNotExists } from '../helpers/helperfunctions.js';
 
 // TODO: 
 // set default car
 // TODO:
+
+const Point = PointData.Point;
+
 
 export let getAllCarsByParker = async (req, res, next) => {
   const userId = req.userId;

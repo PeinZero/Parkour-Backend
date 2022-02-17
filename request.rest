@@ -4,8 +4,8 @@ POST http://localhost:5000/auth/signup
 Content-Type: application/json 
 
 {
-    "name": "Mahad Khalid",
-    "phone": "1p",
+    "name": "test1s",
+    "phone": "2s",
     "password": "123",
     "confirmPassword": "123"
 }
@@ -15,14 +15,14 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1p",
+    "phone": "2s",
     "password": "123"
 }
 
 ### switch role
 PUT http://localhost:5000/user/switchRole
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODk3OTM3LCJleHAiOjE2NDE5MDE1Mzd9.cEIIV7jnnf5f2tUW5ZyIRSCyOmomamExP1GehRG8Bds
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk2MDAxLCJleHAiOjE2NDUwOTk2MDF9.dcECTALeD9NV_NWqffuI_G3kXPlbPl6uz7a57qwuh1k
 
 ### add car
 POST http://localhost:5000/car/addCar
@@ -55,15 +55,42 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgU
 
 POST http://localhost:5000/spot/addSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxODkzNjcyLCJleHAiOjE2NDE4OTcyNzJ9.kt8soNJ-f-9qNYn3k1gLlGSs1L9jaTJiaf6uMA3Ew6A
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
 
 {
-    "name": "Ammar's spot",
-    "addressLine1" : "North America",
-    "nearestLandmark": "Near N Flats",
-    "location": [68.04038400013158, 24.01522262464436],
-    "pricePerHour": 20
+    "name": "Millenium Mall, Rashid Minhas Road",
+    "addressLine1" : "on Rashid minhas road, near Mcdonalds and Shell Petrol Pump",
+    "nearestLandmark": "Next to Saima Mall",
+    "location": [ 67.115461, 24.900942],
+    "pricePerHour": 50
 }
+
+### add spot 2
+POST http://localhost:5000/spot/addSpot
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
+
+{
+    "name": "Main Safoora Chowrangi",
+    "addressLine1" : "Next to Malik Dairy and rangers Chowk.",
+    "nearestLandmark": "-",
+    "location": [ 67.156612, 24.939279],
+    "pricePerHour": 50
+}
+
+### add spot 3
+POST http://localhost:5000/spot/addSpot
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
+
+{
+    "name": "Main Safoora Chowrangi",
+    "addressLine1" : "Next to Malik Dairy and rangers Chowk.",
+    "nearestLandmark": "-",
+    "location": [ 67.158914, 24.942960],
+    "pricePerHour": 50
+}
+
 
 ### delete spot
 
@@ -81,7 +108,10 @@ GET http://localhost:5000/spot/getAllSpotsBySeller
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxOTI2MzQwLCJleHAiOjE2NDE5Mjk5NDB9.Dd7z94tyKLBbGdtNS5hNyUGcTzA7Z5m0uQ0r0AAktbw
 
-
+### get spots by radius
+GET http://localhost:5000/spot/getSpotsByRadius?lat=67.155731&lng=24.939035&radius=2
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQ1MDk2NDg4LCJleHAiOjE2NDUxMDAwODh9.8AdripSbqpyr_bh8Kkmf0KojQTapQMP8HxOV6ceB8XM
 
 ###
 
