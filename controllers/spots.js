@@ -164,7 +164,7 @@ export let getSpotsByRadius = async (req, res, next) => {
     const user = await User.findById(userId);
     
     if (!user) throwError('User not found', 404);
-    if (!queryLng || !queryLat) throwError('Missing lat or lng', 422);
+    if (!queryLng || !queryLat || !queryRadius) throwError('Missing lat or lng or radius', 422);
     if (!user.currentRoleParker) throwError('User is not a parker', 403);
 
     const centerSearchPoint = [queryLng, queryLat];
@@ -192,7 +192,7 @@ export let getSpotsByRadius = async (req, res, next) => {
           $maxDistance: queryRadius * 1000 // in meters
         }
       }
-    });
+    }).populate('owner');
 
     // ================ W A Y -- 3 ================
     // let spots = await Spot.find()

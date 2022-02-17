@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "2s",
+    "phone": "1p",
     "password": "123"
 }
 
@@ -51,8 +51,7 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkyNDIxLCJleHAiOjE2NDE4OTYwMjF9.2jDu6kDZfhUuH6_ywM66FU2MOCCo8F90a5ILmaNlYw0
 
 
-### add spot
-
+### add spot 1
 POST http://localhost:5000/spot/addSpot
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
@@ -84,19 +83,19 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
 
 {
-    "name": "Main Safoora Chowrangi",
-    "addressLine1" : "Next to Malik Dairy and rangers Chowk.",
+    "name": "Main NIPA Chowrangi Center",
+    "addressLine1" : "Next to Sadqain marriage lawn.",
     "nearestLandmark": "-",
-    "location": [ 67.158914, 24.942960],
-    "pricePerHour": 50
+    "location": [ 67.097099, 24.917846],
+    "pricePerHour": 60
 }
 
 
 ### delete spot
 
-POST http://localhost:5000/spot/deleteSpot/61dadb9db67d6c51be2bff85
+POST http://localhost:5000/spot/deleteSpot/620e33b6fc788bab6ece776f
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxODkzNjcyLCJleHAiOjE2NDE4OTcyNzJ9.kt8soNJ-f-9qNYn3k1gLlGSs1L9jaTJiaf6uMA3Ew6A
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
 
 ### get all spots
 GET http://localhost:5000/spot/getAllSpots
@@ -109,9 +108,9 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxOTI2MzQwLCJleHAiOjE2NDE5Mjk5NDB9.Dd7z94tyKLBbGdtNS5hNyUGcTzA7Z5m0uQ0r0AAktbw
 
 ### get spots by radius
-GET http://localhost:5000/spot/getSpotsByRadius?lat=67.155731&lng=24.939035&radius=2
+GET http://localhost:5000/spot/getSpotsByRadius?lat=24.942960&lng=67.158914&radius=7
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQ1MDk2NDg4LCJleHAiOjE2NDUxMDAwODh9.8AdripSbqpyr_bh8Kkmf0KojQTapQMP8HxOV6ceB8XM
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQ1MTA3NTI3LCJleHAiOjE2NDUxMTExMjd9.lHJ4Ts3XCg11cmmq70ZwbtUXrzqPd-jtS3u4WQmmgWw
 
 ###
 
