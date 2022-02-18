@@ -3,9 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
-import {
-  throwError
-} from '../helpers/helperfunctions.js';
+import { throwError } from '../helpers/helperfunctions.js';
 
 export let signup = async (req, res, next) => {
   const name = req.body.name;
@@ -19,18 +17,10 @@ export let signup = async (req, res, next) => {
     const user = await User.findOne({ phone: phone });
     if (!user) throwError('Phone Number already in use.', 409);
 
-    if (!confirmPassword || !/\S/.test(confirmPassword)) {
-      // testing whitespace
-      const error = new Error('Please confirm your password');
-      error.statusCode = 403;
-      throw error;
-    }
+    if (!confirmPassword || !/\S/.test(confirmPassword))
+      throwError('Confirm Password field incorrect', 403);
 
-    if (password !== confirmPassword) {
-      const error = new Error('Passwords do not match');
-      error.statusCode = 403;
-      throw error;
-    }
+    if (password !== confirmPassword) throwError('Passwords do NOT match', 403);
 
     const hashedPassword = await bcrypt.hash(password, 12);
 

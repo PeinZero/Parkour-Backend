@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import isAuth from '../middleware/isAuth.js';
-import {addSpot, deleteSpot, getSpotsByRadius, getAllSpotsBySeller, getAllSpots} from '../controllers/spots.js';
+import {
+  addSpot,
+  deleteSpot,
+  getSpotsByRadius,
+  getAllSpotsBySeller,
+  getAllSpots
+} from '../controllers/spots.js';
 
 const router = Router();
 
