@@ -3,7 +3,7 @@ import Car from '../models/car.js';
 import Spot from '../models/spot.js';
 import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
-import { checkIfObjectDoesNotExists } from '../helpers/helperfunctions.js';
+import { throwError } from '../helpers/helperfunctions.js';
 
 // TODO: 
 // set default car
@@ -17,21 +17,17 @@ export let getAllCarsByParker = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    checkIfObjectDoesNotExists(user, 'User not found');
-
-    if (!user.currentRoleParker) {
-      const error = new Error('User is not a Parker');
-      error.statusCode = 403;
-      throw error;
-    }
+    if (!user) throwError('User not found', 404);
+    if (!user.currentRoleParker) throwError('User is not a Parker', 403);
 
     const parker = await Parker.findById(user.parker);
-    checkIfObjectDoesNotExists(parker, 'Parker not found');
+    if (!parker) throwError(`Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`, 500);
 
     let cars = await Car.find({ owner: parker._id });
 
     res.status(200).json({
       message: `Successfully fetched all cars of ${user.name}`,
+      totalCars: cars.length,
       cars
     });
   } catch (error) {
@@ -45,15 +41,11 @@ export let addCar = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    checkIfObjectDoesNotExists(user, 'User not found');
-
-    if (!user.currentRoleParker) {
-      const error = new Error('User is not a Parker');
-      error.statusCode = 403;
-      throw error;
-    }
+    if (!user) throwError('User not found', 404);
+    if (!user.currentRoleParker) throwError('User is not a Parker', 403);
 
     const parker = await Parker.findById(user.parker);
+    if (!parker) throwError(`Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`, 500);
 
     let car = new Car({
       numberPlate: data.numberPlate,
@@ -76,6 +68,7 @@ export let addCar = async (req, res, next) => {
 
     res.status(201).json({
       message: 'Car added successfully',
+      totalCars: cars.length,
       cars: cars
     });
   } catch (err) {
@@ -89,29 +82,25 @@ export let deleteCar = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    checkIfObjectDoesNotExists(user, 'User not found');
-
-    if (!user.currentRoleParker) {
-      const error = new Error('User is not a Parker');
-      error.statusCode = 403;
-      throw error;
-    }
+    if (!user) throwError('User not found', 404);
+    if (!user.currentRoleParker) throwError('User is not a Parker', 403);
 
     const parker = await Parker.findById(user.parker);
-    checkIfObjectDoesNotExists(parker, 'Parker not found');
+    if (!parker) throwError(`Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`, 500);
 
     const car = await Car.findById(carId);
-    checkIfObjectDoesNotExists(car, 'Car not found');
+    if (!car) throwError('Car not found', 404);
 
     parker.cars = parker.cars.filter((car) => car._id.toString() !== carId);
     await parker.save();
-
+    
     await car.remove();
 
     const cars = await Car.find({ owner: parker._id });
 
     res.status(200).json({
       message: 'Car deleted successfully',
+      totalCars: cars.length,
       cars: cars
     });
   } catch (err) {

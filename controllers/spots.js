@@ -4,11 +4,7 @@ import Spot from '../models/spot.js';
 import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
-import {
-  checkIfObjectDoesNotExists,
-  checkIfObjectExists,
-  throwError
-} from '../helpers/helperfunctions.js';
+import { throwError } from '../helpers/helperfunctions.js';
 
 const Point = PointData.Point;
 
@@ -22,14 +18,11 @@ export let addSpot = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    checkIfObjectDoesNotExists(user, 'User not found');
+    if (!user) throwError('User not found', 404);
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
-    if (user.currentRoleParker) {
-      const error = new Error('User is not a Seller');
-      error.statusCode = 403;
-      throw error;
-    }
     const seller = await Seller.findById(user.seller);
+    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
 
     const location = new Point({ coordinates: req.body.location });
     await location.save();
@@ -55,6 +48,7 @@ export let addSpot = async (req, res, next) => {
 
     res.status(201).send({
       message: 'Spot added successfully',
+      totalActiveSpots: seller.activeSpots.length,
       addedSpot: spot,
       activeSpots: seller.activeSpots
     });
@@ -70,19 +64,39 @@ export let deleteSpot = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    checkIfObjectDoesNotExists(user, 'User not found');
+    if (!user) throwError('User not found', 404);
+
+    const seller = await Seller.findById(user.seller);
+    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
 
     const spot = await Spot.findById(spotId);
-    checkIfObjectDoesNotExists(spot, 'Spot not found');
+    if (!spot) throwError('Spot not found', 404);
 
-    user.spots = user.spots.filter((spot) => spot._id.toString() !== spotId);
-    await user.save();
+    if (spot.owner.toString() !== seller._id.toString()) throwError('This Seller is not the owner of this Spot', 404);
 
-    // Remove spot
+    if (spot.isActive) {
+      seller.activeSpots = seller.activeSpots.filter(
+        (spot) => spot._id.toString() !== spotId
+      );
+    } else {
+      seller.inactiveSpots = seller.inactiveSpots.filter(
+        (spot) => spot._id.toString() !== spotId
+      );
+    }
+
+    const pointToRemove = await Point.findById(spot.location);
+    console.log(pointToRemove);
+    
+    await pointToRemove.remove();
     await spot.remove();
+    await seller.save();
 
     res.status(200).json({
-      message: `Spot deleted successfully!`
+      message: `Spot deleted successfully!`,
+      totalActiveSpots: seller.activeSpots.length,
+      activeSpots: seller.activeSpots,
+      totalInactiveSpots: seller.inactiveSpots.length,
+      inactiveSpots: seller.inactiveSpots
     });
   } catch (err) {
     next(err);
@@ -93,17 +107,12 @@ export let getAllSpotsBySeller = async (req, res, next) => {
   const userId = req.userId;
 
   try {
-    let user = await User.findById(userId);
-    checkIfObjectDoesNotExists(user, 'User not found');
-
-    if (user.currentRoleParker) {
-      const error = new Error('User is not a Seller');
-      error.statusCode = 403;
-      throw error;
-    }
+    const user = await User.findById(userId);
+    if (!user) throwError('User not found', 404);
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    checkIfObjectDoesNotExists(seller, 'Seller not found');
+    if (!parker) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,500);
 
     const selectedData = await Seller.findById(user.seller)
       .select('activeSpots')
@@ -117,12 +126,13 @@ export let getAllSpotsBySeller = async (req, res, next) => {
     res.status(200).json({
       message: `All Spots found successfully for ${user.name}`,
       data: {
-        activeSpots: selectedData.activeSpots,
+        totalSpots: selectedData.activeSpots.length,
         seller: {
           name: user.name,
           rating: seller.cumulativeRating,
           reviews: seller.reviews
-        }
+        },
+        activeSpots: selectedData.activeSpots
       }
     });
   } catch (error) {
@@ -132,7 +142,7 @@ export let getAllSpotsBySeller = async (req, res, next) => {
 
 export let getAllSpots = async (req, res, next) => {
   try {
-    let data = await User.find({ isSeller: true })
+    let allSpots = await User.find({ isSeller: true })
       .populate({
         path: 'seller',
         populate: {
@@ -143,11 +153,12 @@ export let getAllSpots = async (req, res, next) => {
         }
       })
       .select('name cumulativeRating reviews activeSpots');
-    checkIfObjectDoesNotExists(data, 'No sellers found');
+    if (!allSpots) throwError('No Spots/Sellers found', 404);
 
     res.status(200).json({
       message: 'All Spots found successfully',
-      data
+      totalSpots: spots.length,
+      allSpots
     });
   } catch (error) {
     next(error);
@@ -162,9 +173,10 @@ export let getSpotsByRadius = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    
+
     if (!user) throwError('User not found', 404);
-    if (!queryLng || !queryLat || !queryRadius) throwError('Missing lat or lng or radius', 422);
+    if (!queryLng || !queryLat || !queryRadius)
+      throwError('Missing lat or lng or radius in query params', 422);
     if (!user.currentRoleParker) throwError('User is not a parker', 403);
 
     const centerSearchPoint = [queryLng, queryLat];
@@ -204,8 +216,9 @@ export let getSpotsByRadius = async (req, res, next) => {
     //   });
 
     res.status(200).json({
-      spots,
-      message: 'Spots found successfully'
+      message: 'Spots found successfully',
+      totalSpots: spots.length,
+      spots
     });
   } catch (error) {
     next(error);

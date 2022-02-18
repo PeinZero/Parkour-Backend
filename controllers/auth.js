@@ -4,8 +4,7 @@ import User from '../models/user.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 import {
-  checkIfObjectDoesNotExists,
-  checkIfObjectExists
+  throwError
 } from '../helpers/helperfunctions.js';
 
 export let signup = async (req, res, next) => {
@@ -18,7 +17,7 @@ export let signup = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ phone: phone });
-    checkIfObjectExists(user, 'Phone Number already in use.');
+    if (!user) throwError('Phone Number already in use.', 409);
 
     if (!confirmPassword || !/\S/.test(confirmPassword)) {
       // testing whitespace
@@ -65,17 +64,10 @@ export let login = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ phone: phone });
+    if (!user) throwError('User not found', 404);
 
-    // Checking User email
-    checkIfObjectDoesNotExists(user, 'User not found');
-
-    // Checking User password
     const isEqual = await bcrypt.compare(password, user.password);
-    if (!isEqual) {
-      const error = new Error('Wrong Password!');
-      error.statusCode = 401;
-      throw error;
-    }
+    if (!isEqual) throwError('Wrong Password!', 401);
 
     // If everything checks out, send back JWT and the message we wish to send.
     // TOKEN ===================================

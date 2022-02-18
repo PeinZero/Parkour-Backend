@@ -16,5 +16,5 @@ const PointSchema = new mongoose.Schema({
 
 // export default mongoose.model('Point', PointSchema);
 
-let Point = mongoose.model('Point', PointSchema);
+const Point = mongoose.model('Point', PointSchema);
 export default { PointSchema, Point };

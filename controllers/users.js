@@ -5,8 +5,7 @@ import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 import {
-  checkIfObjectDoesNotExists,
-  checkIfObjectExists
+  throwError
 } from '../helpers/helperfunctions.js';
 
 const Point = PointData.Point;
@@ -18,8 +17,8 @@ export const switchRole = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    checkIfObjectDoesNotExists(user, 'User not found');
-    console.log(user);
+    if (!user) throwError('User not found', 404);
+
     let modifiedUser;
 
     if (!user.currentRoleParker) {
@@ -74,7 +73,7 @@ export const getUser = async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    checkIfObjectDoesNotExists(user, 'User not found');
+    if (!user) throwError('User not found', 404);
 
     let modifiedUser;
 
