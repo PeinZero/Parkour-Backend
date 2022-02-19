@@ -1,4 +1,3 @@
-
 ###
 POST http://localhost:5000/auth/signup 
 Content-Type: application/json 
@@ -11,23 +10,26 @@ Content-Type: application/json
 }
 
 ### login
+# @name login 
 POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1p",
+    "phone": "1s",
     "password": "123"
 }
+###
+@generalToken = {{login.response.body.token}}
 
 ### switch role
 PUT http://localhost:5000/user/switchRole
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk2MDAxLCJleHAiOjE2NDUwOTk2MDF9.dcECTALeD9NV_NWqffuI_G3kXPlbPl6uz7a57qwuh1k
+Authorization: bearer {{generalToken}}
 
 ### add car
 POST http://localhost:5000/car/addCar
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkyNDIxLCJleHAiOjE2NDE4OTYwMjF9.2jDu6kDZfhUuH6_ywM66FU2MOCCo8F90a5ILmaNlYw0
+Authorization: bearer {{generalToken}}
 
 {
     "model": 
@@ -43,18 +45,18 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgU
 ### get all cars
 GET http://localhost:5000/car/getAllCarsByParker
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkxNzc4LCJleHAiOjE2NDE4OTUzNzh9.dKz3jpq-XBTLNSpdQcv8jz-tdcQITUyb8owSx28Ec88
+Authorization: bearer {{generalToken}}
 
 ### delete car
 DELETE http://localhost:5000/car/deleteCar/61dd4a6dc27b32ced1f33cd4
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODkyNDIxLCJleHAiOjE2NDE4OTYwMjF9.2jDu6kDZfhUuH6_ywM66FU2MOCCo8F90a5ILmaNlYw0
+Authorization: bearer {{generalToken}}
 
 
 ### add spot 1
 POST http://localhost:5000/spot/addSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
+Authorization: bearer {{generalToken}}
 
 {
     "name": "Millenium Mall, Rashid Minhas Road",
@@ -67,7 +69,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzI
 ### add spot 2
 POST http://localhost:5000/spot/addSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
+Authorization: bearer {{generalToken}}
 
 {
     "name": "Main Safoora Chowrangi",
@@ -80,7 +82,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzI
 ### add spot 3
 POST http://localhost:5000/spot/addSpot
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
+Authorization: bearer {{generalToken}}
 
 {
     "name": "Main NIPA Chowrangi Center",
@@ -92,28 +94,27 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzI
 
 
 ### delete spot
-
-POST http://localhost:5000/spot/deleteSpot/620e33b6fc788bab6ece776f
+DELETE http://localhost:5000/spot/deleteSpot/620f7d65d670f6742020ad80
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdDFzIiwidXNlcklkIjoiNjIwZTJjMzEwODc0OWI4MWJmOTQ3YWEzIiwiaWF0IjoxNjQ1MDk3MTg0LCJleHAiOjE2NDUxMDA3ODR9.HXymGXUC4b22e_OzvPQyY_KK2VpUpyEB_cefakRTcmM
+Authorization: bearer {{generalToken}}
 
 ### get all spots
 GET http://localhost:5000/spot/getAllSpots
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxOTM4NjQ3LCJleHAiOjE2NDE5NDIyNDd9.NEjOLeIe-anTEKwcTJWkqmV3YVEDL6ssbKFJLtqxvO4
+Authorization: bearer {{generalToken}}
 
 ### get all spots by seller
 GET http://localhost:5000/spot/getAllSpotsBySeller
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJkdWxsYWggU2VsbGVyIiwidXNlcklkIjoiNjFkYTM5ODIxOThkYTVkZDZjMGJjOWYyIiwiaWF0IjoxNjQxOTI2MzQwLCJleHAiOjE2NDE5Mjk5NDB9.Dd7z94tyKLBbGdtNS5hNyUGcTzA7Z5m0uQ0r0AAktbw
+Authorization: bearer {{generalToken}}
 
 ### get spots by radius
-GET http://localhost:5000/spot/getSpotsByRadius?lat=24.942960&lng=67.158914&radius=7
+GET http://localhost:5000/spot/getSpotsByRadius?lat=24.942960&lng=67.158914&radius=5
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQ1MTA3NTI3LCJleHAiOjE2NDUxMTExMjd9.lHJ4Ts3XCg11cmmq70ZwbtUXrzqPd-jtS3u4WQmmgWw
+Authorization: bearer {{generalToken}}
 
 ###
 
 GET http://localhost:5000/user/getUser/61da3991198da5dd6c0bc9f9
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1tYXIgUGFya2VyIiwidXNlcklkIjoiNjFkYTM5OTExOThkYTVkZDZjMGJjOWY5IiwiaWF0IjoxNjQxODg5OTM0LCJleHAiOjE2NDE4OTM1MzR9.KQvUn9oNEM3eUsH5BCa0YOcABIn7TKjOLWaWE7uvpxM
+Authorization: bearer {{generalToken}}
 
