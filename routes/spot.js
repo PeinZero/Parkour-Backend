@@ -3,6 +3,7 @@ import isAuth from '../middleware/isAuth.js';
 import {
   addSpot,
   deleteSpot,
+  editSpot,
   getSpotsByRadius,
   getAllSpotsBySeller,
   getAllSpots
@@ -12,12 +13,15 @@ const router = Router();
 
 // Posts
 router.post('/addSpot', isAuth, addSpot);
+router.delete('/deleteSpot/:spotId', isAuth, deleteSpot);
+
+// Puts
+router.put('/editSpot/:spotId', isAuth, editSpot);
 
 // Gets
 router.get('/getAllSpots', isAuth, getAllSpots);
 
 // Dev APIs
-router.post('/deleteSpot/:spotId', isAuth, deleteSpot);
 router.get('/getAllSpotsBySeller', isAuth, getAllSpotsBySeller);
 router.get('/getSpotsByRadius', isAuth, getSpotsByRadius);
 

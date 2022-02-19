@@ -5,12 +5,11 @@ import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
-// TODO: 
+// TODO:
 // set default car
 // TODO:
 
 const Point = PointData.Point;
-
 
 export let getAllCarsByParker = async (req, res, next) => {
   const userId = req.userId;
@@ -21,7 +20,11 @@ export let getAllCarsByParker = async (req, res, next) => {
     if (!user.currentRoleParker) throwError('User is not a Parker', 403);
 
     const parker = await Parker.findById(user.parker);
-    if (!parker) throwError(`Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`, 500);
+    if (!parker)
+      throwError(
+        `Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`,
+        500
+      );
 
     let cars = await Car.find({ owner: parker._id });
 
@@ -45,7 +48,11 @@ export let addCar = async (req, res, next) => {
     if (!user.currentRoleParker) throwError('User is not a Parker', 403);
 
     const parker = await Parker.findById(user.parker);
-    if (!parker) throwError(`Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`, 500);
+    if (!parker)
+      throwError(
+        `Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`,
+        500
+      );
 
     let car = new Car({
       numberPlate: data.numberPlate,
@@ -86,14 +93,21 @@ export let deleteCar = async (req, res, next) => {
     if (!user.currentRoleParker) throwError('User is not a Parker', 403);
 
     const parker = await Parker.findById(user.parker);
-    if (!parker) throwError(`Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`, 500);
+    if (!parker)
+      throwError(
+        `Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`,
+        500
+      );
 
     const car = await Car.findById(carId);
     if (!car) throwError('Car not found', 404);
 
+    if (car.owner.toString() !== parker._id.toString())
+      throwError('This Parker is not the owner of this Car', 401);
+
     parker.cars = parker.cars.filter((car) => car._id.toString() !== carId);
     await parker.save();
-    
+
     await car.remove();
 
     const cars = await Car.find({ owner: parker._id });

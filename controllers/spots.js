@@ -22,7 +22,11 @@ export let addSpot = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
+    if (!seller)
+      throwError(
+        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
+        500
+      );
 
     const location = new Point({ coordinates: req.body.location });
     await location.save();
@@ -57,7 +61,6 @@ export let addSpot = async (req, res, next) => {
   }
 };
 
-// TODO: this isnt working, still not updated
 export let deleteSpot = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
@@ -67,12 +70,17 @@ export let deleteSpot = async (req, res, next) => {
     if (!user) throwError('User not found', 404);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
+    if (!seller)
+      throwError(
+        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
+        500
+      );
 
     const spot = await Spot.findById(spotId);
     if (!spot) throwError('Spot not found', 404);
 
-    if (spot.owner.toString() !== seller._id.toString()) throwError('This Seller is not the owner of this Spot', 404);
+    if (spot.owner.toString() !== seller._id.toString())
+      throwError('This Seller is not the owner of this Spot', 401);
 
     if (spot.isActive) {
       seller.activeSpots = seller.activeSpots.filter(
@@ -85,10 +93,19 @@ export let deleteSpot = async (req, res, next) => {
     }
 
     const pointToRemove = await Point.findById(spot.location);
-    console.log(pointToRemove);
-    
-    await pointToRemove.remove();
-    await spot.remove();
+
+    await spot
+      .deleteOne()
+      .then(async () => {
+        await pointToRemove.deleteOne();
+      })
+      .catch((err) => {
+        throwError(
+          `Internal Server Error: Deletion Failed.\nDetails: ${err}`,
+          500
+        );
+      });
+    // await pointToRemove.remove();
     await seller.save();
 
     res.status(200).json({
@@ -103,6 +120,43 @@ export let deleteSpot = async (req, res, next) => {
   }
 };
 
+export let editSpot = async (req, res, next) => {
+  const userId = req.userId;
+  const spotId = req.params.spotId;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) throwError('User not found', 404);
+
+    const seller = await Seller.findById(user.seller);
+    if (!seller)
+      throwError(
+        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
+        500
+      );
+
+    const spot = await Spot.findById(spotId);
+    if (!spot) throwError('Spot not found', 404);
+
+    if (seller.owner.toString() !== seller._id.toString())
+      throwError('This Seller is not the owner of this Spot', 401);
+
+    spot.addressLine1 = req.body.addressLine1;
+    spot.addressLine2 = req.body.addressLine2;
+    spot.nearestLandmark = req.body.nearestLandmark;
+    spot.comment = req.body.comment;
+    spot.location;
+    spot.imagesURI = req.body.imagesURI;
+    spot.pricePerHour = req.body.pricePerHour;
+    spot.owner = seller._id;
+    spot.availability = req.body.availability;
+
+    await spot.save();
+  } catch (err) {
+    next(err);
+  }
+};
+
 export let getAllSpotsBySeller = async (req, res, next) => {
   const userId = req.userId;
 
@@ -112,7 +166,11 @@ export let getAllSpotsBySeller = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!parker) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,500);
+    if (!seller)
+      throwError(
+        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
+        500
+      );
 
     const selectedData = await Seller.findById(user.seller)
       .select('activeSpots')
