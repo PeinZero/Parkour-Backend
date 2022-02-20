@@ -94,18 +94,8 @@ export let deleteSpot = async (req, res, next) => {
 
     const pointToRemove = await Point.findById(spot.location);
 
-    await spot
-      .deleteOne()
-      .then(async () => {
-        await pointToRemove.deleteOne();
-      })
-      .catch((err) => {
-        throwError(
-          `Internal Server Error: Deletion Failed.\nDetails: ${err}`,
-          500
-        );
-      });
-    // await pointToRemove.remove();
+    await spot.deleteOne();
+    await pointToRemove.deleteOne();
     await seller.save();
 
     res.status(200).json({
