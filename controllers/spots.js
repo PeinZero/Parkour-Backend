@@ -4,6 +4,7 @@ import Spot from '../models/spot.js';
 import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
+import BookingRequest from '../models/bookingRequests.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
 const Point = PointData.Point;
@@ -128,7 +129,7 @@ export let editSpot = async (req, res, next) => {
     const spot = await Spot.findById(spotId);
     if (!spot) throwError('Spot not found', 404);
 
-    if (seller.owner.toString() !== seller._id.toString())
+    if (spot.owner.toString() !== seller._id.toString())
       throwError('This Seller is not the owner of this Spot', 401);
 
     spot.addressLine1 = req.body.addressLine1;
@@ -145,6 +146,15 @@ export let editSpot = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+export let requestSpot = async (req, res, next) => {
+  const userId = req.userId;
+  const spotId = req.params.spotId;
+  const slot = 
+  
+  try {
+
 };
 
 export let getAllSpotsBySeller = async (req, res, next) => {
@@ -177,6 +187,7 @@ export let getAllSpotsBySeller = async (req, res, next) => {
         totalSpots: selectedData.activeSpots.length,
         seller: {
           name: user.name,
+          phone: user.phone,
           rating: seller.cumulativeRating,
           reviews: seller.reviews
         },
@@ -205,7 +216,7 @@ export let getAllSpots = async (req, res, next) => {
 
     res.status(200).json({
       message: 'All Spots found successfully',
-      totalSpots: spots.length,
+      totalSpots: allSpots.length,
       allSpots
     });
   } catch (error) {
@@ -216,7 +227,7 @@ export let getAllSpots = async (req, res, next) => {
 export let getSpotsByRadius = async (req, res, next) => {
   const queryLng = req.query.lng;
   const queryLat = req.query.lat;
-  const queryRadius = req.query.radius; // is in kilometers
+  const queryRadius = req.query.radius; // is in kilometers, the mongoose function requires meters
   const userId = req.userId;
 
   try {
@@ -228,19 +239,7 @@ export let getSpotsByRadius = async (req, res, next) => {
     if (!user.currentRoleParker) throwError('User is not a parker', 403);
 
     const centerSearchPoint = [queryLng, queryLat];
-    // const centerSphere = [...centerSearchPoint, queryRadius/ 3963.2]; // in miles
 
-    //  ================ W A Y -- 1 ================
-    // const options = {
-    //   location: {
-    //     $geoWithin: {
-    //       $centerSphere: centerSphere
-    //     }
-    //   }
-    // };
-    // let spots = await Spot.find(options);
-
-    //  ================ W A Y -- 2 ================
     let spots = await Spot.find({
       location: {
         $near: {
@@ -254,14 +253,13 @@ export let getSpotsByRadius = async (req, res, next) => {
       }
     }).populate('owner');
 
-    // ================ W A Y -- 3 ================
-    // let spots = await Spot.find()
-    //   .where('location')
-    //   .near({
-    //     center: centerSearchPoint,
-    //     maxDistance: queryRadius/3963.2, // in miles
-    //     spherical: true
-    //   });
+    let seller = await Seller.findById(user.seller);
+    if (seller) {
+      // if the user is a Seller aswell, then filter out his own spots.
+      spots = spots.filter(
+        (spot) => spot.owner._id.toString() !== seller._id.toString()
+      );
+    }
 
     res.status(200).json({
       message: 'Spots found successfully',

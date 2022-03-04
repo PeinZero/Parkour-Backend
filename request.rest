@@ -3,8 +3,8 @@ POST http://localhost:5000/auth/signup
 Content-Type: application/json 
 
 {
-    "name": "test1s",
-    "phone": "2s",
+    "name": "PARKER",
+    "phone": "4p",
     "password": "123",
     "confirmPassword": "123"
 }
@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1s",
+    "phone": "4p",
     "password": "123"
 }
 ###
@@ -92,9 +92,11 @@ Authorization: bearer {{generalToken}}
     "pricePerHour": 60
 }
 
+###########################################
+###########################################
 
 ### delete spot
-DELETE http://localhost:5000/spot/deleteSpot/620f7d65d670f6742020ad80
+DELETE http://localhost:5000/spot/deleteSpot/620f7cc23461fdf83823e418
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -114,7 +116,28 @@ Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 ###
+GET http://localhost:5000/user/getUserByRole/61da3982198da5dd6c0bc9f0
+Authorization: bearer {{generalToken}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###########################################
+###########################################
+################# DEV  ####################
+################# APIs ####################
+###########################################
+###########################################
 
 GET http://localhost:5000/user/getUser/61da3991198da5dd6c0bc9f9
 Authorization: bearer {{generalToken}}
-

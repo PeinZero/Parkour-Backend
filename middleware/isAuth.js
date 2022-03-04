@@ -9,11 +9,14 @@ export default (req, res, next) => {
     error.statusCode = 401;
     throw error;
   }
-  const token = authHeader.split(' ')[1];
+
+  // token: header.payload.signature <-- usually
+  // here our token is: header.signature.payload, so...
+  const signature = authHeader.split(' ')[1];
   let decodedToken;
 
   try {
-    decodedToken = verify(token, 'secretkey');
+    decodedToken = verify(signature, 'secretkey');
   } catch (err) {
     err.statusCode = 500;
     throw err;

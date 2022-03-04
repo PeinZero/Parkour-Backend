@@ -15,7 +15,7 @@ export let signup = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ phone: phone });
-    if (!user) throwError('Phone Number already in use.', 409);
+    if (user) throwError('Phone Number already in use.', 409);
 
     if (!confirmPassword || !/\S/.test(confirmPassword))
       throwError('Confirm Password field incorrect', 403);

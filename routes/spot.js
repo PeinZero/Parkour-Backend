@@ -4,6 +4,7 @@ import {
   addSpot,
   deleteSpot,
   editSpot,
+  requestSpot,
   getSpotsByRadius,
   getAllSpotsBySeller,
   getAllSpots
@@ -16,6 +17,7 @@ router.post('/addSpot', isAuth, addSpot);
 router.delete('/deleteSpot/:spotId', isAuth, deleteSpot);
 
 // Puts
+router.put('/requestSpot/:spotId', isAuth, requestSpot);
 router.put('/editSpot/:spotId', isAuth, editSpot);
 
 // Gets

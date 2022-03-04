@@ -15,15 +15,12 @@ const bookingRequestsSchema = new Schema(
 
     day: String,
 
-    startTime: {
-      type: Date,
-      required: true
-    },
-
-    endTime: {
-      type: Date,
-      required: true
-    },
+    slots: [
+      {
+        startTime: { type: Date, required: true },
+        endTime: { type: Date, required: true }
+      }
+    ],
 
     message: String
   },

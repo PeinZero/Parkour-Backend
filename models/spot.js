@@ -45,12 +45,13 @@ const SpotSchema = new Schema(
     },
 
     /*  
-        <== REMEMBER THE STORY ==>
+        <==//     REMEMBER THE STORY     //==>
         User selects a spot on map
         User selects a time slot
         API receives ParkerId, SpotId, StartTime, EndTime
         API creates a new BookingRequest
         API pushes the new BookingRequest to the Spot with the SpotId
+        API pushes the new BookingRequest to the Parker
     */
     bookingRequests: [
       {
@@ -61,19 +62,15 @@ const SpotSchema = new Schema(
 
     // =======================| State |====>
 
-    // availibilty: {
-    //   monday: [{ startTime: Date, endTime: Date }],
-    //   tuesday: [{ startTime: Date, endTime: Date }],
-    //   wednesday: [{ startTime: Date, endTime: Date }],
-    //   thursday: [{ startTime: Date, endTime: Date }],
-    //   friday: [{ startTime: Date, endTime: Date }],
-    //   saturday: [{ startTime: Date, endTime: Date }],
-    //   sunday: [{ startTime: Date, endTime: Date }]
-    // },
     availability: [
       {
         slotDate: Date,
-        slots: [{ startTime: Date, endTime: Date }]
+        slots: [
+          {
+            startTime: { type: Date, required: true },
+            endTime: { type: Date, required: true }
+          }
+        ]
       }
     ],
 

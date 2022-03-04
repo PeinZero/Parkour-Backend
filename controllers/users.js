@@ -4,12 +4,9 @@ import Spot from '../models/spot.js';
 import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
-import {
-  throwError
-} from '../helpers/helperfunctions.js';
+import { throwError } from '../helpers/helperfunctions.js';
 
 const Point = PointData.Point;
-
 
 // make switch role API to
 export const switchRole = async (req, res, next) => {
@@ -50,6 +47,34 @@ export const switchRole = async (req, res, next) => {
       message: "User's Role switched successfully",
       user: modifiedUser
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserByRole = async (req, res, next) => {
+  const roleId = req.params.roleId;
+
+  try {
+    const parkerUser = await User.findOne({ parker: roleId.toString() });
+    if (parkerUser) {
+      res.status(200).json({
+        message: 'Parker User found',
+        user: parkerUser
+      });
+    }
+
+    const sellerUser = await User.findOne({ seller: roleId.toString() });
+    if (sellerUser) {
+      res.status(200).json({
+        message: 'Seller User found',
+        user: sellerUser
+      });
+    }
+
+    if (!parkerUser && !sellerUser) {
+      throwError('User not found. Does not exist.', 404);
+    }
   } catch (error) {
     next(error);
   }
@@ -100,12 +125,10 @@ export const getUser = async (req, res, next) => {
       delete modifiedUser.parker;
     }
 
-
     res.status(200).json({
       message: 'User fetched successfully!',
       user: modifiedUser
     });
-    
   } catch (error) {
     next(error);
   }
