@@ -151,10 +151,8 @@ export let editSpot = async (req, res, next) => {
 export let requestSpot = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
-  const slot = 
-  
-  try {
-
+  // const slot =
+  console.log('requestSpot');
 };
 
 export let getAllSpotsBySeller = async (req, res, next) => {
