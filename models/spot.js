@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const SpotSchema = new Schema(
   {
     // =======================| Identification |====>
-    spotNname: {
+    spotName: {
       type: String,
       required: true
     },
