@@ -19,21 +19,19 @@ export let create = async (req, res, next) => {
     // get spot from spotId and validate if spot is active
 
     const bookingRequest = new BookingRequests({
-        day,
-        car,
-        slots,
-        message,
-        userId
+      bookingRequestor: parkerId,
+      car,
+      day,
+      slots,
+      message
     });
 
     await bookingRequest.save();
 
     res.status(200).json({
-        message: 'Booking request created successfully',
-        bookingRequest
+      message: 'Booking request created successfully',
+      bookingRequest
     });
-
-
   } catch (err) {
     next(err);
   }

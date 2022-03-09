@@ -6,6 +6,7 @@ import {
   edit,
   getSpotsByRadius,
   getSpotsBySeller,
+  switchStatus
 } from '../controllers/spots.js';
 
 const router = Router();
@@ -19,6 +20,7 @@ router.get('/getSpotsByRadius', isAuth, getSpotsByRadius);
 
 // Puts
 router.put('/:spotId', isAuth, edit);
+router.put('/switchStatus/:spotId', isAuth, switchStatus);
 
 // Deletes
 router.delete('/:spotId', isAuth, remove);

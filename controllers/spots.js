@@ -9,7 +9,6 @@ import { throwError } from '../helpers/helperfunctions.js';
 const Point = PointData.Point;
 
 // TODO:
-// get spot by ID
 // switch spot status (active -> inactive & inactive -> active)
 // TODO:
 
@@ -22,7 +21,7 @@ export let add = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller)
+    if (!seller && !user.currentRoleParker)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
@@ -120,7 +119,7 @@ export let edit = async (req, res, next) => {
     if (!user) throwError('User not found', 404);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller)
+    if (!seller && !user.currentRoleParker)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
@@ -153,7 +152,6 @@ export let edit = async (req, res, next) => {
   }
 };
 
-// TODO: Modify API to use the filter option provided.
 export let getSpotsBySeller = async (req, res, next) => {
   const userId = req.userId;
   const filter = req.query.filter.toString();
@@ -167,7 +165,7 @@ export let getSpotsBySeller = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller).populate('reviews');
-    if (!seller)
+    if (!seller && !user.currentRoleParker)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
@@ -175,10 +173,13 @@ export let getSpotsBySeller = async (req, res, next) => {
 
     selector.owner = user.seller.toString();
 
+    message = 'All spots fetched successfully';
     if (filter === '1') {
       selector.isActive = true;
+      message = 'Active Spots fetched successfully';
     } else if (filter === '-1') {
       selector.isActive = false;
+      message = 'InActive Spots fetched successfully';
     }
     const selectedSpots = await Spot.find(selector);
 
@@ -198,6 +199,7 @@ export let getSpotsBySeller = async (req, res, next) => {
   }
 };
 
+// TODO: Fix this to filter out inactive spots
 export let getSpotsByRadius = async (req, res, next) => {
   const queryLng = req.query.lng;
   const queryLat = req.query.lat;
@@ -242,5 +244,38 @@ export let getSpotsByRadius = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export let switchStatus = async (req, res, next) => {
+  const userId = req.userId;
+  const spotId = req.params.spotId;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) throwError('User not found', 404);
+
+    const seller = await Seller.findById(user.seller);
+    if (!seller && !user.currentRoleParker)
+      throwError(
+        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
+        500
+      );
+
+    const spot = await Spot.findById(spotId);
+    if (!spot) throwError('Spot not found', 404);
+
+    if (spot.owner.toString() !== seller._id.toString())
+      throwError('This Seller is not the owner of this Spot', 401);
+
+    spot.isActive = !spot.isActive;
+    await spot.save();
+
+    res.status(200).json({
+      message: `Spot status changed successfully!`,
+      isActive: spot.isActive
+    });
+  } catch (err) {
+    next(err);
   }
 };
