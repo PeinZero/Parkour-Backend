@@ -1,8 +1,6 @@
 import User from '../models/user.js';
-import Car from '../models/car.js';
 import Spot from '../models/spot.js';
 import PointData from '../models/point.js';
-import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
@@ -138,7 +136,7 @@ export let edit = async (req, res, next) => {
     spot.addressLine2 = req.body.addressLine2;
     spot.nearestLandmark = req.body.nearestLandmark;
     spot.comment = req.body.comment;
-    spot.location;
+    spot.location = req.body.location;
     spot.imagesURI = req.body.imagesURI;
     spot.pricePerHour = req.body.pricePerHour;
     spot.owner = seller._id;
