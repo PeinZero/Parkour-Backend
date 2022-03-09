@@ -153,51 +153,50 @@ export let edit = async (req, res, next) => {
   }
 };
 
-
 // TODO: Modify API to use the filter option provided.
 export let getSpotsBySeller = async (req, res, next) => {
   const userId = req.userId;
-  const filter = req.query.filter;
+  const filter = req.query.filter.toString();
+  let message,
+    selector = {};
 
   try {
+    if (!filter) throwError(`Missing Query Param: "filter"`, 400);
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
-    const seller = await Seller.findById(user.seller);
+    const seller = await Seller.findById(user.seller).populate('reviews');
     if (!seller)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
       );
 
-    const selectedData = await Seller.findById(user.seller)
-      .select('activeSpots')
-      .populate({
-        path: 'activeSpots reviews',
-        populate: {
-          path: 'location'
-        }
-      });
+    selector.owner = user.seller.toString();
+
+    if (filter === '1') {
+      selector.isActive = true;
+    } else if (filter === '-1') {
+      selector.isActive = false;
+    }
+    const selectedSpots = await Spot.find(selector);
 
     res.status(200).json({
-      message: `All Spots found successfully for ${user.name}`,
-      data: {
-        totalSpots: selectedData.activeSpots.length,
-        seller: {
-          name: user.name,
-          phone: user.phone,
-          rating: seller.cumulativeRating,
-          reviews: seller.reviews
-        },
-        activeSpots: selectedData.activeSpots
-      }
+      message,
+      totalSpots: selectedSpots.length,
+      spots: selectedSpots
+      // seller: {
+      //   name: user.name,
+      //   phone: user.phone,
+      //   rating: seller.cumulativeRating,
+      //   reviews: seller.reviews
+      // },
     });
   } catch (error) {
     next(error);
   }
 };
-
 
 export let getSpotsByRadius = async (req, res, next) => {
   const queryLng = req.query.lng;
