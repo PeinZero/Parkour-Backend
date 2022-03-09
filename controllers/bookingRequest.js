@@ -15,7 +15,7 @@ export let create = async (req, res, next) => {
   // const startTime = req.body.startTime;
   // const endTime = req.body.endTime;
   const message = req.body.message;
-  
+
   try {
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
@@ -81,9 +81,12 @@ export let getSellerRequests = async (req, res, next) => {
       );
 
     selector = {
-      spotOwner: seller._id,
-      status: filter
+      spotOwner: seller._id
     };
+
+    if (filter !== 'all') {
+      selector.status = filter;
+    }
 
     const bookingRequests = await BookingRequests.find(selector);
 
@@ -117,9 +120,12 @@ export let getParkerRequests = async (req, res, next) => {
       );
 
     selector = {
-      bookingRequestor: parker._id,
-      status: filter
+      bookingRequestor: parker._id
     };
+
+    if (filter !== 'all') {
+      selector.status = filter;
+    }
 
     const bookingRequests = await BookingRequests.find(selector);
 
