@@ -133,7 +133,11 @@ GET http://localhost:5000/user/getUserByRole/61da3982198da5dd6c0bc9f0
 Authorization: bearer {{generalToken}}
 
 ###
-GET http://localhost:5000/bookingRequest/sellerRequests?filter=rejected
+GET http://localhost:5000/bookingRequest/sellerRequests?filter=pending
+Authorization: bearer {{generalToken}}
+
+###
+GET http://localhost:5000/bookingRequest/parkerRequests?filter=pending
 Authorization: bearer {{generalToken}}
 
 

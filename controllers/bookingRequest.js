@@ -7,16 +7,16 @@ import { throwError } from '../helpers/helperfunctions.js';
 import Car from '../models/car.js';
 
 export let create = async (req, res, next) => {
+  const userId = req.userId;
+  const spotId = req.body.spotId;
+  const carId = req.body.carId;
+  const day = req.body.day;
+  const slots = req.body.slots;
+  // const startTime = req.body.startTime;
+  // const endTime = req.body.endTime;
+  const message = req.body.message;
+  
   try {
-    const userId = req.userId;
-    const spotId = req.body.spotId;
-    const carId = req.body.carId;
-    const day = req.body.day;
-    const slots = req.body.slots;
-    // const startTime = req.body.startTime;
-    // const endTime = req.body.endTime;
-    const message = req.body.message;
-
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
     if (!user.currentRoleParker) throwError('User is not a Parker', 403);
@@ -89,6 +89,7 @@ export let getSellerRequests = async (req, res, next) => {
 
     res.status(200).json({
       message: `Booking requests for Seller with status "${filter}" retrieved successfully`,
+      total: bookingRequests.length,
       bookingRequests
     });
   } catch (err) {
@@ -124,6 +125,7 @@ export let getParkerRequests = async (req, res, next) => {
 
     res.status(200).json({
       message: `Booking requests for Parker with status "${filter}" retrieved successfully`,
+      total: bookingRequests.length,
       bookingRequests
     });
   } catch (err) {
