@@ -4,7 +4,6 @@ import Spot from '../models/spot.js';
 import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
-import BookingRequest from '../models/bookingRequests.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
 const Point = PointData.Point;
@@ -14,7 +13,7 @@ const Point = PointData.Point;
 // switch spot status (active -> inactive & inactive -> active)
 // TODO:
 
-export let addSpot = async (req, res, next) => {
+export let add = async (req, res, next) => {
   const userId = req.userId;
 
   try {
@@ -33,6 +32,7 @@ export let addSpot = async (req, res, next) => {
     await location.save();
 
     let spot = new Spot({
+      name: req.body.name,
       addressLine1: req.body.addressLine1,
       addressLine2: req.body.addressLine2,
       nearestLandmark: req.body.nearestLandmark,
@@ -62,7 +62,7 @@ export let addSpot = async (req, res, next) => {
   }
 };
 
-export let deleteSpot = async (req, res, next) => {
+export let remove = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
 
@@ -111,7 +111,7 @@ export let deleteSpot = async (req, res, next) => {
   }
 };
 
-export let editSpot = async (req, res, next) => {
+export let edit = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
 
@@ -143,22 +143,21 @@ export let editSpot = async (req, res, next) => {
     spot.availability = req.body.availability;
 
     await spot.save();
+
+    res.status(200).json({
+      message: `Spot edited successfully!`,
+      spot
+    });
   } catch (err) {
     next(err);
   }
 };
 
-export let requestSpot = async (req, res, next) => {
-  const userId = req.userId;
-  const spotId = req.params.spotId;
-  const slot = 
-  
-  try {
 
-};
-
-export let getAllSpotsBySeller = async (req, res, next) => {
+// TODO: Modify API to use the filter option provided.
+export let getSpotsBySeller = async (req, res, next) => {
   const userId = req.userId;
+  const filter = req.query.filter;
 
   try {
     const user = await User.findById(userId);
@@ -199,30 +198,6 @@ export let getAllSpotsBySeller = async (req, res, next) => {
   }
 };
 
-export let getAllSpots = async (req, res, next) => {
-  try {
-    let allSpots = await User.find({ isSeller: true })
-      .populate({
-        path: 'seller',
-        populate: {
-          path: 'activeSpots',
-          populate: {
-            path: 'location'
-          }
-        }
-      })
-      .select('name cumulativeRating reviews activeSpots');
-    if (!allSpots) throwError('No Spots/Sellers found', 404);
-
-    res.status(200).json({
-      message: 'All Spots found successfully',
-      totalSpots: allSpots.length,
-      allSpots
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
 export let getSpotsByRadius = async (req, res, next) => {
   const queryLng = req.query.lng;

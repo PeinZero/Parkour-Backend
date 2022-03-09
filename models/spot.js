@@ -53,6 +53,7 @@ const SpotSchema = new Schema(
         API pushes the new BookingRequest to the Spot with the SpotId
         API pushes the new BookingRequest to the Parker
     */
+   
     bookingRequests: [
       {
         ref: 'BookingRequests',
