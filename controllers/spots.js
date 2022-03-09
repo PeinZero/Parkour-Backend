@@ -4,7 +4,6 @@ import Spot from '../models/spot.js';
 import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
-import BookingRequest from '../models/bookingRequests.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
 const Point = PointData.Point;
@@ -14,7 +13,7 @@ const Point = PointData.Point;
 // switch spot status (active -> inactive & inactive -> active)
 // TODO:
 
-export let addSpot = async (req, res, next) => {
+export let add = async (req, res, next) => {
   const userId = req.userId;
 
   try {
@@ -33,6 +32,7 @@ export let addSpot = async (req, res, next) => {
     await location.save();
 
     let spot = new Spot({
+      name: req.body.name,
       addressLine1: req.body.addressLine1,
       addressLine2: req.body.addressLine2,
       nearestLandmark: req.body.nearestLandmark,
@@ -62,7 +62,7 @@ export let addSpot = async (req, res, next) => {
   }
 };
 
-export let deleteSpot = async (req, res, next) => {
+export let remove = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
 
@@ -111,7 +111,7 @@ export let deleteSpot = async (req, res, next) => {
   }
 };
 
-export let editSpot = async (req, res, next) => {
+export let edit = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
 
@@ -143,77 +143,55 @@ export let editSpot = async (req, res, next) => {
     spot.availability = req.body.availability;
 
     await spot.save();
+
+    res.status(200).json({
+      message: `Spot edited successfully!`,
+      spot
+    });
   } catch (err) {
     next(err);
   }
 };
 
-export let requestSpot = async (req, res, next) => {
+// TODO: Modify API to use the filter option provided.
+export let getSpotsBySeller = async (req, res, next) => {
   const userId = req.userId;
-  const spotId = req.params.spotId;
-};
-
-export let getAllSpotsBySeller = async (req, res, next) => {
-  const userId = req.userId;
+  const filter = req.query.filter.toString();
+  let message,
+    selector = {};
 
   try {
+    if (!filter) throwError(`Missing Query Param: "filter"`, 400);
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
-    const seller = await Seller.findById(user.seller);
+    const seller = await Seller.findById(user.seller).populate('reviews');
     if (!seller)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
       );
 
-    const selectedData = await Seller.findById(user.seller)
-      .select('activeSpots')
-      .populate({
-        path: 'activeSpots reviews',
-        populate: {
-          path: 'location'
-        }
-      });
+    selector.owner = user.seller.toString();
+
+    if (filter === '1') {
+      selector.isActive = true;
+    } else if (filter === '-1') {
+      selector.isActive = false;
+    }
+    const selectedSpots = await Spot.find(selector);
 
     res.status(200).json({
-      message: `All Spots found successfully for ${user.name}`,
-      data: {
-        totalSpots: selectedData.activeSpots.length,
-        seller: {
-          name: user.name,
-          phone: user.phone,
-          rating: seller.cumulativeRating,
-          reviews: seller.reviews
-        },
-        activeSpots: selectedData.activeSpots
-      }
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export let getAllSpots = async (req, res, next) => {
-  try {
-    let allSpots = await User.find({ isSeller: true })
-      .populate({
-        path: 'seller',
-        populate: {
-          path: 'activeSpots',
-          populate: {
-            path: 'location'
-          }
-        }
-      })
-      .select('name cumulativeRating reviews activeSpots');
-    if (!allSpots) throwError('No Spots/Sellers found', 404);
-
-    res.status(200).json({
-      message: 'All Spots found successfully',
-      totalSpots: allSpots.length,
-      allSpots
+      message,
+      totalSpots: selectedSpots.length,
+      spots: selectedSpots
+      // seller: {
+      //   name: user.name,
+      //   phone: user.phone,
+      //   rating: seller.cumulativeRating,
+      //   reviews: seller.reviews
+      // },
     });
   } catch (error) {
     next(error);

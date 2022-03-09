@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "4p",
+    "phone": "1s",
     "password": "123"
 }
 ###
@@ -54,7 +54,7 @@ Authorization: bearer {{generalToken}}
 
 
 ### add spot 1
-POST http://localhost:5000/spot/addSpot
+POST http://localhost:5000/spot
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -67,7 +67,7 @@ Authorization: bearer {{generalToken}}
 }
 
 ### add spot 2
-POST http://localhost:5000/spot/addSpot
+POST http://localhost:5000/spot
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -80,7 +80,7 @@ Authorization: bearer {{generalToken}}
 }
 
 ### add spot 3
-POST http://localhost:5000/spot/addSpot
+POST http://localhost:5000/spot
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -95,8 +95,22 @@ Authorization: bearer {{generalToken}}
 ###########################################
 ###########################################
 
+### Edit spot
+PUT http://localhost:5000/spot/6227e722ddea4b8a6cb78be6
+Content-Type: application/json
+Authorization: bearer {{generalToken}}
+
+{
+    "name": "Near NIPA Chowrangi Center",
+    "addressLine1" : "Very near the Sadqain marriage lawn cut.",
+    "nearestLandmark": "-",
+    "location": [ 67.097099, 24.917846],
+    "pricePerHour": 60
+}
+
+
 ### delete spot
-DELETE http://localhost:5000/spot/deleteSpot/620f7cc23461fdf83823e418
+DELETE http://localhost:5000/spot/6227e722ddea4b8a6cb78be6
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -106,7 +120,7 @@ Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 ### get all spots by seller
-GET http://localhost:5000/spot/getAllSpotsBySeller
+GET http://localhost:5000/spot/getSpotsBySeller?filter=0
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 

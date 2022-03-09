@@ -5,6 +5,10 @@ const Schema = mongoose.Schema;
 const SpotSchema = new Schema(
   {
     // =======================| Identification |====>
+    name: {
+      type: String,
+      required: true
+    },
 
     addressLine1: {
       type: String,
@@ -53,6 +57,7 @@ const SpotSchema = new Schema(
         API pushes the new BookingRequest to the Spot with the SpotId
         API pushes the new BookingRequest to the Parker
     */
+
     bookingRequests: [
       {
         ref: 'BookingRequests',
