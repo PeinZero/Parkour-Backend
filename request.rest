@@ -96,7 +96,7 @@ Authorization: bearer {{generalToken}}
 ###########################################
 
 ### Edit spot
-PUT http://localhost:5000/spot/6227e722ddea4b8a6cb78be6
+PUT http://localhost:5000/spot/622903f63d9a243f7623c9d3
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -108,9 +108,8 @@ Authorization: bearer {{generalToken}}
     "pricePerHour": 60
 }
 
-
 ### delete spot
-DELETE http://localhost:5000/spot/6227e722ddea4b8a6cb78be6
+DELETE http://localhost:5000/spot/6221b5d2b4de40b5bfc642ca
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -131,6 +130,10 @@ Authorization: bearer {{generalToken}}
 
 ###
 GET http://localhost:5000/user/getUserByRole/61da3982198da5dd6c0bc9f0
+Authorization: bearer {{generalToken}}
+
+###
+GET http://localhost:5000/bookingRequest/sellerRequests?filter=rejected
 Authorization: bearer {{generalToken}}
 
 

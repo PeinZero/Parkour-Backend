@@ -5,6 +5,7 @@ import Seller from '../models/seller.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
 const Point = PointData.Point;
+const safeDistance = 3; // in meters
 
 // TODO:
 // switch spot status (active -> inactive & inactive -> active)
@@ -28,7 +29,22 @@ export let add = async (req, res, next) => {
     const location = new Point({ coordinates: req.body.location });
     await location.save();
 
-    let spot = new Spot({
+    let spots = await Spot.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: centerSearchPoint
+          },
+          $maxDistance: safeDistance // in meters
+        }
+      },
+      isActive: true
+    });
+
+    if (spots) throwError('A spot already exists at this location.', 409);
+
+    const spot = new Spot({
       spotName: req.body.spotName,
       addressLine1: req.body.addressLine1,
       addressLine2: req.body.addressLine2,
@@ -41,10 +57,7 @@ export let add = async (req, res, next) => {
       availability: req.body.availability
     });
 
-    // adding spot
     await spot.save();
-
-    // pushing spots to seller.activeSpots
     seller.activeSpots.push(spot);
     await seller.save();
 
@@ -155,12 +168,14 @@ export let edit = async (req, res, next) => {
 
 export let getSpotsBySeller = async (req, res, next) => {
   const userId = req.userId;
-  const filter = req.query.filter.toString();
+  let filter = req.query.filter;
   let message,
     selector = {};
 
   try {
     if (!filter) throwError(`Missing Query Param: "filter"`, 400);
+    filter = filter.toString();
+
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
@@ -174,14 +189,18 @@ export let getSpotsBySeller = async (req, res, next) => {
 
     selector.owner = user.seller.toString();
 
-    message = 'All spots fetched successfully';
     if (filter === '1') {
       selector.isActive = true;
       message = 'Active Spots fetched successfully';
     } else if (filter === '-1') {
       selector.isActive = false;
       message = 'InActive Spots fetched successfully';
+    } else if (filter === '0') {
+      message = 'All spots fetched successfully';
+    } else {
+      throwError("Invalid value for query param 'filter'", 422);
     }
+
     const selectedSpots = await Spot.find(selector);
 
     res.status(200).json({
@@ -200,7 +219,6 @@ export let getSpotsBySeller = async (req, res, next) => {
   }
 };
 
-// TODO: Fix this to filter out inactive spots
 export let getSpotsByRadius = async (req, res, next) => {
   const queryLng = req.query.lng;
   const queryLat = req.query.lat;

@@ -13,12 +13,14 @@ export let create = async (req, res, next) => {
     const carId = req.body.carId;
     const day = req.body.day;
     const slots = req.body.slots;
+    // const startTime = req.body.startTime;
+    // const endTime = req.body.endTime;
     const message = req.body.message;
 
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
     if (!user.currentRoleParker) throwError('User is not a Parker', 403);
-    
+
     const parker = await Parker.findById(user.parker);
     if (!parker)
       throwError(
@@ -38,6 +40,8 @@ export let create = async (req, res, next) => {
       spot: spotId,
       car,
       day,
+      // startTime,
+      // endTime,
       slots,
       message
     });
@@ -57,13 +61,18 @@ export let create = async (req, res, next) => {
   }
 };
 
-export let getAll = async (req, res, next) => {
+export let getSellerRequests = async (req, res, next) => {
   const userId = req.userId;
+  let filter = req.query.filter;
+  let selector = {};
 
   try {
+    if (!filter) throwError(`Missing Query Param: "filter"`, 400);
+    filter = filter.toString();
+
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
-    if (!user.currentRoleParker) throwError('User is not a Seller', 403);
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
     const seller = await Seller.findById(user.seller);
     if (!seller)
       throwError(
@@ -71,12 +80,50 @@ export let getAll = async (req, res, next) => {
         500
       );
 
-    const bookingRequests = await BookingRequests.find({
-      spotOwner: seller._id
-    });
+    selector = {
+      spotOwner: seller._id,
+      status: filter
+    };
+
+    const bookingRequests = await BookingRequests.find(selector);
 
     res.status(200).json({
-      message: 'Booking requests retrieved successfully',
+      message: `Booking requests for Seller with status "${filter}" retrieved successfully`,
+      bookingRequests
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export let getParkerRequests = async (req, res, next) => {
+  const userId = req.userId;
+  let filter = req.query.filter;
+  let selector = {};
+
+  try {
+    if (!filter) throwError(`Missing Query Param: "filter"`, 400);
+    filter = filter.toString();
+
+    const user = await User.findById(userId);
+    if (!user) throwError('User not found', 404);
+    if (!user.currentRoleParker) throwError('User is not a Parker', 403);
+    const parker = await Parker.findById(user.parker);
+    if (!parker)
+      throwError(
+        `Internal Server Error: User has a currentRole "Parker" flag but doesn't contain 'Parker' information`,
+        500
+      );
+
+    selector = {
+      bookingRequestor: parker._id,
+      status: filter
+    };
+
+    const bookingRequests = await BookingRequests.find(selector);
+
+    res.status(200).json({
+      message: `Booking requests for Parker with status "${filter}" retrieved successfully`,
       bookingRequests
     });
   } catch (err) {
