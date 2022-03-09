@@ -21,7 +21,7 @@ export let add = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller && !user.currentRoleParker)
+    if (!seller)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
@@ -68,6 +68,7 @@ export let remove = async (req, res, next) => {
   try {
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
     if (!seller)
@@ -117,9 +118,10 @@ export let edit = async (req, res, next) => {
   try {
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller && !user.currentRoleParker)
+    if (!seller)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
@@ -165,7 +167,7 @@ export let getSpotsBySeller = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller).populate('reviews');
-    if (!seller && !user.currentRoleParker)
+    if (!seller)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
@@ -254,9 +256,10 @@ export let switchStatus = async (req, res, next) => {
   try {
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller && !user.currentRoleParker)
+    if (!seller)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
