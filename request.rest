@@ -59,7 +59,7 @@ Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 {
-    "name": "Millenium Mall, Rashid Minhas Road",
+    "spotName": "Millenium Mall, Rashid Minhas Road",
     "addressLine1" : "on Rashid minhas road, near Mcdonalds and Shell Petrol Pump",
     "nearestLandmark": "Next to Saima Mall",
     "location": [ 67.115461, 24.900942],
@@ -72,7 +72,7 @@ Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 {
-    "name": "Main Safoora Chowrangi",
+    "spotName": "Main Safoora Chowrangi",
     "addressLine1" : "Next to Malik Dairy and rangers Chowk.",
     "nearestLandmark": "-",
     "location": [ 67.156612, 24.939279],
@@ -85,7 +85,7 @@ Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 {
-    "name": "Main NIPA Chowrangi Center",
+    "spotName": "Main NIPA Chowrangi Center",
     "addressLine1" : "Next to Sadqain marriage lawn.",
     "nearestLandmark": "-",
     "location": [ 67.097099, 24.917846],
@@ -120,7 +120,7 @@ Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 ### get all spots by seller
-GET http://localhost:5000/spot/getSpotsBySeller?filter=0
+GET http://localhost:5000/spot/getSpotsBySeller?filter=1
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 

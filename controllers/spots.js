@@ -229,7 +229,8 @@ export let getSpotsByRadius = async (req, res, next) => {
           // $minDistance: 500,
           $maxDistance: queryRadius * 1000 // in meters
         }
-      }
+      },
+      isActive: true
     }).populate('owner');
 
     let seller = await Seller.findById(user.seller);
