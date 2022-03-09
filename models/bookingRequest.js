@@ -7,12 +7,24 @@ const bookingRequestsSchema = new Schema(
       ref: 'Parker',
       type: Schema.Types.ObjectId
     },
+    
+    spotOwner: {
+      ref: 'Seller',
+      type: Schema.Types.ObjectId
+    },
+
+    spot: {
+      ref: 'Spot',
+      type: Schema.Types.ObjectId
+    },
 
     car: {
       ref: 'Car',
       type: Schema.Types.ObjectId
     },
 
+
+    
     day: String,
 
     slots: [
