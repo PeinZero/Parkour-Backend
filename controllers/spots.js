@@ -31,7 +31,7 @@ export let add = async (req, res, next) => {
     await location.save();
 
     let spot = new Spot({
-      name: req.body.name,
+      spotName: req.body.spotName,
       addressLine1: req.body.addressLine1,
       addressLine2: req.body.addressLine2,
       nearestLandmark: req.body.nearestLandmark,
@@ -133,6 +133,7 @@ export let edit = async (req, res, next) => {
     if (spot.owner.toString() !== seller._id.toString())
       throwError('This Seller is not the owner of this Spot', 401);
 
+    spot.spotName = req.body.spotName;
     spot.addressLine1 = req.body.addressLine1;
     spot.addressLine2 = req.body.addressLine2;
     spot.nearestLandmark = req.body.nearestLandmark;
