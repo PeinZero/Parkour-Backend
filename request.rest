@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1s",
+    "phone": "1p",
     "password": "123"
 }
 ###
@@ -137,7 +137,7 @@ GET http://localhost:5000/bookingRequest/sellerRequests?filter=pending
 Authorization: bearer {{generalToken}}
 
 ###
-GET http://localhost:5000/bookingRequest/parkerRequests?filter=pending
+GET http://localhost:5000/bookingRequest/parkerRequests?filter=all
 Authorization: bearer {{generalToken}}
 
 
