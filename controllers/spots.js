@@ -145,21 +145,17 @@ export let edit = async (req, res, next) => {
     if (spot.owner.toString() !== seller._id.toString())
       throwError('This Seller is not the owner of this Spot', 401);
 
-    const location = new Point({ coordinates: req.body.location });
-    await location.save();
-
     spot.spotName = req.body.spotName;
     spot.addressLine1 = req.body.addressLine1;
     spot.addressLine2 = req.body.addressLine2;
     spot.nearestLandmark = req.body.nearestLandmark;
     spot.comment = req.body.comment;
-    spot.location = location;
+    spot.location.coordinates = req.body.location;
     spot.imagesURI = req.body.imagesURI;
     spot.pricePerHour = req.body.pricePerHour;
     spot.owner = seller._id;
     spot.availability = req.body.availability;
 
-    console.log(spot);
     await spot.save();
 
     res.status(200).json({
