@@ -8,6 +8,16 @@ const bookingRequestsSchema = new Schema(
       type: Schema.Types.ObjectId
     },
 
+    spotOwner: {
+      ref: 'Seller',
+      type: Schema.Types.ObjectId
+    },
+
+    spot: {
+      ref: 'Spot',
+      type: Schema.Types.ObjectId
+    },
+
     car: {
       ref: 'Car',
       type: Schema.Types.ObjectId
@@ -22,7 +32,16 @@ const bookingRequestsSchema = new Schema(
       }
     ],
 
-    message: String
+    // startTime: { type: Date, required: true },
+    // endTime: { type: Date, required: true },
+
+    message: String,
+
+    status: {
+      type: String,
+      enum: ['pending', 'accepted', 'rejected', 'all'],
+      default: 'pending'
+    }
   },
   {
     timestamps: true

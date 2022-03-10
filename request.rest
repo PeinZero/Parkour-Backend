@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "4p",
+    "phone": "1s",
     "password": "123"
 }
 ###
@@ -54,12 +54,12 @@ Authorization: bearer {{generalToken}}
 
 
 ### add spot 1
-POST http://localhost:5000/spot/addSpot
+POST http://localhost:5000/spot
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 {
-    "name": "Millenium Mall, Rashid Minhas Road",
+    "spotName": "Millenium Mall, Rashid Minhas Road",
     "addressLine1" : "on Rashid minhas road, near Mcdonalds and Shell Petrol Pump",
     "nearestLandmark": "Next to Saima Mall",
     "location": [ 67.115461, 24.900942],
@@ -67,12 +67,12 @@ Authorization: bearer {{generalToken}}
 }
 
 ### add spot 2
-POST http://localhost:5000/spot/addSpot
+POST http://localhost:5000/spot
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 {
-    "name": "Main Safoora Chowrangi",
+    "spotName": "Main Safoora Chowrangi",
     "addressLine1" : "Next to Malik Dairy and rangers Chowk.",
     "nearestLandmark": "-",
     "location": [ 67.156612, 24.939279],
@@ -80,23 +80,36 @@ Authorization: bearer {{generalToken}}
 }
 
 ### add spot 3
-POST http://localhost:5000/spot/addSpot
+POST http://localhost:5000/spot
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 {
-    "name": "Main NIPA Chowrangi Center",
-    "addressLine1" : "Next to Sadqain marriage lawn.",
-    "nearestLandmark": "-",
-    "location": [ 67.097099, 24.917846],
+    "spotName": "Johar Street 3",
+    "addressLine1" : "anda wala burger",
+    "nearestLandmark": "Millenium Mall",
+    "location": [ 67.11437358381959, 24.899643751109327],
     "pricePerHour": 60
 }
 
 ###########################################
 ###########################################
 
+### Edit spot
+PUT http://localhost:5000/spot/6229087c3d9a243f7623ca51
+Content-Type: application/json
+Authorization: bearer {{generalToken}}
+
+{
+    "spotName": "Johar Street 30",
+    "addressLine1" : "butter wala burger",
+    "nearestLandmark": "Saima Mall",
+    "location": [ 67.11437358381959, 24.899643751109327],
+    "pricePerHour": 60
+}
+
 ### delete spot
-DELETE http://localhost:5000/spot/deleteSpot/620f7cc23461fdf83823e418
+DELETE http://localhost:5000/spot/6221b5d2b4de40b5bfc642ca
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -106,7 +119,7 @@ Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 ### get all spots by seller
-GET http://localhost:5000/spot/getAllSpotsBySeller
+GET http://localhost:5000/spot/getSpotsBySeller?filter=1
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -117,6 +130,14 @@ Authorization: bearer {{generalToken}}
 
 ###
 GET http://localhost:5000/user/getUserByRole/61da3982198da5dd6c0bc9f0
+Authorization: bearer {{generalToken}}
+
+###
+GET http://localhost:5000/bookingRequest/sellerRequests?filter=pending
+Authorization: bearer {{generalToken}}
+
+###
+GET http://localhost:5000/bookingRequest/parkerRequests?filter=all
 Authorization: bearer {{generalToken}}
 
 

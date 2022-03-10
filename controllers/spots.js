@@ -1,20 +1,17 @@
 import User from '../models/user.js';
-import Car from '../models/car.js';
 import Spot from '../models/spot.js';
 import PointData from '../models/point.js';
-import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
-import BookingRequest from '../models/bookingRequests.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
 const Point = PointData.Point;
+const SAFE_DISTANCE = 3; // in meters
 
 // TODO:
-// get spot by ID
 // switch spot status (active -> inactive & inactive -> active)
 // TODO:
 
-export let addSpot = async (req, res, next) => {
+export let add = async (req, res, next) => {
   const userId = req.userId;
 
   try {
@@ -32,7 +29,24 @@ export let addSpot = async (req, res, next) => {
     const location = new Point({ coordinates: req.body.location });
     await location.save();
 
-    let spot = new Spot({
+    let nearbySpots = await Spot.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: req.body.location
+          },
+          $maxDistance: SAFE_DISTANCE // in meters
+        }
+      },
+      isActive: true
+    });
+
+    if (nearbySpots.length > 0)
+      throwError('A spot already exists at this location.', 409);
+
+    const spot = new Spot({
+      spotName: req.body.spotName,
       addressLine1: req.body.addressLine1,
       addressLine2: req.body.addressLine2,
       nearestLandmark: req.body.nearestLandmark,
@@ -44,10 +58,7 @@ export let addSpot = async (req, res, next) => {
       availability: req.body.availability
     });
 
-    // adding spot
     await spot.save();
-
-    // pushing spots to seller.activeSpots
     seller.activeSpots.push(spot);
     await seller.save();
 
@@ -62,13 +73,14 @@ export let addSpot = async (req, res, next) => {
   }
 };
 
-export let deleteSpot = async (req, res, next) => {
+export let remove = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
 
   try {
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
     if (!seller)
@@ -111,13 +123,14 @@ export let deleteSpot = async (req, res, next) => {
   }
 };
 
-export let editSpot = async (req, res, next) => {
+export let edit = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.params.spotId;
 
   try {
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
     if (!seller)
@@ -132,90 +145,91 @@ export let editSpot = async (req, res, next) => {
     if (spot.owner.toString() !== seller._id.toString())
       throwError('This Seller is not the owner of this Spot', 401);
 
+    let nearbySpots = await Spot.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: req.body.location
+          },
+          $maxDistance: SAFE_DISTANCE // in meters
+        }
+      },
+      isActive: true
+    });
+
+    if (nearbySpots.length > 0)
+      throwError('A spot already exists at this location.', 409);
+
+    spot.spotName = req.body.spotName;
     spot.addressLine1 = req.body.addressLine1;
     spot.addressLine2 = req.body.addressLine2;
     spot.nearestLandmark = req.body.nearestLandmark;
     spot.comment = req.body.comment;
-    spot.location;
+    spot.location.coordinates = req.body.location;
     spot.imagesURI = req.body.imagesURI;
     spot.pricePerHour = req.body.pricePerHour;
     spot.owner = seller._id;
     spot.availability = req.body.availability;
 
     await spot.save();
+
+    res.status(200).json({
+      message: `Spot edited successfully!`,
+      spot
+    });
   } catch (err) {
     next(err);
   }
 };
 
-export let requestSpot = async (req, res, next) => {
+export let getSpotsBySeller = async (req, res, next) => {
   const userId = req.userId;
-  const spotId = req.params.spotId;
-  // const slot =
-  console.log('requestSpot');
-};
-
-export let getAllSpotsBySeller = async (req, res, next) => {
-  const userId = req.userId;
+  let filter = req.query.filter;
+  let message,
+    selector = {};
 
   try {
+    if (!filter) throwError(`Missing Query Param: "filter"`, 400);
+    filter = filter.toString();
+
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
-    const seller = await Seller.findById(user.seller);
+    const seller = await Seller.findById(user.seller).populate('reviews');
     if (!seller)
       throwError(
         `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
         500
       );
 
-    const selectedData = await Seller.findById(user.seller)
-      .select('activeSpots')
-      .populate({
-        path: 'activeSpots reviews',
-        populate: {
-          path: 'location'
-        }
-      });
+    selector.owner = user.seller.toString();
+
+    if (filter === '1') {
+      selector.isActive = true;
+      message = 'Active Spots fetched successfully';
+    } else if (filter === '-1') {
+      selector.isActive = false;
+      message = 'InActive Spots fetched successfully';
+    } else if (filter === '0') {
+      message = 'All spots fetched successfully';
+    } else {
+      throwError("Invalid value for query param 'filter'", 422);
+    }
+
+    const selectedSpots = await Spot.find(selector);
 
     res.status(200).json({
-      message: `All Spots found successfully for ${user.name}`,
-      data: {
-        totalSpots: selectedData.activeSpots.length,
-        seller: {
-          name: user.name,
-          phone: user.phone,
-          rating: seller.cumulativeRating,
-          reviews: seller.reviews
-        },
-        activeSpots: selectedData.activeSpots
-      }
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export let getAllSpots = async (req, res, next) => {
-  try {
-    let allSpots = await User.find({ isSeller: true })
-      .populate({
-        path: 'seller',
-        populate: {
-          path: 'activeSpots',
-          populate: {
-            path: 'location'
-          }
-        }
-      })
-      .select('name cumulativeRating reviews activeSpots');
-    if (!allSpots) throwError('No Spots/Sellers found', 404);
-
-    res.status(200).json({
-      message: 'All Spots found successfully',
-      totalSpots: allSpots.length,
-      allSpots
+      message,
+      totalSpots: selectedSpots.length,
+      spots: selectedSpots
+      // seller: {
+      //   name: user.name,
+      //   phone: user.phone,
+      //   rating: seller.cumulativeRating,
+      //   reviews: seller.reviews
+      // },
     });
   } catch (error) {
     next(error);
@@ -248,7 +262,8 @@ export let getSpotsByRadius = async (req, res, next) => {
           // $minDistance: 500,
           $maxDistance: queryRadius * 1000 // in meters
         }
-      }
+      },
+      isActive: true
     }).populate('owner');
 
     let seller = await Seller.findById(user.seller);
@@ -266,5 +281,39 @@ export let getSpotsByRadius = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export let switchStatus = async (req, res, next) => {
+  const userId = req.userId;
+  const spotId = req.params.spotId;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) throwError('User not found', 404);
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
+
+    const seller = await Seller.findById(user.seller);
+    if (!seller)
+      throwError(
+        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
+        500
+      );
+
+    const spot = await Spot.findById(spotId);
+    if (!spot) throwError('Spot not found', 404);
+
+    if (spot.owner.toString() !== seller._id.toString())
+      throwError('This Seller is not the owner of this Spot', 401);
+
+    spot.isActive = !spot.isActive;
+    await spot.save();
+
+    res.status(200).json({
+      message: `Spot status changed successfully!`,
+      isActive: spot.isActive
+    });
+  } catch (err) {
+    next(err);
   }
 };
