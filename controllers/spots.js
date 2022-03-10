@@ -152,7 +152,7 @@ export let edit = async (req, res, next) => {
             type: 'Point',
             coordinates: req.body.location
           },
-          $maxDistance: safeDistance // in meters
+          $maxDistance: SAFE_DISTANCE // in meters
         }
       },
       isActive: true
