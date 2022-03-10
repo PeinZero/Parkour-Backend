@@ -34,7 +34,7 @@ export let add = async (req, res, next) => {
         $near: {
           $geometry: {
             type: 'Point',
-            coordinates: centerSearchPoint
+            coordinates: req.body.location
           },
           $maxDistance: safeDistance // in meters
         }
@@ -42,7 +42,8 @@ export let add = async (req, res, next) => {
       isActive: true
     });
 
-    if (spots) throwError('A spot already exists at this location.', 409);
+    if (spots.length > 0)
+      throwError('A spot already exists at this location.', 409);
 
     const spot = new Spot({
       spotName: req.body.spotName,
@@ -144,17 +145,21 @@ export let edit = async (req, res, next) => {
     if (spot.owner.toString() !== seller._id.toString())
       throwError('This Seller is not the owner of this Spot', 401);
 
+    const location = new Point({ coordinates: req.body.location });
+    await location.save();
+
     spot.spotName = req.body.spotName;
     spot.addressLine1 = req.body.addressLine1;
     spot.addressLine2 = req.body.addressLine2;
     spot.nearestLandmark = req.body.nearestLandmark;
     spot.comment = req.body.comment;
-    spot.location = req.body.location;
+    spot.location = location;
     spot.imagesURI = req.body.imagesURI;
     spot.pricePerHour = req.body.pricePerHour;
     spot.owner = seller._id;
     spot.availability = req.body.availability;
 
+    console.log(spot);
     await spot.save();
 
     res.status(200).json({
