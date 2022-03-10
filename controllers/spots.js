@@ -5,7 +5,7 @@ import Seller from '../models/seller.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
 const Point = PointData.Point;
-const safeDistance = 3; // in meters
+const SAFE_DISTANCE = 3; // in meters
 
 // TODO:
 // switch spot status (active -> inactive & inactive -> active)
@@ -29,20 +29,20 @@ export let add = async (req, res, next) => {
     const location = new Point({ coordinates: req.body.location });
     await location.save();
 
-    let spots = await Spot.find({
+    let nearbySpots = await Spot.find({
       location: {
         $near: {
           $geometry: {
             type: 'Point',
             coordinates: req.body.location
           },
-          $maxDistance: safeDistance // in meters
+          $maxDistance: SAFE_DISTANCE // in meters
         }
       },
       isActive: true
     });
 
-    if (spots.length > 0)
+    if (nearbySpots.length > 0)
       throwError('A spot already exists at this location.', 409);
 
     const spot = new Spot({
@@ -144,6 +144,22 @@ export let edit = async (req, res, next) => {
 
     if (spot.owner.toString() !== seller._id.toString())
       throwError('This Seller is not the owner of this Spot', 401);
+
+    let nearbySpots = await Spot.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: req.body.location
+          },
+          $maxDistance: safeDistance // in meters
+        }
+      },
+      isActive: true
+    });
+
+    if (nearbySpots.length > 0)
+      throwError('A spot already exists at this location.', 409);
 
     spot.spotName = req.body.spotName;
     spot.addressLine1 = req.body.addressLine1;
