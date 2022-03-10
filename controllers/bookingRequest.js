@@ -94,10 +94,12 @@ export let getSellerRequests = async (req, res, next) => {
       select:
         'addressLine1 addressLine2 nearestLandmark location comment pricePerHour'
     });
-    // .populate({
-    //   path: 'bookingRequestor',
-    //   select: 'cumulativeRating'
-    // });
+
+    await BookingRequests.populate(bookingRequests, {
+      path: 'spot',
+      select:
+        'addressLine1 addressLine2 nearestLandmark location comment pricePerHour'
+    });
 
     res.status(200).json({
       message: `Booking requests for Seller with status "${filter}" retrieved successfully`,

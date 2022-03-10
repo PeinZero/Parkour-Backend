@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1p",
+    "phone": "1s",
     "password": "123"
 }
 ###
@@ -85,10 +85,10 @@ Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 {
-    "spotName": "Main NIPA Chowrangi Center",
-    "addressLine1" : "Next to Sadqain marriage lawn.",
-    "nearestLandmark": "-",
-    "location": [ 67.097099, 24.917846],
+    "spotName": "Johar Street 3",
+    "addressLine1" : "anda wala burger",
+    "nearestLandmark": "Millenium Mall",
+    "location": [ 67.11437358381959, 24.899643751109327],
     "pricePerHour": 60
 }
 
@@ -96,15 +96,15 @@ Authorization: bearer {{generalToken}}
 ###########################################
 
 ### Edit spot
-PUT http://localhost:5000/spot/622903f63d9a243f7623c9d3
+PUT http://localhost:5000/spot/6229087c3d9a243f7623ca51
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
 {
-    "name": "Near NIPA Chowrangi Center",
-    "addressLine1" : "Very near the Sadqain marriage lawn cut.",
-    "nearestLandmark": "-",
-    "location": [ 67.097099, 24.917846],
+    "spotName": "Johar Street 30",
+    "addressLine1" : "butter wala burger",
+    "nearestLandmark": "Saima Mall",
+    "location": [ 67.11437358381959, 24.899643751109327],
     "pricePerHour": 60
 }
 
