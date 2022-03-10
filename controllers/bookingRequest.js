@@ -15,7 +15,7 @@ export let create = async (req, res, next) => {
   // const startTime = req.body.startTime;
   // const endTime = req.body.endTime;
   const message = req.body.message;
-  
+
   try {
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
@@ -73,6 +73,7 @@ export let getSellerRequests = async (req, res, next) => {
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
+
     const seller = await Seller.findById(user.seller);
     if (!seller)
       throwError(
@@ -81,11 +82,22 @@ export let getSellerRequests = async (req, res, next) => {
       );
 
     selector = {
-      spotOwner: seller._id,
-      status: filter
+      spotOwner: seller._id
     };
 
-    const bookingRequests = await BookingRequests.find(selector);
+    if (filter !== 'all') {
+      selector.status = filter;
+    }
+
+    const bookingRequests = await BookingRequests.find(selector).populate({
+      path: 'spot',
+      select:
+        'addressLine1 addressLine2 nearestLandmark location comment pricePerHour'
+    });
+    // .populate({
+    //   path: 'bookingRequestor',
+    //   select: 'cumulativeRating'
+    // });
 
     res.status(200).json({
       message: `Booking requests for Seller with status "${filter}" retrieved successfully`,
@@ -117,11 +129,18 @@ export let getParkerRequests = async (req, res, next) => {
       );
 
     selector = {
-      bookingRequestor: parker._id,
-      status: filter
+      bookingRequestor: parker._id
     };
 
-    const bookingRequests = await BookingRequests.find(selector);
+    if (filter !== 'all') {
+      selector.status = filter;
+    }
+
+    const bookingRequests = await BookingRequests.find(selector).populate({
+      path: 'spot',
+      select:
+        'addressLine1 addressLine2 nearestLandmark location comment pricePerHour'
+    });
 
     res.status(200).json({
       message: `Booking requests for Parker with status "${filter}" retrieved successfully`,
