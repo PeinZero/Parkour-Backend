@@ -8,7 +8,6 @@ const Point = PointData.Point;
 const SAFE_DISTANCE = 3; // in meters
 
 // TODO:
-// switch spot status (active -> inactive & inactive -> active)
 // TODO:
 
 export let add = async (req, res, next) => {
@@ -146,6 +145,8 @@ export let edit = async (req, res, next) => {
       throwError('This Seller is not the owner of this Spot', 401);
 
     let nearbySpots = await Spot.find({
+      _id: { $ne: spotId },
+      isActive: true,
       location: {
         $near: {
           $geometry: {
@@ -154,12 +155,14 @@ export let edit = async (req, res, next) => {
           },
           $maxDistance: SAFE_DISTANCE // in meters
         }
-      },
-      isActive: true
+      }
     });
 
     if (nearbySpots.length > 0)
-      throwError('A spot already exists at this location.', 409);
+      throwError(
+        `A spot already exists within ${SAFE_DISTANCE} meters of that spot`,
+        409
+      );
 
     spot.spotName = req.body.spotName;
     spot.addressLine1 = req.body.addressLine1;
