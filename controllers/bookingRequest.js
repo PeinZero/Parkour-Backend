@@ -150,4 +150,26 @@ export let getParkerRequests = async (req, res, next) => {
   }
 };
 
-export let remove = (req, res, next) => {};
+// cancel request
+export let remove = async (req, res, next) => {};
+
+export let accept = async (req, res, next) => {
+  try {
+    const bookingRequestId = req.params.bookingRequestId;
+
+    const bookingRequest = await BookingRequests.findById(bookingRequestId);
+    if (!bookingRequest) throwError('Booking Request not found', 404);
+
+    console.log(bookingRequest);
+    // *Spot
+    // change isBooked to true
+    // set bookingStartTime
+    // set bookingEndTime
+
+    // *Spot > Availability
+    // subtract requested time slots
+    // split time slots if needed
+  } catch (err) {
+    next(err);
+  }
+};

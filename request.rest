@@ -146,6 +146,10 @@ Authorization: bearer {{generalToken}}
 GET http://localhost:5000/bookingRequest/parkerRequests?filter=all
 Authorization: bearer {{generalToken}}
 
+### Accept Booking Request
+POST http://localhost:5000/bookingRequest/accept/627cccf433abc100217d5b92
+Authorization: bearer {{generalToken}}
+
 
 
 
