@@ -1,5 +1,6 @@
 import User from '../models/user.js';
 import Spot from '../models/spot.js';
+import BookingRequest from '../models/bookingRequest.js';
 import PointData from '../models/point.js';
 import Seller from '../models/seller.js';
 import { throwError } from '../helpers/helperfunctions.js';
@@ -7,7 +8,6 @@ import { throwError } from '../helpers/helperfunctions.js';
 const Point = PointData.Point;
 const SAFE_DISTANCE = 3; // in meters
 
-// TODO:
 // TODO:
 
 export let add = async (req, res, next) => {
@@ -90,7 +90,6 @@ export let remove = async (req, res, next) => {
 
     const spot = await Spot.findById(spotId);
     if (!spot) throwError('Spot not found', 404);
-
     if (spot.owner.toString() !== seller._id.toString())
       throwError('This Seller is not the owner of this Spot', 401);
 
@@ -105,13 +104,17 @@ export let remove = async (req, res, next) => {
     }
 
     const pointToRemove = await Point.findById(spot.location);
-
+    const deletedRequests = await BookingRequest.deleteMany({
+      spot: spot._id,
+      status: { $ne: 'past' }
+    });
+    
     await spot.deleteOne();
     await pointToRemove.deleteOne();
     await seller.save();
 
     res.status(200).json({
-      message: `Spot deleted successfully!`,
+      message: `Spot deleted successfully! ${deletedRequests} active 'Booking Requests' deleted.`,
       totalActiveSpots: seller.activeSpots.length,
       activeSpots: seller.activeSpots,
       totalInactiveSpots: seller.inactiveSpots.length,

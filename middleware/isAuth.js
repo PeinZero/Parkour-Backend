@@ -22,7 +22,7 @@ export default (req, res, next) => {
     throw err;
   }
   if (!decodedToken) {
-    const error = new Error('Not authenticated.');
+    const error = new Error('Not Authorized.');
     error.statusCode = 401;
     throw error;
   }
