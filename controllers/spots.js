@@ -1,5 +1,6 @@
 import User from '../models/user.js';
 import Spot from '../models/spot.js';
+import BookingRequest from '../models/bookingRequest.js';
 import PointData from '../models/point.js';
 import Seller from '../models/seller.js';
 import { throwError } from '../helpers/helperfunctions.js';
@@ -7,8 +8,6 @@ import { throwError } from '../helpers/helperfunctions.js';
 const Point = PointData.Point;
 const SAFE_DISTANCE = 3; // in meters
 
-// TODO:
-// switch spot status (active -> inactive & inactive -> active)
 // TODO:
 
 export let add = async (req, res, next) => {
@@ -91,7 +90,6 @@ export let remove = async (req, res, next) => {
 
     const spot = await Spot.findById(spotId);
     if (!spot) throwError('Spot not found', 404);
-
     if (spot.owner.toString() !== seller._id.toString())
       throwError('This Seller is not the owner of this Spot', 401);
 
@@ -106,13 +104,17 @@ export let remove = async (req, res, next) => {
     }
 
     const pointToRemove = await Point.findById(spot.location);
-
+    const deletedRequests = await BookingRequest.deleteMany({
+      spot: spot._id,
+      status: { $ne: 'past' }
+    });
+    
     await spot.deleteOne();
     await pointToRemove.deleteOne();
     await seller.save();
 
     res.status(200).json({
-      message: `Spot deleted successfully!`,
+      message: `Spot deleted successfully! ${deletedRequests} active 'Booking Requests' deleted.`,
       totalActiveSpots: seller.activeSpots.length,
       activeSpots: seller.activeSpots,
       totalInactiveSpots: seller.inactiveSpots.length,
@@ -146,6 +148,8 @@ export let edit = async (req, res, next) => {
       throwError('This Seller is not the owner of this Spot', 401);
 
     let nearbySpots = await Spot.find({
+      _id: { $ne: spotId },
+      isActive: true,
       location: {
         $near: {
           $geometry: {
@@ -154,12 +158,14 @@ export let edit = async (req, res, next) => {
           },
           $maxDistance: SAFE_DISTANCE // in meters
         }
-      },
-      isActive: true
+      }
     });
 
     if (nearbySpots.length > 0)
-      throwError('A spot already exists at this location.', 409);
+      throwError(
+        `A spot already exists within ${SAFE_DISTANCE} meters of that spot`,
+        409
+      );
 
     spot.spotName = req.body.spotName;
     spot.addressLine1 = req.body.addressLine1;

@@ -56,7 +56,14 @@ export const getUserByRole = async (req, res, next) => {
   const roleId = req.params.roleId;
 
   try {
-    const parkerUser = await User.findOne({ parker: roleId.toString() });
+    // !Populate the review author later
+    const parkerUser = await User.findOne({
+      parker: roleId.toString()
+    }).populate({
+      path: 'parker',
+      select: 'cumulativeRating reviews'
+    });
+
     if (parkerUser) {
       res.status(200).json({
         message: 'Parker User found',
@@ -64,7 +71,14 @@ export const getUserByRole = async (req, res, next) => {
       });
     }
 
-    const sellerUser = await User.findOne({ seller: roleId.toString() });
+    // !Populate the review author later
+    const sellerUser = await User.findOne({
+      seller: roleId.toString()
+    }).populate({
+      path: 'seller',
+      select: 'cumulativeRating reviews'
+    });
+
     if (sellerUser) {
       res.status(200).json({
         message: 'Seller User found',

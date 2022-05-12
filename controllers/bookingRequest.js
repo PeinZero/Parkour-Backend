@@ -89,17 +89,13 @@ export let getSellerRequests = async (req, res, next) => {
       selector.status = filter;
     }
 
-    const bookingRequests = await BookingRequests.find(selector).populate({
-      path: 'spot',
-      select:
-        'addressLine1 addressLine2 nearestLandmark location comment pricePerHour'
-    });
-
-    await BookingRequests.populate(bookingRequests, {
-      path: 'spot',
-      select:
-        'addressLine1 addressLine2 nearestLandmark location comment pricePerHour'
-    });
+    const bookingRequests = await BookingRequests.find(selector)
+      .populate({
+        path: 'spot',
+        select:
+          'addressLine1 addressLine2 nearestLandmark location comment pricePerHour'
+      })
+      .populate('car');
 
     res.status(200).json({
       message: `Booking requests for Seller with status "${filter}" retrieved successfully`,

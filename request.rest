@@ -104,12 +104,18 @@ Authorization: bearer {{generalToken}}
     "spotName": "Johar Street 30",
     "addressLine1" : "butter wala burger",
     "nearestLandmark": "Saima Mall",
-    "location": [ 67.11437358381959, 24.899643751109327],
+    "location": [ 67.12437358381959, 24.899643751109327],
     "pricePerHour": 60
 }
 
+
+### switch spot status
+PUT http://localhost:5000/spot/switchStatus/6229087c3d9a243f7623ca51
+Content-Type: application/json
+Authorization: bearer {{generalToken}}
+
 ### delete spot
-DELETE http://localhost:5000/spot/6221b5d2b4de40b5bfc642ca
+DELETE http://localhost:5000/spot/622960d2a5ffcf68b6bf8baf
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
@@ -128,15 +134,15 @@ GET http://localhost:5000/spot/getSpotsByRadius?lat=24.942960&lng=67.158914&radi
 Content-Type: application/json
 Authorization: bearer {{generalToken}}
 
-###
+### Get user by role
 GET http://localhost:5000/user/getUserByRole/61da3982198da5dd6c0bc9f0
 Authorization: bearer {{generalToken}}
 
-###
+### Get booking Requests for seller
 GET http://localhost:5000/bookingRequest/sellerRequests?filter=pending
 Authorization: bearer {{generalToken}}
 
-###
+### Get booking Requests for seller
 GET http://localhost:5000/bookingRequest/parkerRequests?filter=all
 Authorization: bearer {{generalToken}}
 

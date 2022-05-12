@@ -85,6 +85,7 @@ app.use('/spot', spotRoutes);
 app.use('/car', carRoutes);
 app.use('/bookingrequest', bookingRequestRoutes);
 
+// response for any unknown api request
 app.use((error, req, res, next) => {
   console.log(error);
   const statusCode = error.statusCode || 500;
