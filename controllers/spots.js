@@ -108,7 +108,7 @@ export let remove = async (req, res, next) => {
       spot: spot._id,
       status: { $ne: 'past' }
     });
-    
+
     await spot.deleteOne();
     await pointToRemove.deleteOne();
     await seller.save();
@@ -279,6 +279,8 @@ export let getSpotsByRadius = async (req, res, next) => {
         (spot) => spot.owner._id.toString() !== seller._id.toString()
       );
     }
+
+    console.log(spots);
 
     res.status(200).json({
       message: 'Spots found successfully',

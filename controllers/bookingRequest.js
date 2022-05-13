@@ -134,11 +134,13 @@ export let getParkerRequests = async (req, res, next) => {
       selector.status = filter;
     }
 
-    const bookingRequests = await BookingRequests.find(selector).populate({
-      path: 'spot',
-      select:
-        'addressLine1 addressLine2 nearestLandmark location comment pricePerHour'
-    });
+    const bookingRequests = await BookingRequests.find(selector)
+      .populate({
+        path: 'spot',
+        select:
+          'addressLine1 addressLine2 nearestLandmark location comment pricePerHour'
+      })
+      .populate('car');
 
     res.status(200).json({
       message: `Booking requests for Parker with status "${filter}" retrieved successfully`,
@@ -169,6 +171,9 @@ export let accept = async (req, res, next) => {
     // *Spot > Availability
     // subtract requested time slots
     // split time slots if needed
+    const testDate = bookingRequest.slots[0].startTime;
+    console.log(testDate);
+    console.log(testDate.getHours());
   } catch (err) {
     next(err);
   }

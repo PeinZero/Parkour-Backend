@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
     "name": "PARKER",
-    "phone": "4p",
+    "phone": "1p",
     "password": "123",
     "confirmPassword": "123"
 }
@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1s",
+    "phone": "1p",
     "password": "123"
 }
 ###
@@ -138,11 +138,11 @@ Authorization: bearer {{generalToken}}
 GET http://localhost:5000/user/getUserByRole/61da3982198da5dd6c0bc9f0
 Authorization: bearer {{generalToken}}
 
-### Get booking Requests for seller
+### Get booking Requests for seller (filter = pending)
 GET http://localhost:5000/bookingRequest/sellerRequests?filter=pending
 Authorization: bearer {{generalToken}}
 
-### Get booking Requests for seller
+### Get booking Requests for seller (filter = all)
 GET http://localhost:5000/bookingRequest/parkerRequests?filter=all
 Authorization: bearer {{generalToken}}
 
