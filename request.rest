@@ -3,8 +3,8 @@ POST http://localhost:5000/auth/signup
 Content-Type: application/json 
 
 {
-    "name": "PARKER",
-    "phone": "1p",
+    "name": "SELLER",
+    "phone": "1s",
     "password": "123",
     "confirmPassword": "123"
 }
@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1p",
+    "phone": "1s",
     "password": "123"
 }
 ###

@@ -161,8 +161,18 @@ export let accept = async (req, res, next) => {
 
     const bookingRequest = await BookingRequests.findById(bookingRequestId);
     if (!bookingRequest) throwError('Booking Request not found', 404);
-
     console.log(bookingRequest);
+
+    const spot = await Spot.findById(bookingRequest.spot);
+    if (!spot) throwError('Spot not found', 404);
+
+    // *Error Checking: If slot is invalid (out of bounds)
+    if (!checkSlotAvailability(bookingRequest.slots[0]))
+      throwError('Requested time slot is invalid.', 409);
+    // make sure the parking time starts atleast 1 hour after booking acceptance.
+    // check if the spot has a valid availability according to the requested slot. 
+    // make sure the requested slot falls in atleast one of the avaialbe slots for the day
+
     // *Spot
     // change isBooked to true
     // set bookingStartTime
@@ -171,10 +181,25 @@ export let accept = async (req, res, next) => {
     // *Spot > Availability
     // subtract requested time slots
     // split time slots if needed
-    const testDate = bookingRequest.slots[0].startTime;
-    console.log(testDate);
-    console.log(testDate.getHours());
+
+    res.status(200).json({
+      msg: 'done'
+    });
   } catch (err) {
     next(err);
   }
 };
+
+function checkSlotAvailability(requestedSlot) {
+  console.log(new Date().getHours());
+  console.log(new Date().getMinutes());
+  //! using get hours instead of getUTChours. Inquire.
+  if (new Date().getHours() >= slot.startTime.getUTCHours() - 1) return false;
+  else return true;
+}
+
+function compareSlotsForConflicts(requestedSlot, availableSlot) {
+  console.log(requestedSlot);
+  console.log(availableSlot);
+  // if (requestedSlot.getUTCHours() < )
+}
