@@ -34,6 +34,9 @@ export let create = async (req, res, next) => {
     const spot = await Spot.findById(spotId);
     if (!spot) throwError('Spot not found', 404);
 
+    if (spot.owner.toString() === userId.toString())
+      throwError('Owner cannot book his own spot.', 403);
+
     const bookingRequest = new BookingRequests({
       bookingRequestor: parker._id,
       spotOwner: spot.owner,
@@ -167,10 +170,10 @@ export let accept = async (req, res, next) => {
     if (!spot) throwError('Spot not found', 404);
 
     // *Error Checking: If slot is invalid (out of bounds)
-    if (!checkSlotAvailability(bookingRequest.slots[0]))
+    if (!checkSlotAvailability(bookingRequest.day, bookingRequest.slots[0]))
       throwError('Requested time slot is invalid.', 409);
     // make sure the parking time starts atleast 1 hour after booking acceptance.
-    // check if the spot has a valid availability according to the requested slot. 
+    // check if the spot has a valid availability according to the requested slot.
     // make sure the requested slot falls in atleast one of the avaialbe slots for the day
 
     // *Spot
@@ -190,11 +193,31 @@ export let accept = async (req, res, next) => {
   }
 };
 
-function checkSlotAvailability(requestedSlot) {
+function checkSlotAvailability(day, requestedSlot) {
+  console.log('==== DAY ===');
+  console.log(new Date().toISOString());
+  console.log(new Date());
+  console.log(new Date().getDate());
+  console.log(new Date(day).getDate());
+  console.log(new Date() > new Date(day));
+  console.log('=======');
+
+  // if requested slot date has passed, return false
+  if (new Date() > new Date(day)) {
+    return false;
+  }
+
+  console.log(new Date().getDay());
   console.log(new Date().getHours());
-  console.log(new Date().getMinutes());
+  console.log(requestedSlot.startTime.getHours() - 1);
+
+  console.log('=======');
+  console.log('start time ' + requestedSlot.startTime.getHours());
+  console.log('end time ' + requestedSlot.endTime.getHours());
+  console.log('=======');
   //! using get hours instead of getUTChours. Inquire.
-  if (new Date().getHours() >= slot.startTime.getUTCHours() - 1) return false;
+  if (new Date().getHours() >= requestedSlot.startTime.getHours() - 1)
+    return false;
   else return true;
 }
 
