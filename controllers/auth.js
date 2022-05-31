@@ -67,7 +67,7 @@ export let login = async (req, res, next) => {
         userId: user._id.toString()
       },
       'secretkey',
-      { expiresIn: '1h' }
+      { expiresIn: '10h' }
     );
 
     let modifiedUser;
