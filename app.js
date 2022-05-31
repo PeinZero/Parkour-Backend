@@ -3,6 +3,9 @@ import multer from 'multer';
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { Server } from 'socket.io';
+import { createServer } from 'http';
+
 dotenv.config();
 
 import { fileURLToPath } from 'url';
@@ -22,6 +25,20 @@ import bookingRequestRoutes from './routes/bookingRequest.js';
 // Constants
 const MONGODB_URI = process.env.MONGODB_URI;
 const app = express();
+const io = new Server(5001, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('User connected: ' + socket.id);
+
+  socket.on('sendMessage', (data) => {
+    socket.broadcast.emit('receiveMessage', data);
+  });
+});
 
 // Setting up Multer Storage
 const fileStorage = multer.diskStorage({
