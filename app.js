@@ -3,13 +3,12 @@ import multer from 'multer';
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import { Server } from 'socket.io';
-import { createServer } from 'http';
 
 dotenv.config();
 
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import io from './socket/socketSetup.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,24 +20,11 @@ import userRoutes from './routes/user.js';
 import spotRoutes from './routes/spot.js';
 import carRoutes from './routes/car.js';
 import bookingRequestRoutes from './routes/bookingRequest.js';
+import chatRoutes from './routes/chat.js';
 
 // Constants
 const MONGODB_URI = process.env.MONGODB_URI;
 const app = express();
-const io = new Server(5001, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
-  }
-});
-
-io.on('connection', (socket) => {
-  console.log('User connected: ' + socket.id);
-
-  socket.on('sendMessage', (data) => {
-    socket.broadcast.emit('receiveMessage', data);
-  });
-});
 
 // Setting up Multer Storage
 const fileStorage = multer.diskStorage({
@@ -101,6 +87,7 @@ app.use('/user', userRoutes);
 app.use('/spot', spotRoutes);
 app.use('/car', carRoutes);
 app.use('/bookingrequest', bookingRequestRoutes);
+app.use('/chat', chatRoutes);
 
 // response for any unknown api request
 app.use((error, req, res, next) => {
@@ -109,6 +96,12 @@ app.use((error, req, res, next) => {
   const message = error.message;
   const data = error.data;
   res.status(statusCode).json({ message: message, data: data });
+});
+
+// Connect socket for client to client communication
+io.on('connection', (socket) => {
+  console.log('User connected: ' + socket.id);
+  socketHandler(socket);
 });
 
 // Connecting to Database and Starting the server

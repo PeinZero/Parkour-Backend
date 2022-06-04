@@ -18,4 +18,4 @@ const chatSchema = new Schema({
   ]
 });
 
-export default mongoose.model('Chat', Chat);
+export default mongoose.model('Chat', chatSchema);
