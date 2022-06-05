@@ -280,7 +280,7 @@ export let getSpotsByRadius = async (req, res, next) => {
       );
     }
 
-    console.log(spots);
+    // console.log(spots);
 
     res.status(200).json({
       message: 'Spots found successfully',

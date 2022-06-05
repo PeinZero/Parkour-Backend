@@ -10,6 +10,7 @@ const chatSchema = new Schema({
     ref: 'User',
     type: Schema.Types.ObjectId
   },
+
   messages: [
     {
       ref: 'Message',
@@ -18,4 +19,4 @@ const chatSchema = new Schema({
   ]
 });
 
-export default mongoose.model('Chat', Chat);
+export default mongoose.model('Chat', chatSchema);

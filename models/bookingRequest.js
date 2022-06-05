@@ -32,9 +32,6 @@ const bookingRequestsSchema = new Schema(
       }
     ],
 
-    // startTime: { type: Date, required: true },
-    // endTime: { type: Date, required: true },
-
     message: String,
 
     status: {

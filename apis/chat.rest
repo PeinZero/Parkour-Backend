@@ -1,0 +1,35 @@
+### login
+# @name login 
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "phone": "1p",
+    "password": "123"
+}
+###
+@generalToken = {{login.response.body.token}}
+
+
+### create chat
+# @name createChat 
+POST http://localhost:5000/chat/
+Content-Type: application/json
+Authorization: Bearer {{generalToken}}
+
+{
+    "receiverId": "629b333fbb46e66d2f07b4ac"
+}
+###
+
+
+### get chat
+# @name login 
+GET http://localhost:5000/chat/
+Content-Type: application/json
+
+{
+    "phone": "1s",
+    "password": "123"
+}
+###

@@ -22,6 +22,7 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
+    credit: {type: Number, default: 0 },
     email: { type: String, default: null },
     gender: { type: Boolean, default: null },
     DOB: { type: Date, default: null },
