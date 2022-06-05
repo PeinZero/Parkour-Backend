@@ -7,7 +7,7 @@ const messageSchema = new Schema({
     type: Schema.Types.ObjectId
   },
   message: String,
-  time: Date
+  time: String
 });
 
 export default mongoose.model('Message', messageSchema);

@@ -3,6 +3,7 @@ import multer from 'multer';
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import socketHandler from './socket/socketHandler.js';
 
 dotenv.config();
 
