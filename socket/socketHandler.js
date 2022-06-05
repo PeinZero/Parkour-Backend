@@ -17,7 +17,6 @@ const socketHandler = (socket) => {
   });
 
   socket.on('SendMessage', (data) => {
-    console.log(data);
     saveMessage(data);
     socket.to(data.chatId).emit('ReceiveMessage', data);
   });

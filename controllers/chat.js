@@ -1,5 +1,6 @@
 import User from '../models/user.js';
 import Chat from '../models/chat.js';
+import Message from '../models/message.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
 export const createChat = async (req, res, next) => {
@@ -107,7 +108,25 @@ export const getChatsById = async (req, res, next) => {
 
   const chats = [...modifiedchatsWithUserB, ...modifiedchatsWithUserA];
 
-  res.status(200).json({ chats, message: 'Chats Found' });
+  const modifiedChats = await Promise.all(
+    chats.map(async (chat) => {
+      try {
+        const lastMessageId = chat.messages[chat.messages.length - 1];
+        const lastMessage = await Message.findById(lastMessageId);
+
+        return {
+          _id: chat._id,
+          receiver: chat.receiver,
+          messages: chat.messages,
+          lastMessage: lastMessage
+        };
+      } catch (error) {
+        next(error);
+      }
+    })
+  );
+
+  res.status(200).json({ chats: modifiedChats, message: 'Chats Found' });
 };
 
 export const updateChat = async (req, res, next) => {
