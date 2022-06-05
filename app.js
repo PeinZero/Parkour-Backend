@@ -22,6 +22,7 @@ import spotRoutes from './routes/spot.js';
 import carRoutes from './routes/car.js';
 import bookingRequestRoutes from './routes/bookingRequest.js';
 import chatRoutes from './routes/chat.js';
+import transactionRoutes from './routes/transaction.js';
 
 // Constants
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -89,6 +90,7 @@ app.use('/spot', spotRoutes);
 app.use('/car', carRoutes);
 app.use('/bookingrequest', bookingRequestRoutes);
 app.use('/chat', chatRoutes);
+app.use('/transaction', transactionRoutes);
 
 // response for any unknown api request
 app.use((error, req, res, next) => {
