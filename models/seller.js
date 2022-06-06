@@ -31,10 +31,15 @@ const sellerSchema = new Schema({
     default: -1.0
   },
 
+  numberOfRatings: {
+    type: Number,
+    default: 0
+  },
+
   reviews: [
     {
       author: {
-        ref: 'Parker',
+        ref: 'User',
         type: Schema.Types.ObjectId
       },
       text: String,

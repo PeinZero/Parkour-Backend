@@ -23,8 +23,7 @@ export let signup = async (req, res, next) => {
     const user = await User.findOne({ phone: phone });
     if (user) throwError('Phone Number already in use.', 409);
 
-    if (!confirmPassword || !/\S/.test(confirmPassword))
-      throwError('Confirm Password field incorrect', 403);
+    if (!confirmPassword || !/\S/.test(confirmPassword)) throwError('Confirm Password field incorrect', 403);
 
     if (password !== confirmPassword) throwError('Passwords do NOT match', 403);
 
@@ -86,7 +85,7 @@ export let login = async (req, res, next) => {
       modifiedUser = await user.populate({
         path: 'parker',
         populate: {
-          path: 'defaultCar cars reviews.author'
+          path: 'defaultCar cars'
           // bookingRequests left, figure it out
         }
       });
@@ -97,7 +96,7 @@ export let login = async (req, res, next) => {
       modifiedUser = await user.populate({
         path: 'seller',
         populate: {
-          path: 'activeSpots inactiveSpots reviews.author'
+          path: 'activeSpots inactiveSpots'
         }
       });
       delete modifiedUser.parker;

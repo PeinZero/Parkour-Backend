@@ -1,0 +1,44 @@
+### login
+# @name login
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "phone": "1p",
+    "password": "123"
+}
+###
+@generalToken = {{login.response.body.token}}
+
+
+### create Wallet
+# @name createWallet
+POST http://localhost:5000/transaction/
+Content-Type: application/json
+Authorization: Bearer {{generalToken}}
+
+{
+    "test": "test"
+}
+###
+
+
+### get credit
+# @name getCredit
+GET http://localhost:5000/transaction/
+Content-Type: application/json
+Authorization: Bearer {{generalToken}}
+
+###
+
+### add credit
+# @name addCredit
+PUT http://localhost:5000/transaction/add
+Content-Type: application/json
+Authorization: Bearer {{generalToken}}
+
+{
+    "credit": 100
+}
+###
+

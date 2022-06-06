@@ -3,8 +3,8 @@ POST http://localhost:5000/auth/signup
 Content-Type: application/json 
 
 {
-    "name": "Tester 2",
-    "phone": "2t",
+    "name": "Review Test Seller",
+    "phone": "1rp",
     "password": "123",
     "confirmPassword": "123"
 }
@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1p",
+    "phone": "1rp",
     "password": "123"
 }
 ###
@@ -147,7 +147,7 @@ GET http://localhost:5000/bookingRequest/parkerRequests?filter=all
 Authorization: bearer {{generalToken}}
 
 ### Accept Booking Request
-POST http://localhost:5000/bookingRequest/accept/629b39e6d6ae2e0096c09581
+POST http://localhost:5000/bookingRequest/accept/629ceaece84e67d7b6841be9
 Authorization: bearer {{generalToken}}
 
 
