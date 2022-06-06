@@ -3,8 +3,12 @@ import Spot from '../models/spot.js';
 import User from '../models/user.js';
 import Seller from '../models/seller.js';
 import Parker from '../models/parker.js';
-import { throwError } from '../helpers/helperfunctions.js';
 import Car from '../models/car.js';
+import Notification from '../models/notification.js';
+
+import { throwError } from '../helpers/helperfunctions.js';
+
+import io from '../socket/socketSetup.js';
 
 export let create = async (req, res, next) => {
   const userId = req.userId;
@@ -49,6 +53,42 @@ export let create = async (req, res, next) => {
     await bookingRequest.save();
     await parker.save();
     await spot.save();
+
+
+    // Create Notification
+    const sellerUser = await User.findOne({ seller: spot.owner });
+
+    const existingNotification = await Notification.findOne({ user: sellerUser._id });
+
+    const time = new Date();
+
+    const notification = {
+      text: `${user.name} sent you a booking Request for ${spot.spotName}`,
+      target: "Seller",
+      time: time
+    };
+
+    if (existingNotification) {
+      existingNotification.notifications.push(notification);
+      await existingNotification.save();
+    } else {
+      const newNotification = new Notification({
+        user: sellerUser._id,
+        notifications: [notification]
+      });
+      await newNotification.save();
+    }
+
+    const check = await io.fetchSockets();
+
+    if(sellerUser.socketId){
+      const sockets = await io.in(sellerUser.socketId).fetchSockets();
+      const receiverSocket = sockets[0];
+      if(receiverSocket){
+        receiverSocket.emit("ReceiveNotification", {notification, from: user.name});
+      }
+
+    }
 
     res.status(200).json({
       message: 'Booking request created successfully',

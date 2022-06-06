@@ -100,8 +100,8 @@ app.use((error, req, res, next) => {
 });
 
 // Connect socket for client to client communication
-io.on('connection', (socket) => {
-  console.log('User connected: ' + socket.id);
+io.on('connection', async (socket) => {
+  console.log("=============> CONNECTION INITIATED <=====================");
   socketHandler(socket);
 });
 

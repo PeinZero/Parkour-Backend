@@ -5,11 +5,17 @@ import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 import { throwError } from '../helpers/helperfunctions.js';
 
+
+
 export let signup = async (req, res, next) => {
   const name = req.body.name;
   const phone = req.body.phone;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
+  const socketId = req.body.socketId;
+
+  console.log(socketId);
+
   // Non required fields
   const email = req.body.email;
 
@@ -38,7 +44,8 @@ export let signup = async (req, res, next) => {
       email,
       password: hashedPassword,
       parker,
-      seller
+      seller,
+      socketId
     });
     await newUser.save();
 
@@ -53,6 +60,7 @@ export let login = async (req, res, next) => {
   const password = req.body.password;
 
   try {
+    
     const user = await User.findOne({ phone: phone });
     if (!user) throwError('User not found', 404);
 

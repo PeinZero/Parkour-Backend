@@ -26,6 +26,8 @@ const userSchema = new Schema(
     email: { type: String, default: null },
     gender: { type: Boolean, default: null },
     DOB: { type: Date, default: null },
+    
+    socketId: String,
 
     // =======================| Attachments |====>
     parker: {

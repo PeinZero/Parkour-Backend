@@ -21,8 +21,7 @@ export const createChat = async (req, res, next) => {
       $and: [{ userA: user.parker }, { userB: sellerId }]
     });
 
-    let chatId = '';
-
+    let chatId;
     if (chat) {
       chatId = chat._id;
     } else {
@@ -42,6 +41,7 @@ export const createChat = async (req, res, next) => {
 };
 
 export const getChat = async (req, res, next) => {
+  // In this Api, userA will always be Parker, so we only need to populate userB which is a seller;
   const chatId = req.params.chatId;
   const chat = await Chat.findById(chatId);
 
@@ -49,8 +49,18 @@ export const getChat = async (req, res, next) => {
     throwError("This chat doesn't exist", 404);
   }
 
-  const modifiedChat = await chat.populate('messages');
+  const receiver = await User.findOne({seller: chat.userB});
+  const chatWithMessages = await chat.populate('messages');
 
+  const modifiedChat = {
+    _id: chatWithMessages._id,
+    receiver: {
+      _id: receiver._id,
+      name: receiver.name,
+    },
+    messages: chatWithMessages.messages
+  };
+  
   res.status(200).json({ chat: modifiedChat, message: 'Chat Found' });
 };
 
