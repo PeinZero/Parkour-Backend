@@ -5,6 +5,7 @@ import Seller from '../models/seller.js';
 import Parker from '../models/parker.js';
 import { throwError } from '../helpers/helperfunctions.js';
 import Car from '../models/car.js';
+import transactions from '../helpers/transactionHelpers.js';
 
 const TIMECONFIG = { hours: 'numeric', minutes: 'numeric', hour12: true };
 
@@ -207,6 +208,9 @@ export let accept = async (req, res, next) => {
       bookingRequestDay.getDate(),
       bookingRequest.slots[0].endTime.getHours()
     );
+
+    console.log('\n\n\n\n TRANSSACTIONS');
+    console.log(transactions);
 
     bookingRequest.status = 'accepted';
     // await bookingRequest.save();

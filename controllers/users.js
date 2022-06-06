@@ -5,6 +5,7 @@ import PointData from '../models/point.js';
 import Parker from '../models/parker.js';
 import Seller from '../models/seller.js';
 import { throwError } from '../helpers/helperfunctions.js';
+import bcrypt from 'bcrypt';
 
 const Point = PointData.Point;
 
@@ -94,6 +95,101 @@ export const getUserByRole = async (req, res, next) => {
   }
 };
 
+export const updateInfo = async (req, res, next) => {
+  try {
+    const newInfo = req.body.newInfo;
+    const password = req.body.newInfo.password ? req.body.newInfo.password : null;
+    if (password) {
+      newInfo.password = await bcrypt.hash(password, 12);
+    }
+    const userId = req.userId;
+
+    User.findOneAndUpdate({ _id: userId }, newInfo, { new: true }, (err, updatedUser) => {
+      if (err) throwError(err, 500);
+
+      console.log(updatedUser);
+      res.status(200).json({
+        message: 'User info updated successfully',
+        user: updatedUser
+      });
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const rateUser = async (req, res, next) => {
+  const userId = req.userId;
+  const { text, providedRating, targetUserId } = req.body;
+  // targetUserId is either parker or seller
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) throwError('User not found', 404);
+
+    var specialUser;
+    var errorMessage;
+    if (user.currentRoleParker) {
+      specialUser = await Seller.findById(targetUserId);
+      errorMessage = 'Target Seller not found.';
+    } else {
+      specialUser = await Parker.findById(targetUserId);
+      errorMessage = 'Target Parker not found.';
+    }
+    if (!specialUser) throwError(errorMessage, 404);
+
+    if (specialUser.numberOfRatings === 0) {
+      specialUser.cumulativeRating = providedRating;
+    } else {
+      specialUser.cumulativeRating =
+        (specialUser.cumulativeRating * specialUser.numberOfRatings + providedRating) / (specialUser.numberOfRatings + 1);
+    }
+    specialUser.numberOfRatings += 1;
+
+    const newReview = {
+      author: userId,
+      text,
+      providedRating
+    };
+    specialUser.cumulativeRating = Math.round(specialUser.cumulativeRating * 10) / 10;
+
+    specialUser.reviews.push(newReview);
+
+    await specialUser.save();
+
+    res.status(200).json({
+      message: 'User rating updated successfully',
+      specialUser
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllReviews = async (req, res, next) => {
+  const specialUserId = req.params.specialUserId;
+
+  try {
+    let reviews;
+
+    if (await Seller.exists({ _id: specialUserId })) {
+      reviews = await Seller.findById(specialUserId, 'numberOfRatings cumulativeRating reviews').populate('reviews.author');
+    } else if (await Parker.exists({ _id: specialUserId })) {
+      reviews = await Parker.findById(specialUserId, 'numberOfRatings cumulativeRating reviews').populate('reviews.author');
+    }
+
+    // let reviews = await specialUser.select('numberOfRatings cumulativeRating reviews').populate('reviews.author');
+
+    res.status(200).json({
+      message: 'User reviews found',
+      cumulativeRating: reviews.cumulativeRating,
+      numberOfRatings: reviews.numberOfRatings,
+      reviews: reviews.reviews
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 // ================================== DEV APIS ==================================
 
 export const getAllUsers = async (req, res, next) => {
@@ -122,7 +218,7 @@ export const getUser = async (req, res, next) => {
       modifiedUser = await user.populate({
         path: 'parker',
         populate: {
-          path: 'defaultCar cars reviews.author'
+          path: 'defaultCar cars'
           // bookingRequests left, figure it out
         }
       });
@@ -133,7 +229,7 @@ export const getUser = async (req, res, next) => {
       modifiedUser = await user.populate({
         path: 'seller',
         populate: {
-          path: 'activeSpots inactiveSpots reviews.author'
+          path: 'activeSpots inactiveSpots'
         }
       });
       delete modifiedUser.parker;

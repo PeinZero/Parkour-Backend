@@ -1,0 +1,25 @@
+### login
+# @name login
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "phone": "1rs",
+    "password": "123"
+}
+###
+@generalToken = {{login.response.body.token}}
+
+### review user
+PATCH http://localhost:5000/user/review
+Content-Type: application/json
+Authorization: Bearer {{generalToken}}
+
+{
+    "text": "She a good parker. Believe it!",
+    "providedRating": 1,
+    "targetUserId": "629e2fcc5511238eba2a282b"
+}
+
+###
+GET http://localhost:5000/user/review/629e2fcc5511238eba2a282b
