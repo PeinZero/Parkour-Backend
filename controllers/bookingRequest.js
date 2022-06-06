@@ -6,6 +6,8 @@ import Parker from '../models/parker.js';
 import { throwError } from '../helpers/helperfunctions.js';
 import Car from '../models/car.js';
 
+const TIMECONFIG = { hours: 'numeric', minutes: 'numeric', hour12: true };
+
 export let create = async (req, res, next) => {
   const userId = req.userId;
   const spotId = req.body.spotId;
@@ -153,15 +155,42 @@ export let accept = async (req, res, next) => {
     let spot = await Spot.findById(bookingRequest.spot);
     if (!spot) throwError('Spot not found', 404);
 
-    // *Error Checking: If slot is invalid (out of bounds)
-    if (!isRequestValidForAcceptance(bookingRequest.day, bookingRequest.slots[0])) throwError('Requested time slot is invalid.', 409);
-
     // *Spot > Availability
     const indexOfAvailableDay = getIndexOfAvailableDay(bookingRequest.day, spot.availability);
 
     if (!indexOfAvailableDay < 0) throwError('No slots available for requested day.', 404);
 
-    computeSlots(indexOfAvailableDay, spot.availability, bookingRequest.slots[0]);
+    const requestedSlot = updateRequestedTimeSlot(bookingRequest.day, bookingRequest.slots[0]);
+
+    //! Find the correct indexOfMatchedSlot
+    const indexOfMatchedSlot = getIndexOfMatchedSlot(
+      spot.availability[indexOfAvailableDay].slotDate,
+      spot.availability[indexOfAvailableDay].slots,
+      requestedSlot
+    );
+
+    console.log('\n----\n' + 'Index of slot: ' + indexOfMatchedSlot + '\n----\n');
+    if (indexOfMatchedSlot < 0) throwError('Internal Server Error. Requested time slot is invalid or not available anymore.');
+
+    const matchedAvailableSlot = updateAvailableTimeSlot(
+      spot.availability[indexOfAvailableDay].slotDate,
+      spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot]
+    );
+
+    // *Error Checking: If slot is invalid (out of bounds)
+    if (!isRequestValidForAcceptance(requestedSlot)) throwError('Requested time slot is invalid.', 409);
+
+    console.log('\n----' + '=== Initial State ===' + '----');
+    console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].startTime.toLocaleString('en-US', TIMECONFIG));
+    console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.toLocaleString('en-US', TIMECONFIG));
+    console.log('\n----' + '======' + '----\n');
+
+    computeSlots(spot.availability[indexOfAvailableDay], indexOfMatchedSlot, matchedAvailableSlot, requestedSlot);
+
+    console.log('\n----' + '=== Final State ===' + '----');
+    console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].startTime.toLocaleString('en-US', TIMECONFIG));
+    console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.toLocaleString('en-US', TIMECONFIG));
+    console.log('\n----' + '======' + '----\n');
 
     spot.isBooked = true;
     const bookingRequestDay = new Date(bookingRequest.day);
@@ -192,138 +221,51 @@ export let accept = async (req, res, next) => {
   }
 };
 
-function isRequestValidForAcceptance(requestedDay, requestedSlot) {
-  const _CURRENT_DATE = new Date();
-  const CURRENT_MONTH = _CURRENT_DATE.getMonth();
-  const CURRENT_DATE_NUMBER = _CURRENT_DATE.getDate();
-  const _requestedDay = new Date(requestedDay);
-  const _requestedSlotStartTime = requestedSlot.startTime;
+function computeSlots(matchedDate, indexOfMatchedSlot, matchedAvailableSlot, requestedSlot) {
+  const availableSlots = matchedDate.slots;
 
-  const testStartTime = new Date(requestedSlot.startTime);
+  const requestedStartString = requestedSlot.startTime.toLocaleString('en-US', TIMECONFIG);
+  const requestedEndString = requestedSlot.endTime.toLocaleString('en-US', TIMECONFIG);
+  const availableStartString = matchedAvailableSlot.startTime.toLocaleString('en-US', TIMECONFIG);
+  const availableEndString = matchedAvailableSlot.endTime.toLocaleString('en-US', TIMECONFIG);
 
-  // if requested slot date/time has passed, return false
-  if (_CURRENT_DATE.getTime() > _requestedDay.getTime()) {
-    return false;
-  } else if (_CURRENT_DATE >= testStartTime.setHours(testStartTime.getHours() - 1) && _requestedDay.getDate() == CURRENT_DATE_NUMBER) {
-    return false;
+  if (requestedStartString === availableStartString && availableStartString === availableEndString) {
+    console.log('\n====>>  Full slot matched, deleting slot entry. <<====\n');
+    availableSlots.splice(indexOfMatchedSlot, 1);
+  } else if (requestedStartString === availableStartString) {
+    console.log('\n====>>  Starting of slot matched, changing startTime of slot. <<====\n');
+    availableSlots[indexOfMatchedSlot].startTime = requestedSlot.endTime;
+  } else if (requestedEndString === availableEndString) {
+    console.log('\n====>>  Ending of slot matched, changing endTime of slot. <<====\n');
+    availableSlots.slots[indexOfMatchedSlot].endTime = requestedSlot.startTime;
+  } else {
+    console.log('\n====>> Requested slot lies in the middle, changed current slot, and add a new slot. <<====\n');
+    // change the slot
+    matchedDate.slots[indexOfMatchedSlot].endTime = requestedSlot.startTime;
+
+    // splice: add a new slot
+    const newObjectId = (m = Math, d = Date, h = 16, s = (s) => m.floor(s).toString(h)) =>
+      s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
+
+    const newSlot = {
+      startTime: requestedSlot.endTime,
+      endTime: matchedAvailableSlot.endTime,
+      _id: newObjectId
+    };
+
+    availableSlots.splice(indexOfMatchedSlot + 1, 0, newSlot);
   }
+
   return true;
 }
 
-function updateTimeSlot(_requestedDay, _requestedSlot) {
-  const requestedStartTime = new Date(_requestedDay);
-  const requestedEndTime = new Date(_requestedDay);
+function isRequestValidForAcceptance(requestedSlot) {
+  const _CURRENT_DATE = new Date();
+  const testStartTime = new Date(requestedSlot.startTime);
 
-  requestedStartTime.setHours(_requestedSlot.startTime.getHours());
-  requestedStartTime.setMinutes(_requestedSlot.startTime.getMinutes());
-
-  requestedEndTime.setHours(_requestedSlot.endTime.getHours());
-  requestedEndTime.setMinutes(_requestedSlot.endTime.getMinutes());
-
-  return { requestedStartTime, requestedEndTime };
-}
-/* old function
-! function computeSlots(indexOfAvailableDay, spotAvailability, requestedSlot) {
-  const baseDate = new Date(requestedSlot.startTime);
-  const availableSlots = spotAvailability[indexOfAvailableDay].slots;
-  const indexOfMatchedSlot = getIndexOfMatachedSlot(availableSlots, requestedSlot);
-  if (indexOfMatchedSlot < 0) throwError("Internal Server Error. Requested time slot isn't available.", 500);
-
-  let availableStartHours = availableSlots[indexOfMatchedSlot].startTime.getHours();
-  let availableEndHours = availableSlots[indexOfMatchedSlot].endTime.getHours();
-  let requestedStartHours = requestedSlot.startTime.getHours();
-  let requestedEndHours = requestedSlot.endTime.getHours();
-
-  console.log(availableSlots[indexOfMatchedSlot].startTime.toLocaleString('en-US', { hours: 'numeric', minutes: 'numeric', hour12: true }));
-
-  if (availableStartHours === requestedStartHours && availableEndHours === requestedEndHours) {
-    console.log('====>>  Full slot matched, deleting slot entry. <<====\n');
-    spotAvailability[indexOfAvailableDay].slots.splice(indexOfMatchedSlot, 1);
-  } else if (availableStartHours === requestedStartHours) {
-    console.log('====>>  Start time of slot matched, changing startTime of slot. <<====\n');
-    spotAvailability[indexOfAvailableDay].slots[indexOfMatchedSlot].startTime.setHours(requestedEndHours);
-  } else if (availableEndHours === requestedEndHours) {
-    console.log('====>>  End time of slot matched, changing endTime of slot. <<====\n');
-    spotAvailability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.setHours(requestedStartHours);
-    console.log(spotAvailability[indexOfAvailableDay].slots[indexOfMatchedSlot]);
-  } else {
-    console.log('====>> Requested slot lies in the middle, changed current slot, and add a new slot. <<====\n');
-    // change the slot
-    spotAvailability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.setHours(requestedStartHours);
-
-    // splice: add a new slot
-    const newObjectId = (m = Math, d = Date, h = 16, s = (s) => m.floor(s).toString(h)) =>
-      s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
-
-    const newSlot = {
-      startTime: new Date(baseDate).setHours(requestedEndHours),
-      endTime: new Date(baseDate).setHours(availableEndHours),
-      _id: newObjectId
-    };
-
-    spotAvailability[indexOfAvailableDay].slots.splice(indexOfMatchedSlot + 1, 0, newSlot);
+  if (_CURRENT_DATE.getTime() > testStartTime.getTime() || _CURRENT_DATE >= testStartTime.setHours(testStartTime.getHours() - 1)) {
+    return false;
   }
-
-  */
-
-function computeSlots(indexOfAvailableDay, spotAvailability, requestedSlot) {
-  const baseDate = new Date(requestedSlot.startTime);
-  const { requestedStartTime, requestedEndTime} = updateTimeSlot(requestedSlot);
-  const availableSlots = spotAvailability[indexOfAvailableDay].slots;
-  const indexOfMatchedSlot = getIndexOfMatachedSlot(availableSlots, requestedSlot);
-  if (indexOfMatchedSlot < 0) throwError("Internal Server Error. Requested time slot isn't available.", 500);
-
-  let availableStartHours = availableSlots[indexOfMatchedSlot].startTime.getHours();
-  let availableEndHours = availableSlots[indexOfMatchedSlot].endTime.getHours();
-  let requestedStartHours = requestedSlot.startTime.getHours();
-  let requestedEndHours = requestedSlot.endTime.getHours();
-
-  console.log(availableSlots[indexOfMatchedSlot].startTime.toLocaleString('en-US', { hours: 'numeric', minutes: 'numeric', hour12: true }));
-
-  if (availableStartHours === requestedStartHours && availableEndHours === requestedEndHours) {
-    console.log('====>>  Full slot matched, deleting slot entry. <<====\n');
-    spotAvailability[indexOfAvailableDay].slots.splice(indexOfMatchedSlot, 1);
-  } else if (availableStartHours === requestedStartHours) {
-    console.log('====>>  Start time of slot matched, changing startTime of slot. <<====\n');
-    spotAvailability[indexOfAvailableDay].slots[indexOfMatchedSlot].startTime.setHours(requestedEndHours);
-  } else if (availableEndHours === requestedEndHours) {
-    console.log('====>>  End time of slot matched, changing endTime of slot. <<====\n');
-    spotAvailability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.setHours(requestedStartHours);
-    console.log(spotAvailability[indexOfAvailableDay].slots[indexOfMatchedSlot]);
-  } else {
-    console.log('====>> Requested slot lies in the middle, changed current slot, and add a new slot. <<====\n');
-    // change the slot
-    spotAvailability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.setHours(requestedStartHours);
-
-    // splice: add a new slot
-    const newObjectId = (m = Math, d = Date, h = 16, s = (s) => m.floor(s).toString(h)) =>
-      s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
-
-    const newSlot = {
-      startTime: new Date(baseDate).setHours(requestedEndHours),
-      endTime: new Date(baseDate).setHours(availableEndHours),
-      _id: newObjectId
-    };
-
-    spotAvailability[indexOfAvailableDay].slots.splice(indexOfMatchedSlot + 1, 0, newSlot);
-  }
-
-  // // TODO: Debug consoles below:
-  // console.log('++++++++++ Final slots array ++++++++++\n');
-  // console.log(spotAvailability[indexOfAvailableDay].slots);
-  // console.log('\n\n __ Individual slots __ \n');
-
-  // spotAvailability[indexOfAvailableDay].slots.forEach((el) => {
-  //   console.log(el.startTime.getHours() + ' to ' + el.endTime.getHours());
-  // });
-  // console.log('\n++++++++++ ++++++++++ ++++++++++ ++++++++++');
-  // // TODO: Debug consoles above:
-  // console.log('\n\n \t\t ----------- <> ----------- \n\n\n\n');
-
-  // console.log('\n\n (((( \n\n');
-  // console.log(spotAvailability);
-  // console.log(' \n\n (((( \n\n');
-
   return true;
 }
 
@@ -331,10 +273,32 @@ function getIndexOfAvailableDay(requestedDay, availability) {
   return availability.findIndex((availableDay) => availableDay.slotDate.toISOString() === new Date(requestedDay).toISOString());
 }
 
-function getIndexOfMatachedSlot(availableSlots, requestedSlot) {
-  return availableSlots.findIndex(
-    (availableSlot) =>
-      !(requestedSlot.startTime.getHours() < availableSlot.startTime.getHours()) &&
-      !(requestedSlot.endTime.getHours() > availableSlot.endTime.getHours())
-  );
+function updateRequestedTimeSlot(_requestedDay, _requestedSlot) {
+  return fixTimeSlot(_requestedSlot.startTime, _requestedSlot.endTime, _requestedDay);
+}
+
+function updateAvailableTimeSlot(_availableDay, _availableSlot) {
+  return fixTimeSlot(_availableSlot.startTime, _availableSlot.endTime, _availableDay);
+}
+
+function fixTimeSlot(startTime, endTime, dateToFix) {
+  const fixedStartTime = new Date(dateToFix);
+  const fixedEndTime = new Date(dateToFix);
+
+  fixedStartTime.setHours(startTime.getHours());
+  fixedStartTime.setMinutes(startTime.getMinutes());
+
+  fixedEndTime.setHours(endTime.getHours());
+  fixedEndTime.setMinutes(endTime.getMinutes());
+
+  return { startTime: fixedStartTime, endTime: fixedEndTime };
+}
+
+function getIndexOfMatchedSlot(availableDay, availableSlots, requestedSlot) {
+  for (const [index, slot] of availableSlots.entries()) {
+    const fixedAvailable = fixTimeSlot(slot.startTime, slot.endTime, availableDay);
+    if (!(requestedSlot.startTime < fixedAvailable.startTime) && !(requestedSlot.endTime > fixedAvailable.endTime)) {
+      return index;
+    }
+  }
 }
