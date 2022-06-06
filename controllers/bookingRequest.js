@@ -19,8 +19,6 @@ export let create = async (req, res, next) => {
   const carId = req.body.carId;
   const day = req.body.day;
   const slots = req.body.slots;
-  // const startTime = req.body.startTime;
-  // const endTime = req.body.endTime;
   const message = req.body.message;
 
   try {
@@ -57,7 +55,6 @@ export let create = async (req, res, next) => {
     await parker.save();
     await spot.save();
 
-
     // Create Notification
     const sellerUser = await User.findOne({ seller: spot.owner });
 
@@ -67,8 +64,9 @@ export let create = async (req, res, next) => {
 
     const notification = {
       text: `${user.name} sent you a booking Request for ${spot.spotName}`,
-      target: "Seller",
-      time: time
+      target: 'Seller',
+      time: time,
+      from: user.name
     };
 
     if (existingNotification) {
@@ -82,15 +80,12 @@ export let create = async (req, res, next) => {
       await newNotification.save();
     }
 
-    const check = await io.fetchSockets();
-
-    if(sellerUser.socketId){
+    if (sellerUser.socketId) {
       const sockets = await io.in(sellerUser.socketId).fetchSockets();
       const receiverSocket = sockets[0];
-      if(receiverSocket){
-        receiverSocket.emit("ReceiveNotification", {notification, from: user.name});
+      if (receiverSocket) {
+        receiverSocket.emit('ReceiveNotification', { notification });
       }
-
     }
 
     res.status(200).json({
@@ -250,11 +245,12 @@ export let accept = async (req, res, next) => {
     );
 
     console.log('\n\n\n\n TRANSSACTIONS');
+    // Deduce parking fee from parker
     console.log(transactions);
 
     bookingRequest.status = 'accepted';
-    // await bookingRequest.save();
-    // await spot.save();
+    await bookingRequest.save();
+    await spot.save();
 
     res.status(200).json({
       msg: 'Booking request accepted.',
