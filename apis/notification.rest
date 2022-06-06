@@ -1,0 +1,17 @@
+### login
+# @name login
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "phone": "1s",
+    "password": "123"
+}
+###
+@generalToken = {{login.response.body.token}}
+
+
+### get all notifications
+GET http://localhost:5000/notification?filter=Parker
+Content-Type: application/json
+Authorization: Bearer {{generalToken}}
