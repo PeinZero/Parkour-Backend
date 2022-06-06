@@ -103,8 +103,14 @@ export const updateInfo = async (req, res, next) => {
       newInfo.password = await bcrypt.hash(password, 12);
     }
     const userId = req.userId;
+    const queryOptions = {
+      new: true,
+      omitUndefined: true
+    };
 
-    User.findOneAndUpdate({ _id: userId }, newInfo, { new: true }, (err, updatedUser) => {
+    const modifiedNewInfo = Object.fromEntries(Object.entries(newInfo).filter(([_, v]) => v != null && v != undefined && v != ''));
+
+    User.findOneAndUpdate({ _id: userId }, modifiedNewInfo, queryOptions, (err, updatedUser) => {
       if (err) throwError(err, 500);
 
       console.log(updatedUser);

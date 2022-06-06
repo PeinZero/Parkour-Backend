@@ -4,7 +4,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1rs",
+    "phone": "1s",
     "password": "123"
 }
 ###
@@ -33,6 +33,7 @@ Authorization: Bearer {{generalToken}}
 {
     "newInfo": {
         "email": "new@email",
+        "name": null,
         "password": "1234"
     }
 }
