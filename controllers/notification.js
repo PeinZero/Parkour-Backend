@@ -10,17 +10,21 @@ export const get = async (req, res, next) => {
     console.log(filter);
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
+    const notifications = [];
 
     const notificationData = await Notification.findOne({ user: userId });
-    if (!notificationData) res.status(200).json({ message: 'No notification found', notifications: [] });
-    else {
-      console.log(notificationData);
-
-      const notifications = notificationData.notifications.filter((not) => {
-        if (not.target === filter) {
-          return not;
-        }
-      });
+    if (!notificationData) {
+      res.status(200).json({ message: 'No notifications found', notifications });
+    } else {
+      if (filter !== 'All') {
+        notifications = notificationData.notifications.filter((not) => {
+          if (not.target === filter) {
+            return not;
+          }
+        });
+      } else {
+        notifications = notificationData.notifications;
+      }
 
       res.status(200).json({
         message: 'Notifications found',
