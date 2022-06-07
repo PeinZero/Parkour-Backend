@@ -57,9 +57,7 @@ export let create = async (req, res, next) => {
 
     // Create Notification
     const sellerUser = await User.findOne({ seller: spot.owner });
-
     const existingNotification = await Notification.findOne({ user: sellerUser._id });
-
     const time = new Date();
 
     const notification = {
@@ -68,6 +66,8 @@ export let create = async (req, res, next) => {
       time: time,
       from: user.name
     };
+
+    console.log(notification);
 
     if (existingNotification) {
       existingNotification.notifications.push(notification);
@@ -80,11 +80,13 @@ export let create = async (req, res, next) => {
       await newNotification.save();
     }
 
+
+
     if (sellerUser.socketId) {
       const sockets = await io.in(sellerUser.socketId).fetchSockets();
       const receiverSocket = sockets[0];
       if (receiverSocket) {
-        receiverSocket.emit('ReceiveNotification', { notification });
+        receiverSocket.emit('ReceiveNotification',  notification );
       }
     }
 
