@@ -25,7 +25,7 @@ const userSchema = new Schema(
     credit: { type: Number, default: 0 },
     email: { type: String, default: null },
     gender: { type: String, default: null },
-    DOB: { type: Date, default: null },
+    DOB: { type: String, default: null },
 
     socketId: String,
 

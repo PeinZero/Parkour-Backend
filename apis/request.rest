@@ -3,8 +3,8 @@ POST http://localhost:5000/auth/signup
 Content-Type: application/json 
 
 {
-    "name": "Review Test Seller",
-    "phone": "1rp",
+    "name": "Abdullah Parker",
+    "phone": "1p",
     "password": "123",
     "confirmPassword": "123"
 }
