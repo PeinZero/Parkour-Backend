@@ -81,13 +81,11 @@ export let create = async (req, res, next) => {
       await newNotification.save();
     }
 
-
-
     if (sellerUser.socketId) {
       const sockets = await io.in(sellerUser.socketId).fetchSockets();
       const receiverSocket = sockets[0];
       if (receiverSocket) {
-        receiverSocket.emit('ReceiveNotification',  notification );
+        receiverSocket.emit('ReceiveNotification', notification);
       }
     }
 
@@ -331,8 +329,7 @@ function computeSlots(matchedDate, indexOfMatchedSlot, matchedAvailableSlot, req
 
     const newSlot = {
       startTime: requestedSlot.endTime,
-      endTime: matchedAvailableSlot.endTime,
-      _id: newObjectId
+      endTime: matchedAvailableSlot.endTime
     };
 
     availableSlots.splice(indexOfMatchedSlot + 1, 0, newSlot);
