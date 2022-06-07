@@ -196,6 +196,7 @@ export let reject = async (req, res, next) => {
     const bookingRequest = await BookingRequests.findById(bookingRequestId);
     if (!bookingRequest) throwError('Booking request not found', 404);
     if (bookingRequest.status === 'past' || bookingRequest.status === 'rejected') throwError('Booking request already cancelled', 400);
+    if (bookingRequest.status === 'accepted') throwError('Booking request has been accepted', 400);
 
     // find spot where seller is "owner"
     const spot = await Spot.findOne({ owner: user.seller });

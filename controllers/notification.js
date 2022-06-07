@@ -10,7 +10,7 @@ export const get = async (req, res, next) => {
     console.log(filter);
     const user = await User.findById(userId);
     if (!user) throwError('User not found', 404);
-    const notifications = [];
+    let notifications = [];
 
     const notificationData = await Notification.findOne({ user: userId });
     if (!notificationData) {
