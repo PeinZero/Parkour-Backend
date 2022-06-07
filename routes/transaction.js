@@ -8,6 +8,6 @@ const router = Router();
 
 router.post('/', [isAuth, isUser], createWallet);
 router.get('/', [isAuth, isUser], getCredit);
-router.put('/add', [isAuth, isUser], addCredit);
+router.put('/', [isAuth, isUser], addCredit);
 
 export default router;
