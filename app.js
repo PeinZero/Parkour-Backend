@@ -23,6 +23,7 @@ import carRoutes from './routes/car.js';
 import bookingRequestRoutes from './routes/bookingRequest.js';
 import chatRoutes from './routes/chat.js';
 import transactionRoutes from './routes/transaction.js';
+import notificationRoutes from './routes/notification.js';
 
 // Constants
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -40,11 +41,7 @@ const fileStorage = multer.diskStorage({
 
 // Setting up Multer File Filter
 const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === 'image/png' ||
-    file.mimetype === 'image/jpg' ||
-    file.mimetype === 'image/jpeg'
-  ) {
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
     cb(null, true);
   } else {
     cb(null, false);
@@ -58,9 +55,7 @@ app.use(express.json()); //application/json
 app.use(express.urlencoded({ extended: false }));
 
 // Setting up Multer for File Upload
-app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
-);
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 
 // Setting up Static Folders
 app.use(express.static(path.join(__dirname, 'public')));
@@ -73,10 +68,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 // Handling CORS Error
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PUT, PATCH, DELETE'
-  );
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
@@ -91,6 +83,7 @@ app.use('/car', carRoutes);
 app.use('/bookingrequest', bookingRequestRoutes);
 app.use('/chat', chatRoutes);
 app.use('/transaction', transactionRoutes);
+app.use('/notification', notificationRoutes);
 
 // response for any unknown api request
 app.use((error, req, res, next) => {
@@ -103,7 +96,7 @@ app.use((error, req, res, next) => {
 
 // Connect socket for client to client communication
 io.on('connection', async (socket) => {
-  console.log("=============> CONNECTION INITIATED <=====================");
+  console.log('=============> CONNECTION INITIATED <=====================');
   socketHandler(socket);
 });
 

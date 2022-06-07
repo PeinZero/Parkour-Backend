@@ -4,7 +4,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1rs",
+    "phone": "1s",
     "password": "123"
 }
 ###
@@ -17,9 +17,23 @@ Authorization: Bearer {{generalToken}}
 
 {
     "text": "She a good parker. Believe it!",
-    "providedRating": 1,
+    "providedRating": 5,
     "targetUserId": "629e2fcc5511238eba2a282b"
 }
 
-###
+### Get all reviews
 GET http://localhost:5000/user/review/629e2fcc5511238eba2a282b
+Authorization: Bearer {{generalToken}}
+
+### User Settings
+PATCH http://localhost:5000/user/
+Content-Type: application/json
+Authorization: Bearer {{generalToken}}
+
+{
+    "newInfo": {
+        "email": "new@email",
+        "name": null,
+        "password": "1234"
+    }
+}

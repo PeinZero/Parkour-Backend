@@ -181,7 +181,32 @@ export let getParkerRequests = async (req, res, next) => {
 };
 
 // cancel request
-export let remove = async (req, res, next) => {};
+export let reject = async (req, res, next) => {
+  const userId = req.userId;
+  const bookingRequestId = req.params.bookingRequestId;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) throwError('User not found', 404);
+
+    if (user.currentRoleParker) throwError('User is not a Seller', 403);
+
+    const seller = await Seller.findById(user.seller);
+    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
+
+    const bookingRequest = await BookingRequests.findById(bookingRequestId);
+    if (!bookingRequest) throwError('Booking request not found', 404);
+    if (bookingRequest.status === 'past' || bookingRequest.status === 'rejected') throwError('Booking request already cancelled', 400);
+    await bookingRequest.deleteOne();
+
+    res.status(200).json({
+      message: 'Booking request rejected successfully'
+    });
+  } catch (err) {
+    next(err);
+  }
+  // bookingRequewst status should not be "rejected" or "past"
+};
 
 export let accept = async (req, res, next) => {
   try {
@@ -200,7 +225,6 @@ export let accept = async (req, res, next) => {
 
     const requestedSlot = updateRequestedTimeSlot(bookingRequest.day, bookingRequest.slots[0]);
 
-    //! Find the correct indexOfMatchedSlot
     const indexOfMatchedSlot = getIndexOfMatchedSlot(
       spot.availability[indexOfAvailableDay].slotDate,
       spot.availability[indexOfAvailableDay].slots,
