@@ -196,7 +196,14 @@ export let reject = async (req, res, next) => {
     const bookingRequest = await BookingRequests.findById(bookingRequestId);
     if (!bookingRequest) throwError('Booking request not found', 404);
     if (bookingRequest.status === 'past' || bookingRequest.status === 'rejected') throwError('Booking request already cancelled', 400);
+
+    // find spot where seller is "owner"
+    const spot = await Spot.findOne({ owner: user.seller });
+    if (!spot) throwError('Internal Server Error. Spot not found (weird)', 500);
+    spot.bookingRequests.filter((bookingRequest) => bookingRequest._id.toString() !== bookingRequestId.toString());
+
     await bookingRequest.deleteOne();
+    await spot.save();
 
     res.status(200).json({
       message: 'Booking request rejected successfully'
@@ -204,7 +211,6 @@ export let reject = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-  // bookingRequewst status should not be "rejected" or "past"
 };
 
 export let accept = async (req, res, next) => {
@@ -329,8 +335,7 @@ function computeSlots(matchedDate, indexOfMatchedSlot, matchedAvailableSlot, req
 
     const newSlot = {
       startTime: requestedSlot.endTime,
-      endTime: matchedAvailableSlot.endTime,
-      _id: newObjectId
+      endTime: matchedAvailableSlot.endTime
     };
 
     availableSlots.splice(indexOfMatchedSlot + 1, 0, newSlot);
