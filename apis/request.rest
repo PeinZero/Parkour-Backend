@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "phone": "1rp",
+    "phone": "1p",
     "password": "123"
 }
 ###
@@ -147,11 +147,20 @@ GET http://localhost:5000/bookingRequest/parkerRequests?filter=all
 Authorization: bearer {{generalToken}}
 
 ### Accept Booking Request
-POST http://localhost:5000/bookingRequest/accept/629ceaece84e67d7b6841be9
+POST http://localhost:5000/bookingRequest/accept/629e9c988ab4763bbf5e050b
 Authorization: bearer {{generalToken}}
 
 
+# FIRST REQUEST:  629e9c738ab4763bbf5e04d8
+# SECOND REQUEST: 629e9c988ab4763bbf5e050b
+# THIRD REQUEWST: 629e9f900ef403d010fe8964
 
+# first slot:          5:30 to 6:30
+# second slot:         9:00 to 10:00
+# third slot:          8:00 - 10:00
+
+# Available slot[0] -> 5:30 to 7:00
+# Available slot[1] -> 8:00 - 11:00
 
 
 
@@ -170,5 +179,5 @@ Authorization: bearer {{generalToken}}
 ###########################################
 ###########################################
 
-GET http://localhost:5000/user/getUser/61da3991198da5dd6c0bc9f9
+GET http://localhost:5000/user/getUser/629e74acd37cc8da837936c2
 Authorization: bearer {{generalToken}}
