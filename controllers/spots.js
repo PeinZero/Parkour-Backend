@@ -19,11 +19,7 @@ export let add = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller)
-      throwError(
-        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
-        500
-      );
+    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
 
     const location = new Point({ coordinates: req.body.location });
     await location.save();
@@ -41,8 +37,7 @@ export let add = async (req, res, next) => {
       isActive: true
     });
 
-    if (nearbySpots.length > 0)
-      throwError('A spot already exists at this location.', 409);
+    if (nearbySpots.length > 0) throwError('A spot already exists at this location.', 409);
 
     const spot = new Spot({
       spotName: req.body.spotName,
@@ -82,25 +77,16 @@ export let remove = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller)
-      throwError(
-        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
-        500
-      );
+    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
 
     const spot = await Spot.findById(spotId);
     if (!spot) throwError('Spot not found', 404);
-    if (spot.owner.toString() !== seller._id.toString())
-      throwError('This Seller is not the owner of this Spot', 401);
+    if (spot.owner.toString() !== seller._id.toString()) throwError('This Seller is not the owner of this Spot', 401);
 
     if (spot.isActive) {
-      seller.activeSpots = seller.activeSpots.filter(
-        (spot) => spot._id.toString() !== spotId
-      );
+      seller.activeSpots = seller.activeSpots.filter((spot) => spot._id.toString() !== spotId);
     } else {
-      seller.inactiveSpots = seller.inactiveSpots.filter(
-        (spot) => spot._id.toString() !== spotId
-      );
+      seller.inactiveSpots = seller.inactiveSpots.filter((spot) => spot._id.toString() !== spotId);
     }
 
     const pointToRemove = await Point.findById(spot.location);
@@ -135,17 +121,12 @@ export let edit = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller)
-      throwError(
-        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
-        500
-      );
+    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
 
     const spot = await Spot.findById(spotId);
     if (!spot) throwError('Spot not found', 404);
 
-    if (spot.owner.toString() !== seller._id.toString())
-      throwError('This Seller is not the owner of this Spot', 401);
+    if (spot.owner.toString() !== seller._id.toString()) throwError('This Seller is not the owner of this Spot', 401);
 
     let nearbySpots = await Spot.find({
       _id: { $ne: spotId },
@@ -161,11 +142,7 @@ export let edit = async (req, res, next) => {
       }
     });
 
-    if (nearbySpots.length > 0)
-      throwError(
-        `A spot already exists within ${SAFE_DISTANCE} meters of that spot`,
-        409
-      );
+    if (nearbySpots.length > 0) throwError(`A spot already exists within ${SAFE_DISTANCE} meters of that spot`, 409);
 
     spot.spotName = req.body.spotName;
     spot.addressLine1 = req.body.addressLine1;
@@ -204,11 +181,7 @@ export let getSpotsBySeller = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller).populate('reviews');
-    if (!seller)
-      throwError(
-        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
-        500
-      );
+    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
 
     selector.owner = user.seller.toString();
 
@@ -252,8 +225,7 @@ export let getSpotsByRadius = async (req, res, next) => {
     const user = await User.findById(userId);
 
     if (!user) throwError('User not found', 404);
-    if (!queryLng || !queryLat || !queryRadius)
-      throwError('Missing lat or lng or radius in query params', 422);
+    if (!queryLng || !queryLat || !queryRadius) throwError('Missing lat or lng or radius in query params', 422);
     if (!user.currentRoleParker) throwError('User is not a parker', 403);
 
     const centerSearchPoint = [queryLng, queryLat];
@@ -275,9 +247,7 @@ export let getSpotsByRadius = async (req, res, next) => {
     let seller = await Seller.findById(user.seller);
     if (seller) {
       // if the user is a Seller aswell, then filter out his own spots.
-      spots = spots.filter(
-        (spot) => spot.owner._id.toString() !== seller._id.toString()
-      );
+      spots = spots.filter((spot) => spot.owner._id.toString() !== seller._id.toString());
     }
 
     // console.log(spots);
@@ -302,17 +272,12 @@ export let switchStatus = async (req, res, next) => {
     if (user.currentRoleParker) throwError('User is not a Seller', 403);
 
     const seller = await Seller.findById(user.seller);
-    if (!seller)
-      throwError(
-        `Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`,
-        500
-      );
+    if (!seller) throwError(`Internal Server Error: User has a currentRole "Seller" flag but doesn't contain 'Seller' information`, 500);
 
     const spot = await Spot.findById(spotId);
     if (!spot) throwError('Spot not found', 404);
 
-    if (spot.owner.toString() !== seller._id.toString())
-      throwError('This Seller is not the owner of this Spot', 401);
+    if (spot.owner.toString() !== seller._id.toString()) throwError('This Seller is not the owner of this Spot', 401);
 
     spot.isActive = !spot.isActive;
     await spot.save();
