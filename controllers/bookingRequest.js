@@ -10,6 +10,7 @@ import { throwError } from '../helpers/helperfunctions.js';
 
 import io from '../socket/socketSetup.js';
 import transactions from '../helpers/transactionHelpers.js';
+import transactionHelpers from '../helpers/transactionHelpers.js';
 
 const TIMECONFIG = { hours: 'numeric', minutes: 'numeric', hour12: true };
 
@@ -231,8 +232,9 @@ export let accept = async (req, res, next) => {
       requestedSlot
     );
 
-    console.log('\n----\n' + 'Index of slot: ' + indexOfMatchedSlot + '\n----\n');
-    if (indexOfMatchedSlot < 0) throwError('Internal Server Error. Requested time slot is invalid or not available anymore.');
+    console.log('\n----' + 'Index of slot: ' + indexOfMatchedSlot + ' ----\n');
+    if (indexOfMatchedSlot < 0 || indexOfMatchedSlot === undefined)
+      throwError('Internal Server Error. Requested time slot is invalid or not available anymore.');
 
     const matchedAvailableSlot = updateAvailableTimeSlot(
       spot.availability[indexOfAvailableDay].slotDate,
@@ -242,17 +244,25 @@ export let accept = async (req, res, next) => {
     // *Error Checking: If slot is invalid (out of bounds)
     if (!isRequestValidForAcceptance(requestedSlot)) throwError('Requested time slot is invalid.', 409);
 
-    console.log('\n----' + '=== Initial State ===' + '----');
-    console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].startTime.toLocaleString('en-US', TIMECONFIG));
-    console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.toLocaleString('en-US', TIMECONFIG));
-    console.log('\n----' + '======' + '----\n');
-
     computeSlots(spot.availability[indexOfAvailableDay], indexOfMatchedSlot, matchedAvailableSlot, requestedSlot);
 
-    console.log('\n----' + '=== Final State ===' + '----');
-    console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].startTime.toLocaleString('en-US', TIMECONFIG));
-    console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.toLocaleString('en-US', TIMECONFIG));
-    console.log('\n----' + '======' + '----\n');
+    /*
+      console.log('\n----' + '=== Initial State ===' + '----');
+      console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].startTime.toLocaleString('en-US', TIMECONFIG));
+      console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.toLocaleString('en-US', TIMECONFIG));
+      console.log('\n----' + '======' + '----\n');
+
+      console.log('\n----' + '=== Requested Slot ===' + '----');
+      console.log(requestedSlot.startTime.toLocaleString('en-US', TIMECONFIG));
+      console.log(requestedSlot.endTime.toLocaleString('en-US', TIMECONFIG));
+      console.log('\n----' + '======' + '----\n');
+
+      
+      console.log('\n----' + '=== Final State ===' + '----');
+      console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].startTime.toLocaleString('en-US', TIMECONFIG));
+      console.log(spot.availability[indexOfAvailableDay].slots[indexOfMatchedSlot].endTime.toLocaleString('en-US', TIMECONFIG));
+      console.log('\n----' + '======' + '----\n');
+      */
 
     spot.isBooked = true;
     const bookingRequestDay = new Date(bookingRequest.day);
@@ -270,13 +280,19 @@ export let accept = async (req, res, next) => {
       bookingRequest.slots[0].endTime.getHours()
     );
 
-    console.log('\n\n\n\n TRANSSACTIONS');
-    // Deduce parking fee from parker
-    console.log(transactions);
-
     bookingRequest.status = 'accepted';
+
+    const requestor = await User.findOne({ parker: bookingRequest.bookingRequestor });
+    console.log(requestor);
+
+    // if parker has enough credits, then deduct his money.
+    const amountToDeduct = spot.pricePerHour * ((requestedSlot.endTime.getTime() - requestedSlot.startTime.getTime()) / 3600000);
+    console.log(amountToDeduct);
+    transactionHelpers.deductCredit(requestor, amountToDeduct);
+
     await bookingRequest.save();
     await spot.save();
+    await requestor.save();
 
     res.status(200).json({
       msg: 'Booking request accepted.',
@@ -295,7 +311,7 @@ function computeSlots(matchedDate, indexOfMatchedSlot, matchedAvailableSlot, req
   const availableStartString = matchedAvailableSlot.startTime.toLocaleString('en-US', TIMECONFIG);
   const availableEndString = matchedAvailableSlot.endTime.toLocaleString('en-US', TIMECONFIG);
 
-  if (requestedStartString === availableStartString && availableStartString === availableEndString) {
+  if (requestedStartString == availableStartString && requestedEndString == availableEndString) {
     console.log('\n====>>  Full slot matched, deleting slot entry. <<====\n');
     availableSlots.splice(indexOfMatchedSlot, 1);
   } else if (requestedStartString === availableStartString) {
